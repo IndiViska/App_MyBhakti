@@ -13,7 +13,7 @@ class LoginPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 60),
-              Image.asset('lib/assets/mybhakti1.png', height: 120),
+              Image.asset('lib/assets/mybhakti1.png', height: 200),
               const SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -31,13 +31,12 @@ class LoginPage extends StatelessWidget {
                         prefixIcon: const Icon(Icons.person_outline),
                       ),
                     ),
-<<<<<<< HEAD
+                    const SizedBox(height: 40),
+
+                    const SizedBox(height: 20),
 
                     const SizedBox(height: 40),
 
-=======
-                    const SizedBox(height: 20),
->>>>>>> 27c703d1e0ffb31e57b32dd9e42b742433a50605
                     const Text("Password"),
                     const SizedBox(height: 8),
                     TextField(
@@ -55,7 +54,7 @@ class LoginPage extends StatelessWidget {
                     const Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        "Forgot Password?",
+                        "Lupa Password?",
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
