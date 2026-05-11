@@ -13,11 +13,8 @@ class LoginPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 60),
-
-              Image.asset("assets/mybhakti 1.png", height: 200),
-
+              Image.asset('lib/assets/mybhakti1.png', height: 120),
               const SizedBox(height: 50),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: Column(
@@ -25,7 +22,6 @@ class LoginPage extends StatelessWidget {
                   children: [
                     const Text("Username"),
                     const SizedBox(height: 8),
-
                     TextField(
                       decoration: InputDecoration(
                         hintText: "Enter Username",
@@ -35,12 +31,15 @@ class LoginPage extends StatelessWidget {
                         prefixIcon: const Icon(Icons.person_outline),
                       ),
                     ),
+<<<<<<< HEAD
 
                     const SizedBox(height: 40),
 
+=======
+                    const SizedBox(height: 20),
+>>>>>>> 27c703d1e0ffb31e57b32dd9e42b742433a50605
                     const Text("Password"),
                     const SizedBox(height: 8),
-
                     TextField(
                       obscureText: true,
                       decoration: InputDecoration(
@@ -52,9 +51,7 @@ class LoginPage extends StatelessWidget {
                         suffixIcon: const Icon(Icons.visibility_off),
                       ),
                     ),
-
                     const SizedBox(height: 10),
-
                     const Align(
                       alignment: Alignment.centerRight,
                       child: Text(
@@ -66,9 +63,7 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 30),
-
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
