@@ -31,7 +31,7 @@ class LoginPage extends StatelessWidget {
                         prefixIcon: const Icon(Icons.person_outline),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 40),
                     const Text("Password"),
                     const SizedBox(height: 8),
                     TextField(
