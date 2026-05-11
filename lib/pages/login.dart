@@ -13,7 +13,7 @@ class LoginPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 60),
-              Image.asset('lib/assets/mybhakti1.png', height: 120),
+              Image.asset('lib/assets/mybhakti1.png', height: 200),
               const SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
