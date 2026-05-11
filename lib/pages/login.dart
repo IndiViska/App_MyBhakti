@@ -10,7 +10,7 @@ class LoginPage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            mainAxisSize: MainAxisSize.min, // 🔥 penting
+            mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 60),
 
@@ -36,7 +36,7 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 40),
 
                     const Text("Password"),
                     const SizedBox(height: 8),
