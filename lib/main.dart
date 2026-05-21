@@ -11,14 +11,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const SplashScreen(),
+      home: SplashScreen(),
     );
   }
 }
 
-// SPLASH SCREEN
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -29,7 +28,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-
   late Animation<double> _whitePanelAnimation;
   late Animation<double> _logoScaleAnimation;
   late Animation<double> _logoOpacityAnimation;
@@ -43,19 +41,16 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(seconds: 3),
     );
 
-    // background putih turun dari atas
     _whitePanelAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    // logo mengecil
     _logoScaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.45,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    // logo muncul setelah animasi mulai
     _logoOpacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
@@ -65,11 +60,12 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    // pindah ke login
     Timer(const Duration(seconds: 4), () {
+      if (!mounted) return;
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+        MaterialPageRoute(builder: (context) => const LoginPage()),
       );
     });
   }
@@ -90,14 +86,11 @@ class _SplashScreenState extends State<SplashScreen>
         builder: (context, child) {
           return Stack(
             children: [
-              // background merah awal
               Container(
                 width: double.infinity,
                 height: double.infinity,
                 color: const Color(0xFFB1121B),
               ),
-
-              // panel putih turun dari atas
               Positioned(
                 top: 0,
                 left: 0,
@@ -107,8 +100,6 @@ class _SplashScreenState extends State<SplashScreen>
                   color: const Color(0xFFF2F2F7),
                 ),
               ),
-
-              // logo tetap center
               Center(
                 child: Opacity(
                   opacity: _logoOpacityAnimation.value,
