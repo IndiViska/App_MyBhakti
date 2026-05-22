@@ -1,80 +1,187 @@
 import 'package:flutter/material.dart';
+import 'package:app_mybhakti/pages/home.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController usernameController =
+      TextEditingController();
+
+  final TextEditingController passwordController =
+      TextEditingController();
+
+  bool isPasswordHidden = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 60),
-              Image.asset('lib/assets/mybhakti1.png', height: 120),
+
+              Image.asset(
+                'lib/assets/mybhakti1.png',
+                height: 120,
+              ),
+
               const SizedBox(height: 50),
+
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30),
+
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+
                   children: [
-                    const Text("Username"),
+                    const Text(
+                      "Username",
+                      style: TextStyle(fontSize: 14),
+                    ),
+
                     const SizedBox(height: 8),
+
                     TextField(
+                      controller: usernameController,
+
                       decoration: InputDecoration(
                         hintText: "Enter Username",
+
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius:
+                              BorderRadius.circular(8),
                         ),
-                        prefixIcon: const Icon(Icons.person_outline),
+
+                        prefixIcon: const Icon(
+                          Icons.person_outline,
+                        ),
                       ),
                     ),
 
                     const SizedBox(height: 20),
 
-                    const Text("Password"),
+                    const Text(
+                      "Password",
+                      style: TextStyle(fontSize: 14),
+                    ),
+
                     const SizedBox(height: 8),
+
                     TextField(
-                      obscureText: true,
+                      controller: passwordController,
+                      obscureText: isPasswordHidden,
+
                       decoration: InputDecoration(
                         hintText: "Enter Password",
+
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius:
+                              BorderRadius.circular(8),
                         ),
-                        prefixIcon: const Icon(Icons.lock_outline),
-                        suffixIcon: const Icon(Icons.visibility_off),
+
+                        prefixIcon: const Icon(
+                          Icons.lock_outline,
+                        ),
+
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            isPasswordHidden
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+
+                          onPressed: () {
+                            setState(() {
+                              isPasswordHidden =
+                                  !isPasswordHidden;
+                            });
+                          },
+                        ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
+
                     const Align(
                       alignment: Alignment.centerRight,
+
                       child: Text(
                         "Lupa Password?",
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
-                          decoration: TextDecoration.underline,
+                          decoration:
+                              TextDecoration.underline,
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 30),
+
                     SizedBox(
                       width: double.infinity,
+
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          String username =
+                              usernameController.text;
+
+                          String password =
+                              passwordController.text;
+
+                          if (username == "admin" &&
+                              password == "admin") {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    const HomeView(),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "Username atau Password salah",
+                                ),
+                              ),
+                            );
+                          }
+                        },
+
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFB1121B),
-                          padding: EdgeInsets.symmetric(vertical: 14),
+                          backgroundColor:
+                              const Color(0xFFB1121B),
+
+                          padding:
+                              const EdgeInsets.symmetric(
+                            vertical: 14,
+                          ),
+
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                            borderRadius:
+                                BorderRadius.circular(25),
                           ),
                         ),
+
                         child: const Text(
                           "Login",
-                          style: TextStyle(fontSize: 16),
-                          selectionColor: Color.fromARGB(255, 255, 255, 255),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
