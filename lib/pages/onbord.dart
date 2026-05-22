@@ -1,5 +1,7 @@
-import 'package:app_mybhakti/pages/login.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:app_mybhakti/pages/login.dart';
 
 // ─────────────────────────────────────────────
 // Onboarding 1 – Splash / Logo screen
@@ -7,22 +9,81 @@ import 'package:flutter/material.dart';
 // ─────────────────────────────────────────────
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
+
   @override
-  OnboardingState createState() => OnboardingState();
+  State<Onboarding> createState() => OnboardingState();
 }
 
-class OnboardingState extends State<Onboarding> {
+class OnboardingState extends State<Onboarding>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1800),
+    );
+
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOutCubic,
+    );
+
+    _controller.forward();
+
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const Onboarding2()),
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          constraints: const BoxConstraints.expand(),
-          color: const Color(0xFFB1121B),
-          child: Center(
-            child: Image.asset('lib/assets/mybhakti1.png', height: 70),
+      body: Stack(
+        children: [
+          // background merah
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: const Color(0xFFB1121B),
           ),
-        ),
+
+          // layer putih meleleh
+          AnimatedBuilder(
+            animation: _animation,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(
+                  0,
+                  lerpDouble(-height, height, _animation.value)!,
+                ),
+                child: ClipPath(
+                  clipper: WaveClipperOne(flip: true),
+                  child: Container(
+                    width: double.infinity,
+                    height: height,
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -40,17 +101,25 @@ class Onboarding2 extends StatefulWidget {
 
 class Onboarding2State extends State<Onboarding2> {
   @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const Onboarding3()),
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          constraints: const BoxConstraints.expand(),
-          child: Image.asset(
-            'lib/assets/onboarding2_bg.png',
-            fit: BoxFit.fill,
-            width: double.infinity,
-            height: double.infinity,
-          ),
+      body: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: Center(
+          child: Image.asset('lib/assets/mybhakti2.png', height: 70),
         ),
       ),
     );
@@ -63,23 +132,72 @@ class Onboarding2State extends State<Onboarding2> {
 // ─────────────────────────────────────────────
 class Onboarding3 extends StatefulWidget {
   const Onboarding3({super.key});
+
   @override
-  Onboarding3State createState() => Onboarding3State();
+  State<Onboarding3> createState() => Onboarding3State();
 }
 
 class Onboarding3State extends State<Onboarding3> {
   @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const Onboarding4()),
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          constraints: const BoxConstraints.expand(),
-          color: const Color(0xFFB1121B),
-          child: Image.asset(
-            'lib/assets/onboarding3_illustration.png',
-            fit: BoxFit.fill,
-            width: double.infinity,
-          ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: const Duration(milliseconds: 2000),
+          curve: Curves.easeInOutCubic,
+
+          builder: (context, value, child) {
+            // posisi logo
+            final double top = lerpDouble(
+              MediaQuery.of(context).size.height / 2 - 35,
+              98,
+              Curves.easeInOut.transform(value),
+            )!;
+
+            // scale logo (lebih smooth)
+            final double scale = lerpDouble(
+              1.0,
+              0.57,
+              Curves.easeOutExpo.transform(value),
+            )!;
+
+            return Stack(
+              children: [
+                Positioned(
+                  top: top,
+                  left: 0,
+                  right: 0,
+
+                  child: Center(
+                    child: Transform.scale(
+                      scale: scale,
+                      child: Image.asset(
+                        'lib/assets/mybhakti2.png',
+                        height: 70,
+                        filterQuality: FilterQuality.high,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -98,8 +216,6 @@ class Onboarding4 extends StatefulWidget {
 }
 
 class Onboarding4State extends State<Onboarding4> {
-  get g => null;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,15 +243,15 @@ class Onboarding4State extends State<Onboarding4> {
                 ),
               ),
               SingleChildScrollView(
-                padding: const EdgeInsets.only(top: 98),
+                padding: const EdgeInsets.only(top: 112),
                 child: Column(
                   children: [
                     // Logo
                     Container(
                       margin: const EdgeInsets.only(bottom: 38),
                       child: Image.asset(
-                        'lib/assets/mybhakti1.png',
-                        height: 70,
+                        'lib/assets/mybhakti2.png',
+                        height: 40,
                       ),
                     ),
 
@@ -170,16 +286,6 @@ class Onboarding4State extends State<Onboarding4> {
                             ),
                           ),
                         ),
-                      ),
-                    ),
-
-                    // Illustration
-                    Container(
-                      height: 464,
-                      width: double.infinity,
-                      child: Image.asset(
-                        'lib/assets/onboarding4_char.png',
-                        fit: BoxFit.fill,
                       ),
                     ),
 
@@ -244,13 +350,13 @@ class Onboarding5State extends State<Onboarding5> {
             ),
           ),
           child: SingleChildScrollView(
-            padding: const EdgeInsets.only(top: 98),
+            padding: const EdgeInsets.only(top: 100),
             child: Column(
               children: [
                 // Logo
                 Container(
                   margin: const EdgeInsets.only(bottom: 38),
-                  child: Image.asset('lib/assets/mybhakti1.png', height: 70),
+                  child: Image.asset('lib/assets/mybhakti2.png', height: 40),
                 ),
 
                 // Skip button – top right
