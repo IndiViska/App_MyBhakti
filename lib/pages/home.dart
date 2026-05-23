@@ -298,18 +298,15 @@ const SizedBox(height: 30),
                   onTap: () {
                     Navigator.push(
                       context,
-
                       MaterialPageRoute(
                         builder: (_) =>
-                            const LaporanKehadiranPage(),
+                            LaporanKehadiranPage(),
                       ),
                     );
                   },
 
                   child: const MenuItem(
-                    image:
-                        "lib/assets/Laporan.png",
-
+                    image: "lib/assets/Laporan.png",
                     title: "Laporan\nKehadiran",
                   ),
                 ),
