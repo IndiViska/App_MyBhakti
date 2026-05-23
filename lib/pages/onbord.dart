@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+/*import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';*/
 import 'package:app_mybhakti/pages/login.dart';
 
 // ─────────────────────────────────────────────
@@ -73,7 +73,7 @@ class OnboardingState extends State<Onboarding>
                   lerpDouble(-height, height, _animation.value)!,
                 ),
                 child: ClipPath(
-                  clipper: WaveClipperOne(flip: true),
+                 // clipper: WaveClipperOne(flip: true),
                   child: Container(
                     width: double.infinity,
                     height: height,
