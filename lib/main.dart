@@ -1,6 +1,8 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:app_mybhakti/pages/login.dart';
+import 'package:app_mybhakti/pages/onbord.dart';
+
+
+
 
 void main() {
   runApp(const MyApp());
@@ -8,11 +10,11 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
+<<<<<<< HEAD
       home: SplashScreen(),
     );
   }
@@ -112,7 +114,14 @@ class _SplashScreenState extends State<SplashScreen>
             ],
           );
         },
+=======
+      title: 'MyBhakti',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+>>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
       ),
+      home: const Onboarding(),
     );
   }
 }
