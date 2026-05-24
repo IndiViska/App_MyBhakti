@@ -15,7 +15,10 @@ class LoginPage extends StatelessWidget {
             children: [
               const SizedBox(height: 55),
 
-              Image.asset('lib/assets/mybhakti1.png', height: 160),
+              Image.asset(
+                'lib/assets/mybhakti1.png',
+                height: 160,
+              ),
 
               const SizedBox(height: 45),
 
@@ -37,7 +40,10 @@ class LoginPage extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Masuk untuk melanjutkan ke aplikasi',
-                  style: TextStyle(fontSize: 13, color: Color(0xff8C96A8)),
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Color(0xff8C96A8),
+                  ),
                 ),
               ),
 
@@ -47,7 +53,10 @@ class LoginPage extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Username',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
 
@@ -76,7 +85,10 @@ class LoginPage extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Password',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
 
@@ -124,7 +136,9 @@ class LoginPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(),
+                      ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
