@@ -9,11 +9,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController usernameController =
-      TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
 
-  final TextEditingController passwordController =
-      TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   bool isPasswordHidden = true;
 
@@ -29,26 +27,18 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const SizedBox(height: 60),
 
-              Image.asset(
-                'lib/assets/mybhakti1.png',
-                height: 120,
-              ),
+              Image.asset('lib/assets/mybhakti1.png', height: 120),
 
               const SizedBox(height: 50),
 
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30),
+                padding: const EdgeInsets.symmetric(horizontal: 30),
 
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
 
                   children: [
-                    const Text(
-                      "Username",
-                      style: TextStyle(fontSize: 14),
-                    ),
+                    const Text("Username", style: TextStyle(fontSize: 14)),
 
                     const SizedBox(height: 8),
 
@@ -59,22 +49,16 @@ class _LoginPageState extends State<LoginPage> {
                         hintText: "Enter Username",
 
                         border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8),
                         ),
 
-                        prefixIcon: const Icon(
-                          Icons.person_outline,
-                        ),
+                        prefixIcon: const Icon(Icons.person_outline),
                       ),
                     ),
 
                     const SizedBox(height: 20),
 
-                    const Text(
-                      "Password",
-                      style: TextStyle(fontSize: 14),
-                    ),
+                    const Text("Password", style: TextStyle(fontSize: 14)),
 
                     const SizedBox(height: 8),
 
@@ -86,13 +70,10 @@ class _LoginPageState extends State<LoginPage> {
                         hintText: "Enter Password",
 
                         border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8),
                         ),
 
-                        prefixIcon: const Icon(
-                          Icons.lock_outline,
-                        ),
+                        prefixIcon: const Icon(Icons.lock_outline),
 
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -103,8 +84,7 @@ class _LoginPageState extends State<LoginPage> {
 
                           onPressed: () {
                             setState(() {
-                              isPasswordHidden =
-                                  !isPasswordHidden;
+                              isPasswordHidden = !isPasswordHidden;
                             });
                           },
                         ),
@@ -121,8 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
-                          decoration:
-                              TextDecoration.underline,
+                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
@@ -134,54 +113,39 @@ class _LoginPageState extends State<LoginPage> {
 
                       child: ElevatedButton(
                         onPressed: () {
-                          String username =
-                              usernameController.text;
+                          String username = usernameController.text;
 
-                          String password =
-                              passwordController.text;
+                          String password = passwordController.text;
 
-                          if (username == "admin" &&
-                              password == "admin") {
+                          if (username == "admin" && password == "admin") {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (_) =>
-                                    const HomeView(),
+                                builder: (_) => HomeView(username: username),
                               ),
                             );
                           } else {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(
+                            ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text(
-                                  "Username atau Password salah",
-                                ),
+                                content: Text("Username atau Password salah"),
                               ),
                             );
                           }
                         },
 
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color(0xFFB1121B),
+                          backgroundColor: const Color(0xFFB1121B),
 
-                          padding:
-                              const EdgeInsets.symmetric(
-                            vertical: 14,
-                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
 
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(25),
+                            borderRadius: BorderRadius.circular(25),
                           ),
                         ),
 
                         child: const Text(
                           "Login",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
+                          style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
                     ),
