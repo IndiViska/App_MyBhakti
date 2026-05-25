@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:app_mybhakti/pages/onbord.dart';
 
 
-
-
 void main() {
   runApp(const MyApp());
 }

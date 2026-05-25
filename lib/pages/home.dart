@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app_mybhakti/pages/presensi_page.dart';
 import 'package:app_mybhakti/pages/laporan_kehadiran_page.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:app_mybhakti/pages/pengajuan_cuti_page.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -324,9 +325,20 @@ const SizedBox(height: 30),
                 ),
 
                 // CUTI
-                const MenuItem(
-                  image: "lib/assets/Cuti.png",
-                  title: "Cuti",
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PengajuanCutiPage(),
+                      ),
+                    );
+                  },
+
+                  child: const MenuItem(
+                    image: "lib/assets/Cuti.png",
+                    title: "Cuti",
+                  ),
                 ),
 
                 // KNOWLEDGE
