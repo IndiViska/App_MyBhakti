@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:app_mybhakti/pages/login.dart';
 
-// ─────────────────────────────────────────────
-// Onboarding 1 – Splash / Logo screen
-// Full red background, centered logo
-// ─────────────────────────────────────────────
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
 
@@ -35,6 +31,8 @@ class OnboardingState extends State<Onboarding>
     _controller.forward();
 
     Future.delayed(const Duration(milliseconds: 2500), () {
+      if (!mounted) return;
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const Onboarding2()),
@@ -55,7 +53,6 @@ class OnboardingState extends State<Onboarding>
     return Scaffold(
       body: Stack(
         children: [
-          // BACKGROUND TRANSISI MERAH -> PUTIH
           AnimatedBuilder(
             animation: _animation,
             builder: (context, child) {
@@ -66,7 +63,6 @@ class OnboardingState extends State<Onboarding>
 
               return Column(
                 children: [
-                  // hampir seluruh layar jadi putih
                   Expanded(
                     flex: 7,
                     child: Container(
@@ -77,8 +73,6 @@ class OnboardingState extends State<Onboarding>
                       ),
                     ),
                   ),
-
-                  // sisa kecil bawah tetap merah
                   Expanded(
                     flex: 1,
                     child: Container(color: const Color(0xFFB1121B)),
@@ -87,7 +81,6 @@ class OnboardingState extends State<Onboarding>
               );
             },
           ),
-          // LAYER PUTIH MELELEH
           AnimatedBuilder(
             animation: _animation,
             builder: (context, child) {
@@ -113,14 +106,11 @@ class OnboardingState extends State<Onboarding>
   }
 }
 
-// ─────────────────────────────────────────────
-// Onboarding 2 – Full-screen background image
-// (decorative / transition screen)
-// ─────────────────────────────────────────────
 class Onboarding2 extends StatefulWidget {
   const Onboarding2({super.key});
+
   @override
-  Onboarding2State createState() => Onboarding2State();
+  State<Onboarding2> createState() => Onboarding2State();
 }
 
 class Onboarding2State extends State<Onboarding2> {
@@ -129,6 +119,8 @@ class Onboarding2State extends State<Onboarding2> {
     super.initState();
 
     Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const Onboarding3()),
@@ -150,10 +142,6 @@ class Onboarding2State extends State<Onboarding2> {
   }
 }
 
-// ─────────────────────────────────────────────
-// Onboarding 3 – Full-screen illustration
-// Red background, full-bleed character image
-// ─────────────────────────────────────────────
 class Onboarding3 extends StatefulWidget {
   const Onboarding3({super.key});
 
@@ -167,6 +155,8 @@ class Onboarding3State extends State<Onboarding3> {
     super.initState();
 
     Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const Onboarding4()),
@@ -177,24 +167,20 @@ class Onboarding3State extends State<Onboarding3> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         height: double.infinity,
-
         child: TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.0, end: 1.0),
           duration: const Duration(milliseconds: 2000),
           curve: Curves.easeInOutCubic,
-
           builder: (context, value, child) {
-            // posisi logo
             final double top = lerpDouble(
               MediaQuery.of(context).size.height / 2 - 35,
               98,
               Curves.easeInOut.transform(value),
             )!;
 
-            // scale logo (lebih smooth)
             final double scale = lerpDouble(
               1.0,
               0.57,
@@ -207,7 +193,6 @@ class Onboarding3State extends State<Onboarding3> {
                   top: top,
                   left: 0,
                   right: 0,
-
                   child: Center(
                     child: Transform.scale(
                       scale: scale,
@@ -228,15 +213,11 @@ class Onboarding3State extends State<Onboarding3> {
   }
 }
 
-// ─────────────────────────────────────────────
-// Onboarding 4 – Slide 1 (page indicator dot 1 active)
-// Background image, logo, skip button, illustration,
-// "WELCOME to MyBhakti" text, dots + next arrow
-// ─────────────────────────────────────────────
 class Onboarding4 extends StatefulWidget {
   const Onboarding4({super.key});
+
   @override
-  Onboarding4State createState() => Onboarding4State();
+  State<Onboarding4> createState() => Onboarding4State();
 }
 
 class Onboarding4State extends State<Onboarding4> {
@@ -270,7 +251,6 @@ class Onboarding4State extends State<Onboarding4> {
                 padding: const EdgeInsets.only(top: 112),
                 child: Column(
                   children: [
-                    // Logo
                     Container(
                       margin: const EdgeInsets.only(bottom: 38),
                       child: Image.asset(
@@ -278,8 +258,6 @@ class Onboarding4State extends State<Onboarding4> {
                         height: 40,
                       ),
                     ),
-
-                    // Skip button – top right
                     Align(
                       alignment: Alignment.centerRight,
                       child: InkWell(
@@ -303,7 +281,7 @@ class Onboarding4State extends State<Onboarding4> {
                           ),
                           margin: const EdgeInsets.only(right: 42),
                           child: const Text(
-                            "Skip",
+                            'Skip',
                             style: TextStyle(
                               color: Color(0xFFFFFFFF),
                               fontSize: 15,
@@ -315,10 +293,10 @@ class Onboarding4State extends State<Onboarding4> {
                     // Welcome text
                     Container(
                       margin: const EdgeInsets.only(bottom: 60),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 330),
-                        child: const Text(
-                          "WELCOME to MyBhakti",
+                      child: const Padding(
+                        padding: EdgeInsets.only(top: 330),
+                        child: Text(
+                          'WELCOME to MyBhakti',
                           style: TextStyle(
                             color: Color(0xFF000000),
                             fontSize: 15,
@@ -352,15 +330,11 @@ class Onboarding4State extends State<Onboarding4> {
   }
 }
 
-// ─────────────────────────────────────────────
-// Onboarding 5 – Slide 2 (page indicator dot 2 active)
-// Same layout as Onboarding4, different background
-// and illustration, no welcome text
-// ─────────────────────────────────────────────
 class Onboarding5 extends StatefulWidget {
   const Onboarding5({super.key});
+
   @override
-  Onboarding5State createState() => Onboarding5State();
+  State<Onboarding5> createState() => Onboarding5State();
 }
 
 class Onboarding5State extends State<Onboarding5> {
@@ -394,7 +368,6 @@ class Onboarding5State extends State<Onboarding5> {
                 padding: const EdgeInsets.only(top: 112),
                 child: Column(
                   children: [
-                    // Logo
                     Container(
                       margin: const EdgeInsets.only(bottom: 38),
                       child: Image.asset(
@@ -402,8 +375,6 @@ class Onboarding5State extends State<Onboarding5> {
                         height: 40,
                       ),
                     ),
-
-                    // Skip button – top right
                     Align(
                       alignment: Alignment.centerRight,
                       child: InkWell(
@@ -427,7 +398,7 @@ class Onboarding5State extends State<Onboarding5> {
                           ),
                           margin: const EdgeInsets.only(right: 42),
                           child: const Text(
-                            "Skip",
+                            'Skip',
                             style: TextStyle(
                               color: Color(0xFFFFFFFF),
                               fontSize: 15,
@@ -436,14 +407,12 @@ class Onboarding5State extends State<Onboarding5> {
                         ),
                       ),
                     ),
-
-                    // Welcome text
                     Container(
                       margin: const EdgeInsets.only(bottom: 60),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 330),
-                        child: const Text(
-                          "Explore more about this MyBhakti",
+                      child: const Padding(
+                        padding: EdgeInsets.only(top: 330),
+                        child: Text(
+                          'Explore more about this MyBhakti',
                           style: TextStyle(
                             color: Color(0xFF000000),
                             fontSize: 15,
@@ -452,8 +421,6 @@ class Onboarding5State extends State<Onboarding5> {
                         ),
                       ),
                     ),
-
-                    // Dots + Next arrow
                     buildBottomNav(
                       context: context,
                       activeIndex: 1,
@@ -479,8 +446,9 @@ class Onboarding5State extends State<Onboarding5> {
 
 class Onboarding6 extends StatefulWidget {
   const Onboarding6({super.key});
+
   @override
-  Onboarding6State createState() => Onboarding6State();
+  State<Onboarding6> createState() => Onboarding6State();
 }
 
 class Onboarding6State extends State<Onboarding6> {
@@ -514,7 +482,6 @@ class Onboarding6State extends State<Onboarding6> {
                 padding: const EdgeInsets.only(top: 112),
                 child: Column(
                   children: [
-                    // Logo
                     Container(
                       margin: const EdgeInsets.only(bottom: 38),
                       child: Image.asset(
@@ -522,8 +489,6 @@ class Onboarding6State extends State<Onboarding6> {
                         height: 40,
                       ),
                     ),
-
-                    // Skip button – top right
                     Align(
                       alignment: Alignment.centerRight,
                       child: InkWell(
@@ -547,7 +512,7 @@ class Onboarding6State extends State<Onboarding6> {
                           ),
                           margin: const EdgeInsets.only(right: 42),
                           child: const Text(
-                            "Skip",
+                            'Skip',
                             style: TextStyle(
                               color: Color(0xFFFFFFFF),
                               fontSize: 15,
@@ -556,9 +521,6 @@ class Onboarding6State extends State<Onboarding6> {
                         ),
                       ),
                     ),
-
-                    // Welcome text
-                    // Button Continue to Login
                     Container(
                       margin: const EdgeInsets.only(bottom: 10),
                       padding: const EdgeInsets.only(top: 355),
@@ -582,7 +544,7 @@ class Onboarding6State extends State<Onboarding6> {
                             ),
                           ),
                           child: const Text(
-                            "Continue to Login",
+                            'Continue to Login',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 14,
@@ -592,17 +554,13 @@ class Onboarding6State extends State<Onboarding6> {
                         ),
                       ),
                     ),
-
-                    // Dots + Next arrow
                     buildBottomNav(
                       context: context,
                       activeIndex: 2,
                       onNext: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => const Onboarding6(),
-                          ),
+                          MaterialPageRoute(builder: (_) => const LoginPage()),
                         );
                       },
                     ),
@@ -636,7 +594,6 @@ Widget buildBottomNav({
     child: Stack(
       alignment: Alignment.center,
       children: [
-        // DOTS CENTER
         Center(
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -666,7 +623,6 @@ Widget buildBottomNav({
                     );
                   }
                 },
-
                 child: Container(
                   margin: const EdgeInsets.only(right: 6),
                   width: isActive ? 24 : 12,
@@ -680,8 +636,6 @@ Widget buildBottomNav({
             }),
           ),
         ),
-
-        // BUTTON RIGHT
         Align(
           alignment: Alignment.centerRight,
           child: GestureDetector(
@@ -706,16 +660,13 @@ Widget buildBottomNav({
   );
 }
 
-//efek MeltClipper
 class MeltClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
 
-    // mulai lebih atas supaya gelombang panjang
     path.lineTo(0, size.height * 0.55);
 
-    // gelombang 1
     path.quadraticBezierTo(
       size.width * 0.10,
       size.height * 0.35,
@@ -723,7 +674,6 @@ class MeltClipper extends CustomClipper<Path> {
       size.height * 0.80,
     );
 
-    // gelombang 2
     path.quadraticBezierTo(
       size.width * 0.40,
       size.height * 1.10,
@@ -731,7 +681,6 @@ class MeltClipper extends CustomClipper<Path> {
       size.height * 0.72,
     );
 
-    // gelombang 3
     path.quadraticBezierTo(
       size.width * 0.72,
       size.height * 0.20,
@@ -739,7 +688,6 @@ class MeltClipper extends CustomClipper<Path> {
       size.height * 1.18,
     );
 
-    // gelombang 4
     path.quadraticBezierTo(
       size.width * 0.92,
       size.height * 1.45,
