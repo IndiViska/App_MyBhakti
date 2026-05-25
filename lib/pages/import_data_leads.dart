@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'tambah_lead_baru.dart';
 
 class ImportDataLeadsScreen extends StatefulWidget {
@@ -10,14 +11,32 @@ class ImportDataLeadsScreen extends StatefulWidget {
 
 class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
   String? selectedFileName;
+  PlatformFile? selectedFile;
 
-  void chooseFile() {
-    setState(() {
-      selectedFileName = 'sample_template.xlsx';
-    });
+  Future<void> chooseFile() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'xlsx', 'xls'],
+      allowMultiple: false,
+      withData: true,
+    );
+
+    if (result != null && result.files.isNotEmpty) {
+      setState(() {
+        selectedFile = result.files.first;
+        selectedFileName = result.files.first.name;
+      });
+    }
   }
 
   void goToTambahLeadBaru() {
+    if (selectedFile == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Pilih file terlebih dahulu')),
+      );
+      return;
+    }
+
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const TambahLeadBaruScreen()),
@@ -53,7 +72,7 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
             ),
             SizedBox(height: 2),
             Text(
-              'Upload file Excel',
+              'Upload file PDF / Excel',
               style: TextStyle(
                 color: Colors.white70,
                 fontWeight: FontWeight.w400,
@@ -86,10 +105,12 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Upload File Excel',
+              'Upload File',
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             ),
+
             const SizedBox(height: 12),
+
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(14),
@@ -118,7 +139,7 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
                   ),
                   SizedBox(height: 9),
                   Text(
-                    'Download template mulai dari baris ke-3. Kolom bertanda * wajib diisi. Lead nomor otomatis digenerate oleh sistem.',
+                    'File yang dapat dipilih adalah PDF, XLSX, dan XLS. Pastikan file sudah sesuai format sebelum diproses.',
                     style: TextStyle(
                       fontSize: 13,
                       color: Color(0xFF6F6F6F),
@@ -128,7 +149,9 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
                 ],
               ),
             ),
+
             const SizedBox(height: 18),
+
             GestureDetector(
               onTap: chooseFile,
               child: Container(
@@ -154,7 +177,7 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
-                              selectedFileName ?? 'No file choose',
+                              selectedFileName ?? 'No file chosen',
                               style: const TextStyle(
                                 color: Color(0xFF828282),
                                 fontSize: 14,
@@ -184,7 +207,16 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
                 ),
               ),
             ),
+
+            const SizedBox(height: 8),
+
+            const Text(
+              'Format didukung: .pdf, .xlsx, .xls',
+              style: TextStyle(fontSize: 12, color: Color(0xFF828282)),
+            ),
+
             const SizedBox(height: 18),
+
             SizedBox(
               width: double.infinity,
               height: 48,
