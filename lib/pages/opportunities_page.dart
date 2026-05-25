@@ -27,7 +27,8 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
 
   final List<String> filters = ['Semua', 'Deal', 'In Progress', 'No Deal'];
 
-  final List<Map<String, dynamic>> leads = [
+  // ================= SEMUA LEADS =================
+  final List<Map<String, dynamic>> allLeads = [
     {
       'client': 'Universitas Bengkulu',
       'code': 'Init26-004',
@@ -36,6 +37,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
       'sales': 'AM Telkom',
       'status': 'DEAL',
       'color': Colors.green,
+      'inputType': 'Manual Input',
     },
     {
       'client': 'Diskominfo Jabar',
@@ -45,6 +47,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
       'sales': 'Direct Sales',
       'status': 'IN PROGRESS',
       'color': Colors.blue,
+      'inputType': 'Import Data',
     },
     {
       'client': 'Politeknik Aceh',
@@ -54,15 +57,42 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
       'sales': 'AM Telkom',
       'status': 'DEAL',
       'color': Colors.green,
+      'inputType': 'Manual Input',
     },
   ];
 
+  // ================= LEADS SAYA / TIM =================
+  final List<Map<String, dynamic>> myLeads = [
+    {
+      'client': 'Universitas Bengkulu',
+      'code': 'Init26-004',
+      'title': 'Pendampingan Siakad Tahap III',
+      'date': '06 Apr 2026',
+      'sales': 'AM Telkom',
+      'status': 'DEAL',
+      'color': Colors.green,
+      'inputType': 'Manual Input',
+    },
+  ];
+
+  List<Map<String, dynamic>> get activeLeads {
+    if (selectedTopTab == 0) {
+      return allLeads;
+    } else {
+      return myLeads;
+    }
+  }
+
   List<Map<String, dynamic>> get filteredLeads {
-    if (selectedFilter == 0) return leads;
+    final List<Map<String, dynamic>> sourceData = activeLeads;
+
+    if (selectedFilter == 0) {
+      return sourceData;
+    }
 
     final filter = filters[selectedFilter].toUpperCase();
 
-    return leads.where((item) {
+    return sourceData.where((item) {
       return item['status'] == filter;
     }).toList();
   }
@@ -88,6 +118,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
       onTap: () {
         setState(() {
           selectedTopTab = index;
+          selectedFilter = 0;
         });
       },
       child: Container(
@@ -154,6 +185,24 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
           fontSize: 9,
           fontWeight: FontWeight.w800,
           color: color,
+        ),
+      ),
+    );
+  }
+
+  Widget buildInputBadge(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF1D6),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 9,
+          fontWeight: FontWeight.w700,
+          color: Color(0xFFD97706),
         ),
       ),
     );
@@ -228,7 +277,9 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
               ),
             ],
           ),
+
           const SizedBox(height: 7),
+
           Text(
             lead['title'],
             style: const TextStyle(
@@ -238,7 +289,9 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
               fontWeight: FontWeight.w800,
             ),
           ),
+
           const SizedBox(height: 9),
+
           Row(
             children: [
               const Icon(
@@ -272,31 +325,45 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
               ),
             ],
           ),
+
           const SizedBox(height: 9),
+
           const Divider(height: 1, color: Color(0xffE6EAF0)),
+
           const SizedBox(height: 9),
+
           Row(
             children: [
               buildStatusBadge(lead['status'], lead['color']),
+
               const SizedBox(width: 8),
+
+              buildInputBadge(lead['inputType'] ?? 'Manual Input'),
+
+              const SizedBox(width: 8),
+
               const CircleAvatar(
                 radius: 11,
-                backgroundColor: Colors.amber,
+                backgroundColor: Colors.lightBlueAccent,
                 child: Icon(Icons.person, size: 13, color: Colors.white),
               ),
+
               const Spacer(),
+
               buildActionButton(
                 icon: Icons.arrow_outward_rounded,
                 color: const Color(0xff00A7C8),
                 bg: const Color(0xffEAFBFF),
                 onTap: goToTambahLeadBaru,
               ),
+
               buildActionButton(
                 icon: Icons.edit_outlined,
                 color: const Color(0xff6B7280),
                 bg: const Color(0xffF1F5F9),
                 onTap: goToTambahLeadBaru,
               ),
+
               buildActionButton(
                 icon: Icons.delete_outline,
                 color: const Color(0xffEF4444),
@@ -310,6 +377,29 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                 },
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildEmptyState() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 16),
+      child: Column(
+        children: [
+          Icon(Icons.inbox_outlined, size: 54, color: Colors.grey.shade400),
+          const SizedBox(height: 12),
+          Text(
+            selectedTopTab == 0
+                ? 'Belum ada data leads'
+                : 'Belum ada data Leads Saya',
+            style: const TextStyle(
+              fontSize: 13,
+              color: Color(0xff8F98A8),
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),
@@ -344,7 +434,9 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                           Navigator.pop(context);
                         },
                       ),
+
                       const SizedBox(width: 4),
+
                       const Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -369,6 +461,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                           ],
                         ),
                       ),
+
                       IconButton(
                         onPressed: goToImportData,
                         icon: const Icon(
@@ -376,6 +469,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                           color: Color(0xffB90F1A),
                         ),
                       ),
+
                       Container(
                         width: 28,
                         height: 28,
@@ -397,17 +491,22 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 24),
+
                   Row(
                     children: [
                       buildTopTab(topTabs[0], 0),
+
                       const SizedBox(width: 28),
+
                       buildTopTab(topTabs[1], 1),
                     ],
                   ),
                 ],
               ),
             ),
+
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(14, 10, 14, 80),
@@ -422,11 +521,15 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                         }),
                       ),
                     ),
+
                     const SizedBox(height: 13),
+
                     TextField(
                       style: const TextStyle(fontSize: 12),
                       decoration: InputDecoration(
-                        hintText: 'Cari lead...',
+                        hintText: selectedTopTab == 0
+                            ? 'Cari lead...'
+                            : 'Cari lead saya...',
                         hintStyle: const TextStyle(
                           fontSize: 12,
                           color: Color(0xffA5ADBA),
@@ -453,15 +556,20 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 13),
-                    ListView.builder(
-                      itemCount: data.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return buildLeadCard(data[index]);
-                      },
-                    ),
+
+                    if (data.isEmpty)
+                      buildEmptyState()
+                    else
+                      ListView.builder(
+                        itemCount: data.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return buildLeadCard(data[index]);
+                        },
+                      ),
                   ],
                 ),
               ),

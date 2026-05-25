@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:app_mybhakti/pages/home_page.dart';
-=======
->>>>>>> 3fb873973f3745d9e979e3e0c451a74fc9873b24
 import 'package:app_mybhakti/pages/home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -13,20 +9,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController usernameController =
+      TextEditingController();
 
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordController =
+      TextEditingController();
 
   bool isPasswordHidden = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-<<<<<<< HEAD
-      backgroundColor: const Color(0xffF8F9FB),
-
-=======
->>>>>>> 3fb873973f3745d9e979e3e0c451a74fc9873b24
       backgroundColor: Colors.white,
 
       body: SafeArea(
@@ -35,15 +28,12 @@ class _LoginPageState extends State<LoginPage> {
 
           child: Column(
             children: [
-<<<<<<< HEAD
-
-              const SizedBox(height: 55),
-
-=======
->>>>>>> 3fb873973f3745d9e979e3e0c451a74fc9873b24
               const SizedBox(height: 60),
 
-              Image.asset('lib/assets/mybhakti1.png', height: 120),
+              Image.asset(
+                'lib/assets/mybhakti1.png',
+                height: 120,
+              ),
 
               const SizedBox(height: 50),
 
@@ -55,7 +45,10 @@ class _LoginPageState extends State<LoginPage> {
 
                   children: [
                     /// USERNAME
-                    const Text("Username", style: TextStyle(fontSize: 14)),
+                    const Text(
+                      "Username",
+                      style: TextStyle(fontSize: 14),
+                    ),
 
                     const SizedBox(height: 8),
 
@@ -69,136 +62,18 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
 
-                        prefixIcon: const Icon(Icons.person_outline),
+                        prefixIcon:
+                            const Icon(Icons.person_outline),
                       ),
                     ),
 
                     const SizedBox(height: 20),
 
-<<<<<<< HEAD
-              const SizedBox(height: 45),
-
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Login',
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xff111827),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 6),
-
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Masuk untuk melanjutkan ke aplikasi',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Color(0xff8C96A8),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Username',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Enter Username',
-                  prefixIcon: const Icon(Icons.person_outline),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: Color(0xffE6EAF0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: Color(0xffE6EAF0)),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Password',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: 'Enter Password',
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: const Icon(Icons.visibility_off),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: Color(0xffE6EAF0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: Color(0xffE6EAF0)),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              const Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  'Lupa Password?',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xff8C96A8),
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomePage(),
-
-=======
                     /// PASSWORD
->>>>>>> 3fb873973f3745d9e979e3e0c451a74fc9873b24
-                    const Text("Password", style: TextStyle(fontSize: 14)),
+                    const Text(
+                      "Password",
+                      style: TextStyle(fontSize: 14),
+                    ),
 
                     const SizedBox(height: 8),
 
@@ -213,7 +88,8 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
 
-                        prefixIcon: const Icon(Icons.lock_outline),
+                        prefixIcon:
+                            const Icon(Icons.lock_outline),
 
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -224,26 +100,13 @@ class _LoginPageState extends State<LoginPage> {
 
                           onPressed: () {
                             setState(() {
-                              isPasswordHidden = !isPasswordHidden;
+                              isPasswordHidden =
+                                  !isPasswordHidden;
                             });
                           },
                         ),
                       ),
                     ),
-<<<<<<< HEAD
-
-                  ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-
-=======
->>>>>>> 3fb873973f3745d9e979e3e0c451a74fc9873b24
 
                     const SizedBox(height: 10),
 
@@ -256,7 +119,8 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
-                          decoration: TextDecoration.underline,
+                          decoration:
+                              TextDecoration.underline,
                         ),
                       ),
                     ),
@@ -269,39 +133,55 @@ class _LoginPageState extends State<LoginPage> {
 
                       child: ElevatedButton(
                         onPressed: () {
-                          String username = usernameController.text;
+                          String username =
+                              usernameController.text;
 
-                          String password = passwordController.text;
+                          String password =
+                              passwordController.text;
 
-                          if (username == "admin" && password == "admin") {
+                          if (username == "admin" &&
+                              password == "admin") {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => HomeView(username: username),
+                                builder: (_) => HomeView(
+                                  username: username,
+                                ),
                               ),
                             );
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(
                               const SnackBar(
-                                content: Text("Username atau Password salah"),
+                                content: Text(
+                                  "Username atau Password salah",
+                                ),
                               ),
                             );
                           }
                         },
 
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFB1121B),
+                          backgroundColor:
+                              const Color(0xFFB1121B),
 
-                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          padding:
+                              const EdgeInsets.symmetric(
+                            vertical: 14,
+                          ),
 
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
+                            borderRadius:
+                                BorderRadius.circular(25),
                           ),
                         ),
 
                         child: const Text(
                           "Login",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),

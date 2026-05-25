@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:app_mybhakti/pages/presensi_data.dart';
 
 class PresensiPage extends StatefulWidget {
   const PresensiPage({super.key});
@@ -15,15 +17,94 @@ class PresensiPage extends StatefulWidget {
 
 class _PresensiPageState
     extends State<PresensiPage> {
+  // ================= LOCATION =================
+
   LatLng currentPosition =
       const LatLng(-6.973316, 107.630478);
 
+  // ================= SELFIE =================
+
   File? selfieImage;
+
+  // ================= MODE =================
+
+  String? selectedMode;
+
+  // ================= JAM =================
+
+  DateTime now = DateTime.now();
+
+  Timer? timer;
 
   @override
   void initState() {
     super.initState();
+
     getLocation();
+
+    timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        setState(() {
+          now = DateTime.now();
+        });
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  // ================= FORMAT JAM =================
+
+  String formatTime(DateTime time) {
+    String hour =
+        time.hour.toString().padLeft(2, '0');
+
+    String minute =
+        time.minute.toString().padLeft(2, '0');
+
+    return "$hour:$minute WIB";
+  }
+
+  // ================= FORMAT TANGGAL =================
+
+  String formatDate(DateTime date) {
+    List<String> hari = [
+      "Senin",
+      "Selasa",
+      "Rabu",
+      "Kamis",
+      "Jumat",
+      "Sabtu",
+      "Minggu",
+    ];
+
+    List<String> bulan = [
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ];
+
+    String namaHari =
+        hari[date.weekday - 1];
+
+    String namaBulan =
+        bulan[date.month - 1];
+
+    return "$namaHari, ${date.day} $namaBulan ${date.year}";
   }
 
   // ================= LOCATION =================
@@ -232,8 +313,8 @@ class _PresensiPageState
                                 CrossAxisAlignment
                                     .start,
 
-                            children: const [
-                              Text(
+                            children: [
+                              const Text(
                                 "Check In",
 
                                 style: TextStyle(
@@ -244,12 +325,15 @@ class _PresensiPageState
                                 ),
                               ),
 
-                              SizedBox(height: 2),
+                              const SizedBox(
+                                height: 2,
+                              ),
 
                               Text(
-                                "Jumat, 10 April 2026",
+                                formatDate(now),
 
-                                style: TextStyle(
+                                style:
+                                    const TextStyle(
                                   color:
                                       Colors.grey,
 
@@ -259,10 +343,10 @@ class _PresensiPageState
                             ],
                           ),
 
-                          const Text(
-                            "09.00",
+                          Text(
+                            formatTime(now),
 
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 15,
                               fontWeight:
                                   FontWeight
@@ -467,59 +551,106 @@ class _PresensiPageState
 
                       const SizedBox(height: 14),
 
-                      // ================= BUTTON =================
+                      // ================= MODE PRESENSI =================
+
+                      const Text(
+                        "MODE PRESENSI",
+
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 11,
+                        ),
+                      ),
+
+                      const SizedBox(height: 10),
 
                       Row(
                         children: [
                           Expanded(
-                            child: Container(
-                              height: 55,
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedMode =
+                                      "WFO";
+                                });
+                              },
 
-                              decoration:
-                                  BoxDecoration(
-                                color:
-                                    const Color(
-                                  0xffC30D19,
-                                ),
+                              child: Container(
+                                height: 55,
 
-                                borderRadius:
-                                    BorderRadius.circular(
-                                  14,
-                                ),
-                              ),
-
-                              child: const Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment
-                                        .center,
-
-                                children: [
-                                  Icon(
-                                    Icons.home,
-                                    color: Colors
-                                        .white,
-                                    size: 18,
-                                  ),
-
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-
-                                  Text(
-                                    "WFO",
-
-                                    style:
-                                        TextStyle(
-                                      color:
-                                          Colors
+                                decoration:
+                                    BoxDecoration(
+                                  color:
+                                      selectedMode ==
+                                              "WFO"
+                                          ? const Color(
+                                            0xffC30D19,
+                                          )
+                                          : Colors
                                               .white,
 
-                                      fontWeight:
-                                          FontWeight
-                                              .w600,
-                                    ),
+                                  borderRadius:
+                                      BorderRadius.circular(
+                                        14,
+                                      ),
+
+                                  border: Border.all(
+                                    color:
+                                        selectedMode ==
+                                                "WFO"
+                                            ? const Color(
+                                              0xffC30D19,
+                                            )
+                                            : Colors
+                                                .grey
+                                                .shade300,
                                   ),
-                                ],
+                                ),
+
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .center,
+
+                                  children: [
+                                    Icon(
+                                      Icons.home,
+                                      color:
+                                          selectedMode ==
+                                                  "WFO"
+                                              ? Colors
+                                                  .white
+                                              : Colors
+                                                  .grey
+                                                  .shade700,
+
+                                      size: 18,
+                                    ),
+
+                                    const SizedBox(
+                                      height: 4,
+                                    ),
+
+                                    Text(
+                                      "WFO",
+
+                                      style:
+                                          TextStyle(
+                                        color:
+                                            selectedMode ==
+                                                    "WFO"
+                                                ? Colors
+                                                    .white
+                                                : Colors
+                                                    .grey,
+
+                                        fontWeight:
+                                            FontWeight
+                                                .w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -527,61 +658,92 @@ class _PresensiPageState
                           const SizedBox(width: 14),
 
                           Expanded(
-                            child: Container(
-                              height: 55,
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedMode =
+                                      "DINAS / WFA";
+                                });
+                              },
 
-                              decoration:
-                                  BoxDecoration(
-                                color:
-                                    Colors.white,
+                              child: Container(
+                                height: 55,
 
-                                borderRadius:
-                                    BorderRadius.circular(
-                                  14,
+                                decoration:
+                                    BoxDecoration(
+                                  color:
+                                      selectedMode ==
+                                              "DINAS / WFA"
+                                          ? const Color(
+                                            0xffC30D19,
+                                          )
+                                          : Colors
+                                              .white,
+
+                                  borderRadius:
+                                      BorderRadius.circular(
+                                        14,
+                                      ),
+
+                                  border: Border.all(
+                                    color:
+                                        selectedMode ==
+                                                "DINAS / WFA"
+                                            ? const Color(
+                                              0xffC30D19,
+                                            )
+                                            : Colors
+                                                .grey
+                                                .shade300,
+                                  ),
                                 ),
 
-                                border: Border.all(
-                                  color: Colors
-                                      .grey
-                                      .shade300,
-                                ),
-                              ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .center,
 
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment
-                                        .center,
+                                  children: [
+                                    Icon(
+                                      Icons.work,
+                                      color:
+                                          selectedMode ==
+                                                  "DINAS / WFA"
+                                              ? Colors
+                                                  .white
+                                              : Colors
+                                                  .grey
+                                                  .shade700,
 
-                                children: [
-                                  Icon(
-                                    Icons.work,
-                                    color: Colors
-                                        .grey
-                                        .shade700,
-
-                                    size: 18,
-                                  ),
-
-                                  const SizedBox(
-                                    height: 4,
-                                  ),
-
-                                  Text(
-                                    "DINAS / WFA",
-
-                                    style:
-                                        TextStyle(
-                                      color: Colors
-                                          .grey,
-
-                                      fontWeight:
-                                          FontWeight
-                                              .w500,
-
-                                      fontSize: 11,
+                                      size: 18,
                                     ),
-                                  ),
-                                ],
+
+                                    const SizedBox(
+                                      height: 4,
+                                    ),
+
+                                    Text(
+                                      "DINAS / WFA",
+
+                                      style:
+                                          TextStyle(
+                                        color:
+                                            selectedMode ==
+                                                    "DINAS / WFA"
+                                                ? Colors
+                                                    .white
+                                                : Colors
+                                                    .grey,
+
+                                        fontWeight:
+                                            FontWeight
+                                                .w500,
+
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -676,6 +838,110 @@ class _PresensiPageState
                                         ),
                                       ],
                                     ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 25),
+
+                      // ================= BUTTON CHECK IN =================
+
+                      SizedBox(
+                        width: double.infinity,
+                        height: 55,
+
+                        child: ElevatedButton(
+                          style:
+                              ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color(
+                              0xffB1121B,
+                            ),
+
+                            shape:
+                                RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(
+                                14,
+                              ),
+                            ),
+                          ),
+
+                          onPressed: () {
+                            if (selectedMode ==
+                                null) {
+                              ScaffoldMessenger.of(
+                                context,
+                              ).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Pilih mode presensi dulu",
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+
+                            if (selfieImage ==
+                                null) {
+                              ScaffoldMessenger.of(
+                                context,
+                              ).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Selfie wajib diisi",
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+
+                            final now =
+                                DateTime.now();
+
+                            String jam =
+                                "${now.hour.toString().padLeft(2, '0')}:"
+                                "${now.minute.toString().padLeft(2, '0')}";
+
+                            String tanggal =
+                                "${now.day}/${now.month}/${now.year}";
+
+                            PresensiData
+                                .riwayat
+                                .insert(0, {
+                              "tanggal":
+                                  tanggal,
+                              "jam": jam,
+                              "status":
+                                  "Hadir",
+                              "mode":
+                                  selectedMode,
+                            });
+
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "Presensi berhasil",
+                                ),
+                              ),
+                            );
+
+                            Navigator.pop(
+                              context,
+                            );
+                          },
+
+                          child: const Text(
+                            "Check In",
+
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight:
+                                  FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                     ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:app_mybhakti/pages/project_dummy.dart';
+import 'package:app_mybhakti/pages/addproject1.dart';
 
 class ProjectPage extends StatefulWidget {
   final String username;
@@ -63,7 +64,14 @@ class _ProjectPageState extends State<ProjectPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xffC1121F),
 
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => AddProjectPage(username: widget.username),
+            ),
+          );
+        },
 
         child: const Icon(Icons.add, color: Colors.white),
       ),
@@ -483,11 +491,10 @@ class _ProjectPageState extends State<ProjectPage> {
               GestureDetector(
                 onTap: () {
                   Share.share("""
-
-Project : ${project["title"]}
-Client  : ${project["client"]}
-Status  : ${project["status"]}
-""");
+                    Project : ${project["title"]}
+                    Client  : ${project["client"]}
+                    Status  : ${project["status"]}
+                  """);
                 },
 
                 child: actionButton(Icons.share_outlined),
