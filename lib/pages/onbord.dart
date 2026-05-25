@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-import 'package:app_mybhakti/pages/login.dart';
-import 'package:flutter/material.dart';
-=======
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:app_mybhakti/pages/login.dart';
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
 
 // ─────────────────────────────────────────────
 // Onboarding 1 – Splash / Logo screen
@@ -13,24 +8,6 @@ import 'package:app_mybhakti/pages/login.dart';
 // ─────────────────────────────────────────────
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
-<<<<<<< HEAD
-  @override
-  OnboardingState createState() => OnboardingState();
-}
-
-class OnboardingState extends State<Onboarding> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          constraints: const BoxConstraints.expand(),
-          color: const Color(0xFFB1121B),
-          child: Center(
-            child: Image.asset('lib/assets/mybhakti1.png', height: 70),
-          ),
-        ),
-=======
 
   @override
   State<Onboarding> createState() => OnboardingState();
@@ -131,7 +108,6 @@ class OnboardingState extends State<Onboarding>
             },
           ),
         ],
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
       ),
     );
   }
@@ -149,19 +125,6 @@ class Onboarding2 extends StatefulWidget {
 
 class Onboarding2State extends State<Onboarding2> {
   @override
-<<<<<<< HEAD
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          constraints: const BoxConstraints.expand(),
-          child: Image.asset(
-            'lib/assets/onboarding2_bg.png',
-            fit: BoxFit.fill,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-=======
   void initState() {
     super.initState();
 
@@ -181,7 +144,6 @@ class Onboarding2State extends State<Onboarding2> {
         height: double.infinity,
         child: Center(
           child: Image.asset('lib/assets/mybhakti2.png', height: 70),
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
         ),
       ),
     );
@@ -194,31 +156,13 @@ class Onboarding2State extends State<Onboarding2> {
 // ─────────────────────────────────────────────
 class Onboarding3 extends StatefulWidget {
   const Onboarding3({super.key});
-<<<<<<< HEAD
-  @override
-  Onboarding3State createState() => Onboarding3State();
-=======
 
   @override
   State<Onboarding3> createState() => Onboarding3State();
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
 }
 
 class Onboarding3State extends State<Onboarding3> {
   @override
-<<<<<<< HEAD
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          constraints: const BoxConstraints.expand(),
-          color: const Color(0xFFB1121B),
-          child: Image.asset(
-            'lib/assets/onboarding3_illustration.png',
-            fit: BoxFit.fill,
-            width: double.infinity,
-          ),
-=======
   void initState() {
     super.initState();
 
@@ -278,7 +222,6 @@ class Onboarding3State extends State<Onboarding3> {
               ],
             );
           },
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
         ),
       ),
     );
@@ -297,11 +240,6 @@ class Onboarding4 extends StatefulWidget {
 }
 
 class Onboarding4State extends State<Onboarding4> {
-<<<<<<< HEAD
-  get g => null;
-
-=======
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -312,11 +250,7 @@ class Onboarding4State extends State<Onboarding4> {
             alignment: Alignment.topCenter,
             children: [
               Positioned(
-<<<<<<< HEAD
-                top: 120,
-=======
                 top: 250,
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
                 child: SizedBox(
                   width: 300,
                   child: Image.asset(
@@ -326,35 +260,22 @@ class Onboarding4State extends State<Onboarding4> {
                 ),
               ),
               Positioned(
-<<<<<<< HEAD
-                top: 120,
-=======
                 top: 200,
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
                 child: SizedBox(
                   width: 300,
                   child: Image.asset('lib/assets/on1.png', fit: BoxFit.contain),
                 ),
               ),
               SingleChildScrollView(
-<<<<<<< HEAD
-                padding: const EdgeInsets.only(top: 98),
-=======
                 padding: const EdgeInsets.only(top: 112),
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
                 child: Column(
                   children: [
                     // Logo
                     Container(
                       margin: const EdgeInsets.only(bottom: 38),
                       child: Image.asset(
-<<<<<<< HEAD
-                        'lib/assets/mybhakti1.png',
-                        height: 70,
-=======
                         'lib/assets/mybhakti2.png',
                         height: 40,
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
                       ),
                     ),
 
@@ -391,28 +312,6 @@ class Onboarding4State extends State<Onboarding4> {
                         ),
                       ),
                     ),
-
-<<<<<<< HEAD
-                    // Illustration
-                    Container(
-                      height: 464,
-                      width: double.infinity,
-                      child: Image.asset(
-                        'lib/assets/onboarding4_char.png',
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-
-                    // Welcome text
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 81),
-                      child: const Text(
-                        "WELCOME to MyBhakti",
-                        style: TextStyle(
-                          color: Color(0xFF000000),
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-=======
                     // Welcome text
                     Container(
                       margin: const EdgeInsets.only(bottom: 60),
@@ -425,20 +324,14 @@ class Onboarding4State extends State<Onboarding4> {
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
                         ),
                       ),
                     ),
 
                     // Dots + Next arrow
-<<<<<<< HEAD
-                    _buildBottomNav(
-                      activeDot: 0,
-=======
                     buildBottomNav(
                       context: context,
                       activeIndex: 0,
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
                       onNext: () {
                         Navigator.push(
                           context,
@@ -477,80 +370,6 @@ class Onboarding5State extends State<Onboarding5> {
       body: SafeArea(
         child: Container(
           constraints: const BoxConstraints.expand(),
-<<<<<<< HEAD
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('lib/assets/onboarding5_bg.png'),
-              fit: BoxFit.fill,
-            ),
-          ),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.only(top: 98),
-            child: Column(
-              children: [
-                // Logo
-                Container(
-                  margin: const EdgeInsets.only(bottom: 38),
-                  child: Image.asset('lib/assets/mybhakti1.png', height: 70),
-                ),
-
-                // Skip button – top right
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => const LoginPage()),
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(15),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: const Color(0xFF9E9E9E),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 4,
-                        horizontal: 18,
-                      ),
-                      margin: const EdgeInsets.only(right: 42, bottom: 121),
-                      child: const Text(
-                        "Skip",
-                        style: TextStyle(
-                          color: Color(0xFFFFFFFF),
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Illustration
-                Container(
-                  height: 448,
-                  width: double.infinity,
-                  child: Image.asset(
-                    'lib/assets/onboarding5_char.png',
-                    fit: BoxFit.fill,
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Dots + Next arrow
-                _buildBottomNav(
-                  activeDot: 1,
-                  onNext: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => const LoginPage()),
-                    );
-                  },
-                ),
-              ],
-            ),
-=======
           child: Stack(
             alignment: Alignment.topCenter,
             children: [
@@ -791,7 +610,6 @@ class Onboarding6State extends State<Onboarding6> {
                 ),
               ),
             ],
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
           ),
         ),
       ),
@@ -802,58 +620,18 @@ class Onboarding6State extends State<Onboarding6> {
 // ─────────────────────────────────────────────
 // Shared bottom navigation: dots + next arrow
 // activeDot: 0 = first dot active, 1 = second, 2 = third
-// ─────────────────────────────────────────────
-<<<<<<< HEAD
-Widget _buildBottomNav({required int activeDot, required VoidCallback onNext}) {
-=======
+// ────────────────────────────────────────────
+
 Widget buildBottomNav({
   required BuildContext context,
   required int activeIndex,
   required VoidCallback onNext,
 }) {
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
   const Color activeColor = Color(0xFF9E9E9E);
   const Color inactiveColor = Color(0xFFD9D9D9);
   const int totalDots = 3;
 
   return Container(
-<<<<<<< HEAD
-    margin: const EdgeInsets.only(bottom: 62, left: 48, right: 48),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Left spacer (placeholder for back button if needed)
-        const SizedBox(width: 55, height: 55),
-
-        // Page indicator dots
-        Row(
-          children: List.generate(totalDots, (index) {
-            final bool isActive = index == activeDot;
-            return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: isActive ? activeColor : inactiveColor,
-              ),
-              margin: index < totalDots - 1
-                  ? const EdgeInsets.only(right: 8)
-                  : EdgeInsets.zero,
-              width: 26,
-              height: 5,
-            );
-          }),
-        ),
-
-        // Next arrow button
-        SizedBox(
-          width: 55,
-          height: 55,
-          child: InkWell(
-            onTap: onNext,
-            borderRadius: BorderRadius.circular(15),
-            child: Image.asset(
-              'lib/assets/onboarding_next_arrow.png',
-              fit: BoxFit.fill,
-=======
     margin: const EdgeInsets.only(bottom: 40, right: 40, top: 20),
     child: Stack(
       alignment: Alignment.center,
@@ -920,7 +698,6 @@ Widget buildBottomNav({
                 color: Colors.white,
                 size: 18,
               ),
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
             ),
           ),
         ),
@@ -928,8 +705,6 @@ Widget buildBottomNav({
     ),
   );
 }
-<<<<<<< HEAD
-=======
 
 //efek MeltClipper
 class MeltClipper extends CustomClipper<Path> {
@@ -981,4 +756,3 @@ class MeltClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
->>>>>>> 218de983ed5e04b01266bb6881744675af8d9e95
