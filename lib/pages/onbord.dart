@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:app_mybhakti/pages/login.dart';
@@ -290,6 +291,7 @@ class Onboarding4State extends State<Onboarding4> {
                         ),
                       ),
                     ),
+                    // Welcome text
                     Container(
                       margin: const EdgeInsets.only(bottom: 60),
                       child: const Padding(
@@ -304,6 +306,8 @@ class Onboarding4State extends State<Onboarding4> {
                         ),
                       ),
                     ),
+
+                    // Dots + Next arrow
                     buildBottomNav(
                       context: context,
                       activeIndex: 0,
@@ -571,6 +575,11 @@ class Onboarding6State extends State<Onboarding6> {
     );
   }
 }
+
+// ─────────────────────────────────────────────
+// Shared bottom navigation: dots + next arrow
+// activeDot: 0 = first dot active, 1 = second, 2 = third
+// ────────────────────────────────────────────
 
 Widget buildBottomNav({
   required BuildContext context,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
+import 'package:app_mybhakti/pages/home.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -48,15 +50,18 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffF8F9FB),
+      backgroundColor: Colors.white,
+
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 28),
+
           child: Column(
             children: [
               const SizedBox(height: 55),
+              const SizedBox(height: 60),
 
               Image.asset('lib/assets/mybhakti1.png', height: 160),
-
               const SizedBox(height: 45),
 
               const Align(
@@ -199,6 +204,131 @@ class _LoginPageState extends State<LoginPage> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
+              const SizedBox(height: 50),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30),
+
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+
+                  children: [
+                    /// USERNAME
+                    const Text("Username", style: TextStyle(fontSize: 14)),
+
+                    const SizedBox(height: 8),
+
+                    TextField(
+                      controller: usernameController,
+
+                      decoration: InputDecoration(
+                        hintText: "Enter Username",
+
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+
+                        prefixIcon: const Icon(Icons.person_outline),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    /// PASSWORD
+                    const Text("Password", style: TextStyle(fontSize: 14)),
+
+                    const SizedBox(height: 8),
+
+                    TextField(
+                      controller: passwordController,
+                      obscureText: isPasswordHidden,
+
+                      decoration: InputDecoration(
+                        hintText: "Enter Password",
+
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+
+                        prefixIcon: const Icon(Icons.lock_outline),
+
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            isPasswordHidden
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+
+                          onPressed: () {
+                            setState(() {
+                              isPasswordHidden = !isPasswordHidden;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    /// LUPA PASSWORD
+                    const Align(
+                      alignment: Alignment.centerRight,
+
+                      child: Text(
+                        "Lupa Password?",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    /// BUTTON LOGIN
+                    SizedBox(
+                      width: double.infinity,
+
+                      child: ElevatedButton(
+                        onPressed: () {
+                          String username = usernameController.text;
+
+                          String password = passwordController.text;
+
+                          if (username == "admin" && password == "admin") {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => HomeView(username: username),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Username atau Password salah"),
+                              ),
+                            );
+                          }
+                        },
+
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFB1121B),
+
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                        ),
+
+                        child: const Text(
+                          "Login",
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
