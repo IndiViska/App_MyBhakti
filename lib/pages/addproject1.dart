@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app_mybhakti/pages/addproject2.dart';
+import 'addproject2.dart';
+import 'projectdraft.dart';
 
 class AddProjectPage extends StatefulWidget {
   final String username;
@@ -32,8 +33,12 @@ class _AddProjectPageState extends State<AddProjectPage> {
     "Eksternal",
   ];
 
+  /// ================= DRAFT =================
+  final ProjectDraft draft = ProjectDraft();
+
+  /// ================= NEXT PAGE =================
   void nextPage() {
-    // VALIDASI
+    /// VALIDASI
     if (selectedKategoriProyek == null ||
         selectedKategoriMarket == null ||
         judulController.text.isEmpty ||
@@ -51,13 +56,27 @@ class _AddProjectPageState extends State<AddProjectPage> {
       return;
     }
 
-    // PINDAH PAGE
+    /// ================= SIMPAN KE DRAFT =================
+    draft.kategoriProyek = selectedKategoriProyek;
+    draft.kategoriMarket = selectedKategoriMarket;
+    draft.judul = judulController.text;
+    draft.deskripsi = deskripsiController.text;
+
+    /// ================= PINDAH PAGE =================
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => AddProjectPage2(username: widget.username),
+        builder: (_) =>
+            AddProjectPage2(username: widget.username, draft: draft),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    judulController.dispose();
+    deskripsiController.dispose();
+    super.dispose();
   }
 
   @override
@@ -93,13 +112,7 @@ class _AddProjectPageState extends State<AddProjectPage> {
 
                   child: IconButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              AddProjectPage2(username: widget.username),
-                        ),
-                      );
+                      Navigator.pop(context);
                     },
 
                     icon: const Icon(
@@ -232,13 +245,13 @@ class _AddProjectPageState extends State<AddProjectPage> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(20),
 
-                            child: LinearProgressIndicator(
+                            child: const LinearProgressIndicator(
                               value: 0.25,
                               minHeight: 6,
 
-                              backgroundColor: const Color(0xffE5E7EB),
+                              backgroundColor: Color(0xffE5E7EB),
 
-                              valueColor: const AlwaysStoppedAnimation(
+                              valueColor: AlwaysStoppedAnimation(
                                 Color(0xffC1121F),
                               ),
                             ),

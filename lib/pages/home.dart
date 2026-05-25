@@ -3,6 +3,7 @@ import 'package:app_mybhakti/pages/presensi_page.dart';
 import 'package:app_mybhakti/pages/laporan_kehadiran_page.dart';
 import 'package:app_mybhakti/pages/proyek.dart';
 import 'package:app_mybhakti/pages/opportunities_page.dart';
+import 'package:app_mybhakti/pages/aktivitas.dart';
 
 class HomeView extends StatefulWidget {
   final String username;
@@ -383,7 +384,7 @@ class _CustomNavbarState extends State<CustomNavbar> {
                     context: context,
                     icon: Icons.dashboard_customize_outlined,
                     label: "Activities",
-                    page: const PresensiPage(),
+                    page: const AktivitasPage(username: "admin"),
                     index: 1,
                   ),
                 ),
