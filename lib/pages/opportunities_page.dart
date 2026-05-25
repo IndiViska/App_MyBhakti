@@ -1,12 +1,22 @@
-// lib/pages/opportunities_page.dart
 import 'package:flutter/material.dart';
-import 'import_data_leads.dart'; // pastikan import ini sesuai struktur folder
+import 'import_data_leads.dart';
+import 'tambah_lead_baru.dart';
 
 class OpportunitiesScreen extends StatefulWidget {
-  OpportunitiesScreen({super.key});
+  const OpportunitiesScreen({super.key});
 
   @override
   State<OpportunitiesScreen> createState() => _OpportunitiesScreenState();
+}
+
+// Alias agar kalau di file lain memanggil OpportunitiesPage tetap aman.
+class OpportunitiesPage extends StatelessWidget {
+  const OpportunitiesPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const OpportunitiesScreen();
+  }
 }
 
 class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
@@ -14,6 +24,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
   int selectedFilter = 0;
 
   final List<String> topTabs = ['Semua Leads', 'Leads Saya (Tim)'];
+
   final List<String> filters = ['Semua', 'Deal', 'In Progress', 'No Deal'];
 
   final List<Map<String, dynamic>> leads = [
@@ -48,12 +59,31 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
 
   List<Map<String, dynamic>> get filteredLeads {
     if (selectedFilter == 0) return leads;
+
     final filter = filters[selectedFilter].toUpperCase();
-    return leads.where((item) => item['status'] == filter).toList();
+
+    return leads.where((item) {
+      return item['status'] == filter;
+    }).toList();
+  }
+
+  void goToTambahLeadBaru() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const TambahLeadBaruScreen()),
+    );
+  }
+
+  void goToImportData() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ImportDataLeadsScreen()),
+    );
   }
 
   Widget buildTopTab(String text, int index) {
-    bool active = selectedTopTab == index;
+    final bool active = selectedTopTab == index;
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -61,11 +91,11 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
         });
       },
       child: Container(
-        padding: EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: active ? Color(0xffB90F1A) : Colors.transparent,
+              color: active ? const Color(0xffB90F1A) : Colors.transparent,
               width: 2,
             ),
           ),
@@ -74,8 +104,8 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
           text,
           style: TextStyle(
             fontSize: 11,
-            fontWeight: active ? FontWeight.w600 : FontWeight.w500,
-            color: active ? Color(0xffB90F1A) : Color(0xff9AA3B2),
+            fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+            color: active ? const Color(0xffB90F1A) : const Color(0xff9AA3B2),
           ),
         ),
       ),
@@ -83,7 +113,8 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
   }
 
   Widget buildFilterChip(String text, int index) {
-    bool active = selectedFilter == index;
+    final bool active = selectedFilter == index;
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -91,18 +122,18 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
         });
       },
       child: Container(
-        margin: EdgeInsets.only(right: 10),
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+        margin: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
         decoration: BoxDecoration(
-          color: active ? Color(0xffB90F1A) : Colors.transparent,
+          color: active ? const Color(0xffB90F1A) : Colors.transparent,
           borderRadius: BorderRadius.circular(18),
         ),
         child: Text(
           text,
           style: TextStyle(
             fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: active ? Colors.white : Color(0xff8F98A8),
+            fontWeight: FontWeight.w700,
+            color: active ? Colors.white : const Color(0xff8F98A8),
           ),
         ),
       ),
@@ -111,7 +142,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
 
   Widget buildStatusBadge(String status, Color color) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
       decoration: BoxDecoration(
         color: color.withOpacity(0.10),
         borderRadius: BorderRadius.circular(5),
@@ -121,7 +152,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
         '• $status',
         style: TextStyle(
           fontSize: 9,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w800,
           color: color,
         ),
       ),
@@ -132,43 +163,47 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
     required IconData icon,
     required Color color,
     required Color bg,
+    required VoidCallback onTap,
   }) {
-    return Container(
-      width: 27,
-      height: 27,
-      margin: EdgeInsets.only(left: 7),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(8),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 27,
+        height: 27,
+        margin: const EdgeInsets.only(left: 7),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(icon, size: 15, color: color),
       ),
-      child: Icon(icon, size: 15, color: color),
     );
   }
 
   Widget buildLeadCard(Map<String, dynamic> lead) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      padding: EdgeInsets.all(11),
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(11),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(13),
-        border: Border.all(color: Color(0xffE6EAF0)),
+        border: Border.all(color: const Color(0xffE6EAF0)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.account_balance_outlined,
                 size: 12,
                 color: Color(0xff8C96A8),
               ),
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               Expanded(
                 child: Text(
                   lead['client'],
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 10,
                     color: Color(0xff748094),
                     fontWeight: FontWeight.w500,
@@ -177,59 +212,59 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                 decoration: BoxDecoration(
-                  color: Color(0xffEDF3F8),
+                  color: const Color(0xffEDF3F8),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Text(
                   lead['code'],
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 9,
                     color: Color(0xff66748A),
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 7),
+          const SizedBox(height: 7),
           Text(
             lead['title'],
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12,
               height: 1.25,
               color: Color(0xff1F2937),
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w800,
             ),
           ),
-          SizedBox(height: 9),
+          const SizedBox(height: 9),
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.calendar_today_outlined,
                 size: 12,
                 color: Color(0xff66748A),
               ),
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               Text(
                 lead['date'],
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 10,
                   color: Color(0xff66748A),
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              Spacer(),
-              Icon(
+              const Spacer(),
+              const Icon(
                 Icons.account_balance_outlined,
                 size: 12,
                 color: Color(0xff66748A),
               ),
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               Text(
                 lead['sales'],
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 10,
                   color: Color(0xff66748A),
                   fontWeight: FontWeight.w500,
@@ -237,33 +272,42 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
               ),
             ],
           ),
-          SizedBox(height: 9),
-          Divider(height: 1, color: Color(0xffE6EAF0)),
-          SizedBox(height: 9),
+          const SizedBox(height: 9),
+          const Divider(height: 1, color: Color(0xffE6EAF0)),
+          const SizedBox(height: 9),
           Row(
             children: [
               buildStatusBadge(lead['status'], lead['color']),
-              SizedBox(width: 8),
-              CircleAvatar(
+              const SizedBox(width: 8),
+              const CircleAvatar(
                 radius: 11,
                 backgroundColor: Colors.amber,
                 child: Icon(Icons.person, size: 13, color: Colors.white),
               ),
-              Spacer(),
+              const Spacer(),
               buildActionButton(
                 icon: Icons.arrow_outward_rounded,
-                color: Color(0xff00A7C8),
-                bg: Color(0xffEAFBFF),
+                color: const Color(0xff00A7C8),
+                bg: const Color(0xffEAFBFF),
+                onTap: goToTambahLeadBaru,
               ),
               buildActionButton(
                 icon: Icons.edit_outlined,
-                color: Color(0xff6B7280),
-                bg: Color(0xffF1F5F9),
+                color: const Color(0xff6B7280),
+                bg: const Color(0xffF1F5F9),
+                onTap: goToTambahLeadBaru,
               ),
               buildActionButton(
                 icon: Icons.delete_outline,
-                color: Color(0xffEF4444),
-                bg: Color(0xffFEECEC),
+                color: const Color(0xffEF4444),
+                bg: const Color(0xffFEECEC),
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Fitur hapus lead belum dibuat'),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -277,37 +321,31 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
     final data = filteredLeads;
 
     return Scaffold(
-      backgroundColor: Color(0xffF8F9FB),
+      backgroundColor: const Color(0xffF8F9FB),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigasi ke halaman ImportDataLeadsScreen
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ImportDataLeadsScreen()),
-          );
-        },
-        backgroundColor: Color(0xffB90F1A),
-        shape: CircleBorder(),
-        child: Icon(Icons.add, color: Colors.white),
+        onPressed: goToTambahLeadBaru,
+        backgroundColor: const Color(0xffB90F1A),
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
       body: SafeArea(
         child: Column(
           children: [
             Container(
               color: Colors.white,
-              padding: EdgeInsets.fromLTRB(14, 8, 14, 13),
+              padding: const EdgeInsets.fromLTRB(14, 8, 14, 13),
               child: Column(
                 children: [
                   Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back, size: 22),
+                        icon: const Icon(Icons.arrow_back, size: 22),
                         onPressed: () {
                           Navigator.pop(context);
                         },
                       ),
-                      SizedBox(width: 4),
-                      Expanded(
+                      const SizedBox(width: 4),
+                      const Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -331,32 +369,39 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                           ],
                         ),
                       ),
+                      IconButton(
+                        onPressed: goToImportData,
+                        icon: const Icon(
+                          Icons.upload_file_outlined,
+                          color: Color(0xffB90F1A),
+                        ),
+                      ),
                       Container(
                         width: 28,
                         height: 28,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          border: Border.all(color: Color(0xffE4A3A7)),
+                          border: Border.all(color: const Color(0xffE4A3A7)),
                           shape: BoxShape.circle,
                         ),
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             'A',
                             style: TextStyle(
                               color: Color(0xffB90F1A),
                               fontSize: 13,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   Row(
                     children: [
                       buildTopTab(topTabs[0], 0),
-                      SizedBox(width: 28),
+                      const SizedBox(width: 28),
                       buildTopTab(topTabs[1], 1),
                     ],
                   ),
@@ -365,51 +410,54 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
             ),
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.fromLTRB(14, 10, 14, 80),
+                padding: const EdgeInsets.fromLTRB(14, 10, 14, 80),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
-                        children: List.generate(
-                          filters.length,
-                          (index) => buildFilterChip(filters[index], index),
-                        ),
+                        children: List.generate(filters.length, (index) {
+                          return buildFilterChip(filters[index], index);
+                        }),
                       ),
                     ),
-                    SizedBox(height: 13),
+                    const SizedBox(height: 13),
                     TextField(
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                       decoration: InputDecoration(
                         hintText: 'Cari lead...',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontSize: 12,
                           color: Color(0xffA5ADBA),
                         ),
-                        prefixIcon: Icon(
+                        prefixIcon: const Icon(
                           Icons.search,
                           size: 20,
                           color: Color(0xff9AA3B2),
                         ),
                         filled: true,
                         fillColor: Colors.white,
-                        contentPadding: EdgeInsets.symmetric(vertical: 0),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 0),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(13),
-                          borderSide: BorderSide(color: Color(0xffE7EAF0)),
+                          borderSide: const BorderSide(
+                            color: Color(0xffE7EAF0),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(13),
-                          borderSide: BorderSide(color: Color(0xffB90F1A)),
+                          borderSide: const BorderSide(
+                            color: Color(0xffB90F1A),
+                          ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 13),
+                    const SizedBox(height: 13),
                     ListView.builder(
                       itemCount: data.length,
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return buildLeadCard(data[index]);
                       },

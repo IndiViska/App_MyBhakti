@@ -4,6 +4,7 @@ import 'package:app_mybhakti/pages/laporan_kehadiran_page.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:app_mybhakti/pages/pengajuan_cuti_page.dart';
 import 'package:app_mybhakti/pages/proyek.dart';
+import 'package:app_mybhakti/pages/opportunities_page.dart';
 
 class HomeView extends StatefulWidget {
   final String username;
@@ -12,6 +13,18 @@ class HomeView extends StatefulWidget {
 
   @override
   State<HomeView> createState() => _HomeViewState();
+}
+
+// Alias tambahan supaya kalau ada file lain memanggil HomePage(), tetap aman.
+class HomePage extends StatelessWidget {
+  final String username;
+
+  const HomePage({super.key, this.username = 'admin'});
+
+  @override
+  Widget build(BuildContext context) {
+    return HomeView(username: username);
+  }
 }
 
 class _HomeViewState extends State<HomeView> {
@@ -37,6 +50,13 @@ class _HomeViewState extends State<HomeView> {
     super.dispose();
   }
 
+  void goToLeads() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const OpportunitiesScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +67,6 @@ class _HomeViewState extends State<HomeView> {
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-
           children: [
             // ================= HEADER =================
             Row(
@@ -55,18 +74,15 @@ class _HomeViewState extends State<HomeView> {
                 Container(
                   width: 50,
                   height: 50,
-
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.grey.shade400),
                   ),
-
                   child: Center(
                     child: Text(
                       widget.username.isNotEmpty
                           ? widget.username[0].toUpperCase()
                           : "A",
-
                       style: const TextStyle(
                         color: Colors.red,
                         fontSize: 24,
@@ -80,7 +96,6 @@ class _HomeViewState extends State<HomeView> {
 
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-
                   children: [
                     const Text(
                       "Good Morning!",
@@ -89,7 +104,6 @@ class _HomeViewState extends State<HomeView> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                     Text(
                       widget.username,
                       style: const TextStyle(color: Colors.grey, fontSize: 16),
@@ -113,19 +127,15 @@ class _HomeViewState extends State<HomeView> {
             // ================= BANNER =================
             SizedBox(
               height: 185,
-
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: banners.length,
                 physics: const BouncingScrollPhysics(),
-
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 0),
-
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(22),
-
                       child: Image.asset(banners[index], fit: BoxFit.fill),
                     ),
                   );
@@ -143,29 +153,22 @@ class _HomeViewState extends State<HomeView> {
                   MaterialPageRoute(builder: (_) => const PresensiPage()),
                 );
               },
-
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
                   vertical: 18,
                 ),
-
                 decoration: BoxDecoration(
                   color: Colors.white,
-
                   borderRadius: BorderRadius.circular(20),
-
                   border: Border.all(color: Colors.grey.shade300),
                 ),
-
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
-
                   children: [
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-
                         children: [
                           Row(
                             children: [
@@ -174,9 +177,7 @@ class _HomeViewState extends State<HomeView> {
                                 color: Colors.orange.shade700,
                                 size: 22,
                               ),
-
                               const SizedBox(width: 6),
-
                               const Text(
                                 "Presensi",
                                 style: TextStyle(
@@ -212,20 +213,18 @@ class _HomeViewState extends State<HomeView> {
 
                     Padding(
                       padding: const EdgeInsets.only(right: 25, top: 4),
-
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-
-                        children: [
-                          const Icon(
+                        children: const [
+                          Icon(
                             Icons.login_rounded,
                             color: Colors.red,
                             size: 46,
                           ),
 
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
 
-                          const Text(
+                          Text(
                             "Check-In",
                             style: TextStyle(
                               fontSize: 16,
@@ -246,13 +245,10 @@ class _HomeViewState extends State<HomeView> {
             GridView.count(
               crossAxisCount: 3,
               shrinkWrap: true,
-
               physics: const NeverScrollableScrollPhysics(),
-
               mainAxisSpacing: 0,
               crossAxisSpacing: 10,
               childAspectRatio: 0.95,
-
               children: [
                 // LAPORAN
                 GestureDetector(
@@ -262,7 +258,6 @@ class _HomeViewState extends State<HomeView> {
                       MaterialPageRoute(builder: (_) => LaporanKehadiranPage()),
                     );
                   },
-
                   child: const MenuItem(
                     image: "lib/assets/Laporan.png",
                     title: "Laporan\nKehadiran",
@@ -270,7 +265,13 @@ class _HomeViewState extends State<HomeView> {
                 ),
 
                 // LEADS
-                const MenuItem(image: "lib/assets/Leads.png", title: "Leads"),
+                GestureDetector(
+                  onTap: goToLeads,
+                  child: const MenuItem(
+                    image: "lib/assets/Leads.png",
+                    title: "Leads",
+                  ),
+                ),
 
                 // PROYEK
                 GestureDetector(
@@ -282,7 +283,6 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     );
                   },
-
                   child: const MenuItem(
                     image: "lib/assets/Proyek.png",
                     title: "Proyek",
@@ -349,19 +349,15 @@ class _CustomNavbarState extends State<CustomNavbar> {
     return Container(
       height: 90,
       color: Colors.white,
-
       child: Stack(
         clipBehavior: Clip.none,
-
         children: [
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
-
             child: Container(
               height: 65,
-
               decoration: const BoxDecoration(color: Color(0xffB1121B)),
             ),
           ),
@@ -370,28 +366,23 @@ class _CustomNavbarState extends State<CustomNavbar> {
           Positioned(
             top: -5,
             left: 25,
-
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (_) => HomeView(username: widget.username),
                   ),
                 );
               },
-
               child: Container(
                 width: 70,
                 height: 70,
-
                 decoration: BoxDecoration(
                   color: Colors.grey,
                   shape: BoxShape.circle,
-
                   border: Border.all(color: Colors.white, width: 6),
                 ),
-
                 child: const Icon(Icons.home, color: Colors.white, size: 35),
               ),
             ),
@@ -401,13 +392,11 @@ class _CustomNavbarState extends State<CustomNavbar> {
           Positioned.fill(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-
               children: [
                 const SizedBox(width: 60),
 
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
-
                   child: navItem(
                     context: context,
                     icon: Icons.dashboard_customize_outlined,
@@ -419,7 +408,6 @@ class _CustomNavbarState extends State<CustomNavbar> {
 
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
-
                   child: navItem(
                     context: context,
                     icon: Icons.notifications,
@@ -431,14 +419,11 @@ class _CustomNavbarState extends State<CustomNavbar> {
 
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
-
                   child: navItem(
                     context: context,
                     icon: Icons.person,
                     label: "Profile",
-
                     page: HomeView(username: widget.username),
-
                     index: 3,
                   ),
                 ),
@@ -449,10 +434,8 @@ class _CustomNavbarState extends State<CustomNavbar> {
           const Positioned(
             left: 42,
             bottom: 8,
-
             child: Text(
               "Home",
-
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 13,
@@ -480,10 +463,8 @@ class _CustomNavbarState extends State<CustomNavbar> {
 
         Navigator.push(context, MaterialPageRoute(builder: (_) => page));
       },
-
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-
         children: [
           Icon(icon, color: Colors.white, size: 32),
 
@@ -491,7 +472,6 @@ class _CustomNavbarState extends State<CustomNavbar> {
 
           Text(
             label,
-
             style: const TextStyle(color: Colors.white, fontSize: 12),
           ),
         ],
@@ -519,7 +499,6 @@ class MenuItem extends StatelessWidget {
         Text(
           title,
           textAlign: TextAlign.center,
-
           style: const TextStyle(
             fontSize: 16,
             color: Color(0xff2D4A76),
