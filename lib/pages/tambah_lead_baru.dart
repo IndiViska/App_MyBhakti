@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'tambah_lead_step2.dart';
 
 class TambahLeadBaruScreen extends StatefulWidget {
-  TambahLeadBaruScreen({super.key});
+  const TambahLeadBaruScreen({super.key});
 
   @override
   State<TambahLeadBaruScreen> createState() => _TambahLeadBaruScreenState();
@@ -10,6 +10,7 @@ class TambahLeadBaruScreen extends StatefulWidget {
 
 class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
   final TextEditingController judulController = TextEditingController();
+
   String? kategoriValue;
   String? sumberValue;
   String? marketValue;
@@ -19,25 +20,101 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
     'Kategori B',
     'Kategori C',
   ];
+
   final List<String> sumberOptions = ['Sumber 1', 'Sumber 2', 'Sumber 3'];
+
   final List<String> marketOptions = ['Market 1', 'Market 2', 'Market 3'];
 
   @override
+  void dispose() {
+    judulController.dispose();
+    super.dispose();
+  }
+
+  void showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: const Color(0xFFB91C21),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void goToStep2() {
+    if (judulController.text.trim().isEmpty) {
+      showMessage('Judul Proyek / Lead wajib diisi');
+      return;
+    }
+
+    if (kategoriValue == null || sumberValue == null || marketValue == null) {
+      showMessage('Lengkapi semua data terlebih dahulu');
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const TambahLeadStep2Screen()),
+    );
+  }
+
+  Widget buildDropdown({
+    required String label,
+    required String? value,
+    required List<String> items,
+    required Function(String?) onChanged,
+  }) {
+    return DropdownButtonFormField<String>(
+      value: value,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Color(0xFF6B7280), fontSize: 13),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 12,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Color(0xFFB91C21)),
+        ),
+      ),
+      hint: const Text('Select an option', style: TextStyle(fontSize: 13)),
+      items: items.map((item) {
+        return DropdownMenuItem<String>(
+          value: item,
+          child: Text(item, style: const TextStyle(fontSize: 13)),
+        );
+      }).toList(),
+      onChanged: onChanged,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    const Color primaryRed = Color(0xFFB91C21);
+
     return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FB),
       appBar: AppBar(
         titleSpacing: 0,
-        backgroundColor: Color(0xFFB91C21),
+        backgroundColor: primaryRed,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        title: Column(
+        title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Tambah Lead Baru",
+              'Tambah Lead Baru',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
@@ -46,7 +123,7 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
             ),
             SizedBox(height: 2),
             Text(
-              "Buat opportunity proyek baru",
+              'Buat opportunity proyek baru',
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 12,
@@ -55,62 +132,111 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
             ),
           ],
         ),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: CircleAvatar(
+              radius: 16,
+              backgroundColor: Colors.white,
+              child: Text(
+                'A',
+                style: TextStyle(
+                  color: primaryRed,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(
-              controller: judulController,
-              decoration: InputDecoration(labelText: 'Judul Proyek / Lead'),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFE5E7EB)),
+              ),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: judulController,
+                    decoration: InputDecoration(
+                      labelText: 'Judul Proyek / Lead',
+                      labelStyle: const TextStyle(
+                        color: Color(0xFF6B7280),
+                        fontSize: 13,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: primaryRed),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  buildDropdown(
+                    label: 'Kategori',
+                    value: kategoriValue,
+                    items: kategoriOptions,
+                    onChanged: (val) {
+                      setState(() {
+                        kategoriValue = val;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  buildDropdown(
+                    label: 'Sumber Opportunity',
+                    value: sumberValue,
+                    items: sumberOptions,
+                    onChanged: (val) {
+                      setState(() {
+                        sumberValue = val;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  buildDropdown(
+                    label: 'Market Category',
+                    value: marketValue,
+                    items: marketOptions,
+                    onChanged: (val) {
+                      setState(() {
+                        marketValue = val;
+                      });
+                    },
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              initialValue: kategoriValue,
-              decoration: InputDecoration(labelText: 'Kategori'),
-              items: kategoriOptions
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
-              onChanged: (val) => setState(() => kategoriValue = val),
-            ),
-            SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              initialValue: sumberValue,
-              decoration: InputDecoration(labelText: 'Sumber Opportunity'),
-              items: sumberOptions
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
-              onChanged: (val) => setState(() => sumberValue = val),
-            ),
-            SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              initialValue: marketValue,
-              decoration: InputDecoration(labelText: 'Market Category'),
-              items: marketOptions
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
-              onChanged: (val) => setState(() => marketValue = val),
-            ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
               height: 48,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TambahLeadStep2Screen(),
-                    ),
-                  );
-                },
+                onPressed: goToStep2,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFB91C21),
+                  backgroundColor: primaryRed,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(

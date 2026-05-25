@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'tambah_lead_baru.dart';
 
 class ImportDataLeadsScreen extends StatefulWidget {
-  ImportDataLeadsScreen({super.key});
+  const ImportDataLeadsScreen({super.key});
 
   @override
   State<ImportDataLeadsScreen> createState() => _ImportDataLeadsScreenState();
@@ -11,19 +11,36 @@ class ImportDataLeadsScreen extends StatefulWidget {
 class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
   String? selectedFileName;
 
+  void chooseFile() {
+    setState(() {
+      selectedFileName = 'sample_template.xlsx';
+    });
+  }
+
+  void goToTambahLeadBaru() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const TambahLeadBaruScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    const Color primaryRed = Color(0xFFB91C21);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFFB91C21),
+        backgroundColor: primaryRed,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back),
           color: Colors.white,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        title: Column(
+        title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -45,16 +62,16 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
             ),
           ],
         ),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 16),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 16),
             child: CircleAvatar(
               radius: 16,
               backgroundColor: Colors.white,
               child: Text(
                 'A',
                 style: TextStyle(
-                  color: Color(0xFFB91C21),
+                  color: primaryRed,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -64,23 +81,23 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Upload File Excel',
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.all(14),
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Color(0xFFD6D6D6)),
+                border: Border.all(color: const Color(0xFFD6D6D6)),
               ),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -101,7 +118,7 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
                   ),
                   SizedBox(height: 9),
                   Text(
-                    "Download template mulai dari baris ke-3. Kolom bertanda * wajib diisi. Lead nomor otomatis digenerate oleh sistem.",
+                    'Download template mulai dari baris ke-3. Kolom bertanda * wajib diisi. Lead nomor otomatis digenerate oleh sistem.',
                     style: TextStyle(
                       fontSize: 13,
                       color: Color(0xFF6F6F6F),
@@ -111,51 +128,53 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 18),
+            const SizedBox(height: 18),
             GestureDetector(
-              onTap: () =>
-                  setState(() => selectedFileName = 'sample_template.xlsx'),
+              onTap: chooseFile,
               child: Container(
                 width: double.infinity,
                 height: 44,
-                padding: EdgeInsets.symmetric(horizontal: 14),
+                padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(
-                  color: Color(0xFFF7F7F7),
+                  color: const Color(0xFFF7F7F7),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Color(0xFFD6D6D6), width: 1),
+                  border: Border.all(color: const Color(0xFFD6D6D6), width: 1),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.insert_drive_file_outlined,
-                          color: Color(0xFF828282),
-                          size: 18,
-                        ),
-                        SizedBox(width: 6),
-                        Text(
-                          selectedFileName ?? 'No file choose',
-                          style: TextStyle(
+                    Expanded(
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.insert_drive_file_outlined,
                             color: Color(0xFF828282),
-                            fontSize: 14,
+                            size: 18,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              selectedFileName ?? 'No file choose',
+                              style: const TextStyle(
+                                color: Color(0xFF828282),
+                                fontSize: 14,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     TextButton(
-                      onPressed: () => setState(
-                        () => selectedFileName = 'sample_template.xlsx',
-                      ),
+                      onPressed: chooseFile,
                       style: TextButton.styleFrom(
                         minimumSize: Size.zero,
                         padding: EdgeInsets.zero,
                       ),
-                      child: Text(
+                      child: const Text(
                         'Choose File',
                         style: TextStyle(
-                          color: Color(0xFFB91C21),
+                          color: primaryRed,
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                         ),
@@ -165,28 +184,22 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 18),
+            const SizedBox(height: 18),
             SizedBox(
               width: double.infinity,
               height: 48,
               child: ElevatedButton.icon(
-                icon: Icon(Icons.upload_file_outlined, size: 20),
+                icon: const Icon(Icons.upload_file_outlined, size: 20),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFB91C21),
+                  backgroundColor: primaryRed,
+                  foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
                   elevation: 0,
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TambahLeadBaruScreen(),
-                    ),
-                  );
-                },
-                label: Text(
+                onPressed: goToTambahLeadBaru,
+                label: const Text(
                   'Upload & Proses Import',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
