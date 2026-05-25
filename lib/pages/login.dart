@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:app_mybhakti/pages/home_page.dart';
+=======
+>>>>>>> 3fb873973f3745d9e979e3e0c451a74fc9873b24
 import 'package:app_mybhakti/pages/home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,18 +22,25 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< HEAD
       backgroundColor: const Color(0xffF8F9FB),
 
+=======
+>>>>>>> 3fb873973f3745d9e979e3e0c451a74fc9873b24
       backgroundColor: Colors.white,
 
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 28),
+
           child: Column(
             children: [
+<<<<<<< HEAD
 
               const SizedBox(height: 55),
 
+=======
+>>>>>>> 3fb873973f3745d9e979e3e0c451a74fc9873b24
               const SizedBox(height: 60),
 
               Image.asset('lib/assets/mybhakti1.png', height: 120),
@@ -44,6 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
 
                   children: [
+                    /// USERNAME
                     const Text("Username", style: TextStyle(fontSize: 14)),
 
                     const SizedBox(height: 8),
@@ -62,11 +73,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
 
-              Image.asset(
-                'lib/assets/mybhakti1.png',
-                height: 160,
-              ),
+                    const SizedBox(height: 20),
 
+<<<<<<< HEAD
               const SizedBox(height: 45),
 
               const Align(
@@ -186,6 +195,9 @@ class _LoginPageState extends State<LoginPage> {
                       MaterialPageRoute(
                         builder: (context) => HomePage(),
 
+=======
+                    /// PASSWORD
+>>>>>>> 3fb873973f3745d9e979e3e0c451a74fc9873b24
                     const Text("Password", style: TextStyle(fontSize: 14)),
 
                     const SizedBox(height: 8),
@@ -217,13 +229,8 @@ class _LoginPageState extends State<LoginPage> {
                           },
                         ),
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFB1121B),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
                     ),
+<<<<<<< HEAD
 
                   ),
                   child: const Text(
@@ -235,9 +242,12 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
+=======
+>>>>>>> 3fb873973f3745d9e979e3e0c451a74fc9873b24
 
                     const SizedBox(height: 10),
 
+                    /// LUPA PASSWORD
                     const Align(
                       alignment: Alignment.centerRight,
 
@@ -253,6 +263,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     const SizedBox(height: 30),
 
+                    /// BUTTON LOGIN
                     SizedBox(
                       width: double.infinity,
 
