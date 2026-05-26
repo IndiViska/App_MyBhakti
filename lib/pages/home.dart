@@ -224,37 +224,30 @@ class _HomeViewState extends State<HomeView> {
             const SizedBox(height: 25),
 
             // ================= BANNER =================
-            SizedBox(
-              height: 185,
+SizedBox(
+  height: 185,
+  child: PageView.builder(
+    controller: _pageController,
+    itemCount: banners.length,
+    physics: const BouncingScrollPhysics(),
 
-              child: PageView.builder(
-                controller: _pageController,
+    itemBuilder: (context, index) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6),
 
-                itemCount: banners.length,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(22),
 
-                physics:
-                    const BouncingScrollPhysics(),
-
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(
-                      horizontal: 0,
-                    ),
-
-                    child: ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(22),
-
-                      child: Image.asset(
-                        banners[index],
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+          child: Image.asset(
+            banners[index],
+            fit: BoxFit.cover, // jangan fill
+            filterQuality: FilterQuality.high, // biar lebih halus
+          ),
+        ),
+      );
+    },
+  ),
+),
 
             const SizedBox(height: 28),
 
