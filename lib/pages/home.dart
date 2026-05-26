@@ -7,8 +7,12 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:app_mybhakti/pages/pengajuan_cuti_page.dart';
 import 'package:app_mybhakti/pages/proyek.dart';
 import 'package:app_mybhakti/pages/opportunities_page.dart';
+<<<<<<< HEAD
+import 'package:app_mybhakti/pages/aktivitas.dart';
+=======
 import 'package:app_mybhakti/pages/schedule_page.dart';
 import 'package:app_mybhakti/pages/knowledge_page.dart';
+>>>>>>> caf2ba26208e1524be8e3475070ba2f8bdc68873
 
 class HomeView extends StatefulWidget {
   final String username;
@@ -646,7 +650,7 @@ class _CustomNavbarState
                     icon: Icons
                         .dashboard_customize_outlined,
                     label: "Activities",
-                    page: const PresensiPage(),
+                    page: const AktivitasPage(username: "admin"),
                     index: 1,
                   ),
                 ),
