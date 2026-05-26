@@ -7,9 +7,9 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:app_mybhakti/pages/pengajuan_cuti_page.dart';
 import 'package:app_mybhakti/pages/proyek.dart';
 import 'package:app_mybhakti/pages/opportunities_page.dart';
+import 'package:app_mybhakti/pages/aktivitas.dart';
 import 'package:app_mybhakti/pages/schedule_page.dart';
 import 'package:app_mybhakti/pages/knowledge_page.dart';
-import 'package:app_mybhakti/pages/aktivitas.dart';
 
 class HomeView extends StatefulWidget {
   final String username;
@@ -198,22 +198,23 @@ class _HomeViewState extends State<HomeView> {
             // ================= BANNER =================
             SizedBox(
               height: 185,
-
               child: PageView.builder(
                 controller: _pageController,
-
                 itemCount: banners.length,
-
                 physics: const BouncingScrollPhysics(),
 
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
 
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(22),
 
-                      child: Image.asset(banners[index], fit: BoxFit.fill),
+                      child: Image.asset(
+                        banners[index],
+                        fit: BoxFit.cover, // jangan fill
+                        filterQuality: FilterQuality.high, // biar lebih halus
+                      ),
                     ),
                   );
                 },
