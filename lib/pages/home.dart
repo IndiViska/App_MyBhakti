@@ -7,12 +7,9 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:app_mybhakti/pages/pengajuan_cuti_page.dart';
 import 'package:app_mybhakti/pages/proyek.dart';
 import 'package:app_mybhakti/pages/opportunities_page.dart';
-<<<<<<< HEAD
-import 'package:app_mybhakti/pages/aktivitas.dart';
-=======
 import 'package:app_mybhakti/pages/schedule_page.dart';
 import 'package:app_mybhakti/pages/knowledge_page.dart';
->>>>>>> caf2ba26208e1524be8e3475070ba2f8bdc68873
+import 'package:app_mybhakti/pages/aktivitas.dart';
 
 class HomeView extends StatefulWidget {
   final String username;
@@ -53,18 +50,14 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
 
-    _pageController =
-        PageController(viewportFraction: 0.95);
+    _pageController = PageController(viewportFraction: 0.95);
 
     // ================= UPDATE JAM =================
-    timer = Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        setState(() {
-          now = DateTime.now();
-        });
-      },
-    );
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        now = DateTime.now();
+      });
+    });
   }
 
   @override
@@ -77,11 +70,9 @@ class _HomeViewState extends State<HomeView> {
   // ================= FORMAT JAM =================
 
   String formatTime(DateTime time) {
-    String hour =
-        time.hour.toString().padLeft(2, '0');
+    String hour = time.hour.toString().padLeft(2, '0');
 
-    String minute =
-        time.minute.toString().padLeft(2, '0');
+    String minute = time.minute.toString().padLeft(2, '0');
 
     return "$hour:$minute WIB";
   }
@@ -114,11 +105,9 @@ class _HomeViewState extends State<HomeView> {
       "Desember",
     ];
 
-    String namaHari =
-        hari[date.weekday - 1];
+    String namaHari = hari[date.weekday - 1];
 
-    String namaBulan =
-        bulan[date.month - 1];
+    String namaBulan = bulan[date.month - 1];
 
     return "$namaHari, ${date.day} $namaBulan ${date.year}";
   }
@@ -126,10 +115,7 @@ class _HomeViewState extends State<HomeView> {
   void goToLeads() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) =>
-            const OpportunitiesScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const OpportunitiesScreen()),
     );
   }
 
@@ -138,15 +124,11 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      bottomNavigationBar:
-          CustomNavbar(username: widget.username),
+      bottomNavigationBar: CustomNavbar(username: widget.username),
 
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 10,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
 
           children: [
             // ================= HEADER =================
@@ -159,23 +141,19 @@ class _HomeViewState extends State<HomeView> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
 
-                    border: Border.all(
-                      color: Colors.grey.shade400,
-                    ),
+                    border: Border.all(color: Colors.grey.shade400),
                   ),
 
                   child: Center(
                     child: Text(
                       widget.username.isNotEmpty
-                          ? widget.username[0]
-                              .toUpperCase()
+                          ? widget.username[0].toUpperCase()
                           : "A",
 
                       style: const TextStyle(
                         color: Colors.red,
                         fontSize: 24,
-                        fontWeight:
-                            FontWeight.bold,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -184,8 +162,7 @@ class _HomeViewState extends State<HomeView> {
                 const SizedBox(width: 14),
 
                 Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
 
                   children: [
                     const Text(
@@ -193,34 +170,25 @@ class _HomeViewState extends State<HomeView> {
 
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight:
-                            FontWeight.bold,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
 
                     Text(
                       widget.username,
 
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
-                      ),
+                      style: const TextStyle(color: Colors.grey, fontSize: 16),
                     ),
                   ],
                 ),
 
                 const Spacer(),
 
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.search),
-                ),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
 
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(
-                    Icons.qr_code_scanner,
-                  ),
+                  icon: const Icon(Icons.qr_code_scanner),
                 ),
               ],
             ),
@@ -236,24 +204,16 @@ class _HomeViewState extends State<HomeView> {
 
                 itemCount: banners.length,
 
-                physics:
-                    const BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
 
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(
-                      horizontal: 0,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 0),
 
                     child: ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(22),
+                      borderRadius: BorderRadius.circular(22),
 
-                      child: Image.asset(
-                        banners[index],
-                        fit: BoxFit.fill,
-                      ),
+                      child: Image.asset(banners[index], fit: BoxFit.fill),
                     ),
                   );
                 },
@@ -267,16 +227,12 @@ class _HomeViewState extends State<HomeView> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        const PresensiPage(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const PresensiPage()),
                 );
               },
 
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: 20,
                   vertical: 18,
                 ),
@@ -284,24 +240,18 @@ class _HomeViewState extends State<HomeView> {
                 decoration: BoxDecoration(
                   color: Colors.white,
 
-                  borderRadius:
-                      BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(20),
 
-                  border: Border.all(
-                    color: Colors.grey.shade300,
-                  ),
+                  border: Border.all(color: Colors.grey.shade300),
                 ),
 
                 child: Row(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
 
                   children: [
                     Expanded(
                       child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment
-                                .start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
 
                         children: [
                           Row(
@@ -309,50 +259,39 @@ class _HomeViewState extends State<HomeView> {
                               Icon(
                                 Icons.info_outline,
 
-                                color: Colors
-                                    .orange
-                                    .shade700,
+                                color: Colors.orange.shade700,
 
                                 size: 22,
                               ),
 
-                              const SizedBox(
-                                width: 6,
-                              ),
+                              const SizedBox(width: 6),
 
                               const Text(
                                 "Presensi",
 
                                 style: TextStyle(
                                   fontSize: 16,
-                                  fontWeight:
-                                      FontWeight
-                                          .w500,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
                           ),
 
-                          const SizedBox(
-                            height: 12,
-                          ),
+                          const SizedBox(height: 12),
 
                           // ================= JAM REALTIME =================
-
                           Text(
                             formatTime(now),
 
                             style: const TextStyle(
                               fontSize: 26,
-                              fontWeight:
-                                  FontWeight.bold,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
 
                           const SizedBox(height: 5),
 
                           // ================= TANGGAL REALTIME =================
-
                           Text(
                             formatDate(now),
 
@@ -368,8 +307,7 @@ class _HomeViewState extends State<HomeView> {
                             "Lihat info presensi",
 
                             style: TextStyle(
-                              color:
-                                  Colors.cyan.shade700,
+                              color: Colors.cyan.shade700,
 
                               fontSize: 16,
                             ),
@@ -379,16 +317,10 @@ class _HomeViewState extends State<HomeView> {
                     ),
 
                     Padding(
-                      padding:
-                          const EdgeInsets.only(
-                        right: 25,
-                        top: 4,
-                      ),
+                      padding: const EdgeInsets.only(right: 25, top: 4),
 
                       child: Column(
-                        mainAxisAlignment:
-                            MainAxisAlignment
-                                .center,
+                        mainAxisAlignment: MainAxisAlignment.center,
 
                         children: const [
                           Icon(
@@ -406,8 +338,7 @@ class _HomeViewState extends State<HomeView> {
 
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight:
-                                  FontWeight.w500,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
@@ -426,8 +357,7 @@ class _HomeViewState extends State<HomeView> {
 
               shrinkWrap: true,
 
-              physics:
-                  const NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
 
               mainAxisSpacing: 0,
 
@@ -441,19 +371,14 @@ class _HomeViewState extends State<HomeView> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            LaporanKehadiranPage(),
-                      ),
+                      MaterialPageRoute(builder: (_) => LaporanKehadiranPage()),
                     );
                   },
 
                   child: const MenuItem(
-                    image:
-                        "lib/assets/Laporan.png",
+                    image: "lib/assets/Laporan.png",
 
-                    title:
-                        "Laporan\nKehadiran",
+                    title: "Laporan\nKehadiran",
                   ),
                 ),
 
@@ -473,18 +398,13 @@ class _HomeViewState extends State<HomeView> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) =>
-                            ProjectPage(
-                          username:
-                              widget.username,
-                        ),
+                        builder: (_) => ProjectPage(username: widget.username),
                       ),
                     );
                   },
 
                   child: const MenuItem(
-                    image:
-                        "lib/assets/Proyek.png",
+                    image: "lib/assets/Proyek.png",
 
                     title: "Proyek",
                   ),
@@ -495,10 +415,7 @@ class _HomeViewState extends State<HomeView> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            PengajuanCutiPage(),
-                      ),
+                      MaterialPageRoute(builder: (_) => PengajuanCutiPage()),
                     );
                   },
 
@@ -513,9 +430,7 @@ class _HomeViewState extends State<HomeView> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const KnowledgePage(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const KnowledgePage()),
                     );
                   },
 
@@ -530,9 +445,7 @@ class _HomeViewState extends State<HomeView> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const SchedulePage(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const SchedulePage()),
                     );
                   },
 
@@ -557,18 +470,13 @@ class _HomeViewState extends State<HomeView> {
 class CustomNavbar extends StatefulWidget {
   final String username;
 
-  const CustomNavbar({
-    super.key,
-    required this.username,
-  });
+  const CustomNavbar({super.key, required this.username});
 
   @override
-  State<CustomNavbar> createState() =>
-      _CustomNavbarState();
+  State<CustomNavbar> createState() => _CustomNavbarState();
 }
 
-class _CustomNavbarState
-    extends State<CustomNavbar> {
+class _CustomNavbarState extends State<CustomNavbar> {
   int selectedIndex = 0;
 
   @override
@@ -589,9 +497,7 @@ class _CustomNavbarState
             child: Container(
               height: 65,
 
-              decoration: const BoxDecoration(
-                color: Color(0xffB1121B),
-              ),
+              decoration: const BoxDecoration(color: Color(0xffB1121B)),
             ),
           ),
 
@@ -605,10 +511,7 @@ class _CustomNavbarState
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => HomeView(
-                      username:
-                          widget.username,
-                    ),
+                    builder: (_) => HomeView(username: widget.username),
                   ),
                 );
               },
@@ -622,17 +525,10 @@ class _CustomNavbarState
 
                   shape: BoxShape.circle,
 
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 6,
-                  ),
+                  border: Border.all(color: Colors.white, width: 6),
                 ),
 
-                child: const Icon(
-                  Icons.home,
-                  color: Colors.white,
-                  size: 35,
-                ),
+                child: const Icon(Icons.home, color: Colors.white, size: 35),
               ),
             ),
           ),
@@ -640,22 +536,17 @@ class _CustomNavbarState
           // MENU ITEMS
           Positioned.fill(
             child: Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
 
               children: [
                 const SizedBox(width: 60),
 
                 Padding(
-                  padding:
-                      const EdgeInsets.only(
-                    top: 20,
-                  ),
+                  padding: const EdgeInsets.only(top: 20),
 
                   child: navItem(
                     context: context,
-                    icon: Icons
-                        .dashboard_customize_outlined,
+                    icon: Icons.dashboard_customize_outlined,
                     label: "Activities",
                     page: const AktivitasPage(username: "admin"),
                     index: 1,
@@ -663,35 +554,25 @@ class _CustomNavbarState
                 ),
 
                 Padding(
-                  padding:
-                      const EdgeInsets.only(
-                    top: 20,
-                  ),
+                  padding: const EdgeInsets.only(top: 20),
 
                   child: navItem(
                     context: context,
                     icon: Icons.notifications,
                     label: "Notification",
-                    page:
-                        LaporanKehadiranPage(),
+                    page: LaporanKehadiranPage(),
                     index: 2,
                   ),
                 ),
 
                 Padding(
-                  padding:
-                      const EdgeInsets.only(
-                    top: 20,
-                  ),
+                  padding: const EdgeInsets.only(top: 20),
 
                   child: navItem(
                     context: context,
                     icon: Icons.person,
                     label: "Profile",
-                    page: HomeView(
-                      username:
-                          widget.username,
-                    ),
+                    page: HomeView(username: widget.username),
                     index: 3,
                   ),
                 ),
@@ -731,34 +612,21 @@ class _CustomNavbarState
           selectedIndex = index;
         });
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => page,
-          ),
-        );
+        Navigator.push(context, MaterialPageRoute(builder: (_) => page));
       },
 
       child: Column(
-        mainAxisAlignment:
-            MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
 
         children: [
-          Icon(
-            icon,
-            color: Colors.white,
-            size: 32,
-          ),
+          Icon(icon, color: Colors.white, size: 32),
 
           const SizedBox(height: 3),
 
           Text(
             label,
 
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-            ),
+            style: const TextStyle(color: Colors.white, fontSize: 12),
           ),
         ],
       ),
@@ -772,22 +640,13 @@ class MenuItem extends StatelessWidget {
   final String image;
   final String title;
 
-  const MenuItem({
-    super.key,
-    required this.image,
-    required this.title,
-  });
+  const MenuItem({super.key, required this.image, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image.asset(
-          image,
-          width: 65,
-          height: 65,
-          fit: BoxFit.contain,
-        ),
+        Image.asset(image, width: 65, height: 65, fit: BoxFit.contain),
 
         const SizedBox(height: 10),
 
