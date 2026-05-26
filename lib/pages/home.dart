@@ -124,7 +124,17 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      bottomNavigationBar: CustomNavbar(username: widget.username),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.white,
+        color: const Color(0xffB1121B),
+        items: const [
+          Icon(Icons.home, color: Colors.white),
+          Icon(Icons.dashboard, color: Colors.white),
+          Icon(Icons.notifications, color: Colors.white),
+          Icon(Icons.person, color: Colors.white),
+        ],
+        onTap: (index) {},
+      ),
 
       body: SafeArea(
         child: ListView(
