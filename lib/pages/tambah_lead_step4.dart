@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'lead_data.dart';
+import 'lead_repository.dart';
+import 'opportunities_page.dart';
 
 class TambahLeadStep4Screen extends StatefulWidget {
-  const TambahLeadStep4Screen({super.key});
+  final LeadData leadData;
+
+  const TambahLeadStep4Screen({super.key, required this.leadData});
 
   @override
   State<TambahLeadStep4Screen> createState() => _TambahLeadStep4ScreenState();
@@ -16,12 +21,16 @@ class _TambahLeadStep4ScreenState extends State<TambahLeadStep4Screen> {
   String? selectedPICTeknis;
 
   final List<String> marketingOptions = [
-    'Marketing 1',
-    'Marketing 2',
-    'Marketing 3',
+    'Nisa Siregar - Staff Sub Unit AM YPT Group',
+    'Ayu Setiawan - Komisaris Utama',
+    'Wahyu Pratama - Direktur Utama',
   ];
 
-  final List<String> teknisOptions = ['Teknisi 1', 'Teknisi 2', 'Teknisi 3'];
+  final List<String> teknisOptions = [
+    'Staff SOLTEK - Staff Sub Unit Teknologi',
+    'Engineer Network',
+    'Technical Support',
+  ];
 
   void handleSubmit() {
     if (selectedPICMarketing == null) {
@@ -34,7 +43,25 @@ class _TambahLeadStep4ScreenState extends State<TambahLeadStep4Screen> {
       return;
     }
 
-    showMessage('Lead berhasil dibuat');
+    widget.leadData.marketingPic = selectedPICMarketing!;
+    widget.leadData.technicalPic = selectedPICTeknis!;
+
+    LeadRepository.leads.add({
+      'client': widget.leadData.customer,
+      'code': 'INIT26-${LeadRepository.leads.length + 1}',
+      'title': widget.leadData.judul,
+      'date': '06 Jun 2026',
+      'sales': widget.leadData.sumberOpportunity,
+      'status': 'IN PROGRESS',
+      'color': Colors.blue,
+      'inputType': 'Manual Input',
+    });
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const OpportunitiesScreen()),
+      (route) => false,
+    );
   }
 
   void showMessage(String message) {

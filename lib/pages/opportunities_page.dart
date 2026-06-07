@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'import_data_leads.dart';
 import 'tambah_lead_baru.dart';
+import 'lead_repository.dart';
 
 class OpportunitiesScreen extends StatefulWidget {
   const OpportunitiesScreen({super.key});
@@ -23,57 +24,17 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
   int selectedTopTab = 0;
   int selectedFilter = 0;
 
+  String searchKeyword = '';
+
   final List<String> topTabs = ['Semua Leads', 'Leads Saya (Tim)'];
 
   final List<String> filters = ['Semua', 'Deal', 'In Progress', 'No Deal'];
 
   // ================= SEMUA LEADS =================
-  final List<Map<String, dynamic>> allLeads = [
-    {
-      'client': 'Universitas Bengkulu',
-      'code': 'Init26-004',
-      'title': 'Pendampingan Siakad Tahap III',
-      'date': '06 Apr 2026',
-      'sales': 'AM Telkom',
-      'status': 'DEAL',
-      'color': Colors.green,
-      'inputType': 'Manual Input',
-    },
-    {
-      'client': 'Diskominfo Jabar',
-      'code': 'Init26-002',
-      'title': 'Pengadaan CCTV Kominfo Banjarmasin',
-      'date': '24 Feb 2026',
-      'sales': 'Direct Sales',
-      'status': 'IN PROGRESS',
-      'color': Colors.blue,
-      'inputType': 'Import Data',
-    },
-    {
-      'client': 'Politeknik Aceh',
-      'code': 'Init26-001',
-      'title': 'Penyediaan License Zoom',
-      'date': '19 Feb 2026',
-      'sales': 'AM Telkom',
-      'status': 'DEAL',
-      'color': Colors.green,
-      'inputType': 'Manual Input',
-    },
-  ];
+  List<Map<String, dynamic>> get allLeads => LeadRepository.leads;
 
   // ================= LEADS SAYA / TIM =================
-  final List<Map<String, dynamic>> myLeads = [
-    {
-      'client': 'Universitas Bengkulu',
-      'code': 'Init26-004',
-      'title': 'Pendampingan Siakad Tahap III',
-      'date': '06 Apr 2026',
-      'sales': 'AM Telkom',
-      'status': 'DEAL',
-      'color': Colors.green,
-      'inputType': 'Manual Input',
-    },
-  ];
+  List<Map<String, dynamic>> get myLeads => LeadRepository.leads;
 
   List<Map<String, dynamic>> get activeLeads {
     if (selectedTopTab == 0) {
@@ -84,23 +45,34 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
   }
 
   List<Map<String, dynamic>> get filteredLeads {
-    final List<Map<String, dynamic>> sourceData = activeLeads;
+    List<Map<String, dynamic>> sourceData = activeLeads;
 
-    if (selectedFilter == 0) {
-      return sourceData;
+    // Filter Status
+    if (selectedFilter != 0) {
+      final filter = filters[selectedFilter].toUpperCase();
+
+      sourceData = sourceData.where((item) {
+        return item['status'] == filter;
+      }).toList();
     }
 
-    final filter = filters[selectedFilter].toUpperCase();
+    // Filter Search
+    if (searchKeyword.isNotEmpty) {
+      sourceData = sourceData.where((item) {
+        return item['client'].toString().toLowerCase().contains(
+              searchKeyword,
+            ) ||
+            item['title'].toString().toLowerCase().contains(searchKeyword);
+      }).toList();
+    }
 
-    return sourceData.where((item) {
-      return item['status'] == filter;
-    }).toList();
+    return sourceData;
   }
 
   void goToTambahLeadBaru() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const TambahLeadBaruScreen()),
+      MaterialPageRoute(builder: (_) => const ImportDataLeadsScreen()),
     );
   }
 
@@ -109,6 +81,16 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
       context,
       MaterialPageRoute(builder: (_) => const ImportDataLeadsScreen()),
     );
+  }
+
+  void deleteLead(Map<String, dynamic> lead) {
+    setState(() {
+      LeadRepository.leads.remove(lead);
+    });
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Lead berhasil dihapus')));
   }
 
   Widget buildTopTab(String text, int index) {
@@ -351,17 +333,28 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
               const Spacer(),
 
               buildActionButton(
-                icon: Icons.arrow_outward_rounded,
+                icon: Icons.share_outlined,
                 color: const Color(0xff00A7C8),
                 bg: const Color(0xffEAFBFF),
-                onTap: goToTambahLeadBaru,
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Share WA: ${lead['title']}')),
+                  );
+                },
               ),
 
               buildActionButton(
                 icon: Icons.edit_outlined,
                 color: const Color(0xff6B7280),
                 bg: const Color(0xffF1F5F9),
-                onTap: goToTambahLeadBaru,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const TambahLeadBaruScreen(),
+                    ),
+                  );
+                },
               ),
 
               buildActionButton(
@@ -369,11 +362,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                 color: const Color(0xffEF4444),
                 bg: const Color(0xffFEECEC),
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Fitur hapus lead belum dibuat'),
-                    ),
-                  );
+                  deleteLead(lead);
                 },
               ),
             ],
@@ -526,6 +515,13 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
 
                     TextField(
                       style: const TextStyle(fontSize: 12),
+
+                      onChanged: (value) {
+                        setState(() {
+                          searchKeyword = value.toLowerCase();
+                        });
+                      },
+
                       decoration: InputDecoration(
                         hintText: selectedTopTab == 0
                             ? 'Cari lead...'

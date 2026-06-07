@@ -11,26 +11,35 @@ class ImportDataLeadsScreen extends StatefulWidget {
 
 class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
   String? selectedFileName;
-  PlatformFile? selectedFile;
 
   Future<void> chooseFile() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'xlsx', 'xls'],
-      allowMultiple: false,
-      withData: true,
-    );
+    try {
+      final FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['xlsx', 'xls'],
+        allowMultiple: false,
+      );
 
-    if (result != null && result.files.isNotEmpty) {
+      if (result == null || result.files.isEmpty) {
+        return;
+      }
+
+      if (!mounted) return;
+
       setState(() {
-        selectedFile = result.files.first;
         selectedFileName = result.files.first.name;
       });
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Gagal memilih file: $e')));
     }
   }
 
   void goToTambahLeadBaru() {
-    if (selectedFile == null) {
+    if (selectedFileName == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Pilih file terlebih dahulu')),
       );
@@ -72,7 +81,7 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
             ),
             SizedBox(height: 2),
             Text(
-              'Upload file PDF / Excel',
+              'Import data proyek sebelum membuat lead',
               style: TextStyle(
                 color: Colors.white70,
                 fontWeight: FontWeight.w400,
@@ -139,7 +148,12 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
                   ),
                   SizedBox(height: 9),
                   Text(
-                    'File yang dapat dipilih adalah PDF, XLSX, dan XLS. Pastikan file sudah sesuai format sebelum diproses.',
+                    '''
+                    1. Pilih file data proyek.
+                    2. Pastikan format sesuai template.
+                    3. Klik Upload & Proses Import.
+                    4. Lengkapi data lead pada langkah berikutnya.
+                   ''',
                     style: TextStyle(
                       fontSize: 13,
                       color: Color(0xFF6F6F6F),
@@ -177,7 +191,7 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
-                              selectedFileName ?? 'No file chosen',
+                              selectedFileName ?? 'Belum ada file dipilih',
                               style: const TextStyle(
                                 color: Color(0xFF828282),
                                 fontSize: 14,
@@ -211,9 +225,21 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
             const SizedBox(height: 8),
 
             const Text(
-              'Format didukung: .pdf, .xlsx, .xls',
+              'Format didukung: .xlsx, .xls',
               style: TextStyle(fontSize: 12, color: Color(0xFF828282)),
             ),
+
+            if (selectedFileName != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  'File terpilih: $selectedFileName',
+                  style: const TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
 
             const SizedBox(height: 18),
 

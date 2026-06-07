@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'tambah_lead_step4.dart';
+import 'lead_data.dart';
 
 class TambahLeadStep3Screen extends StatefulWidget {
-  const TambahLeadStep3Screen({super.key});
+  final LeadData leadData;
+
+  const TambahLeadStep3Screen({super.key, required this.leadData});
 
   @override
   State<TambahLeadStep3Screen> createState() => _TambahLeadStep3ScreenState();
@@ -20,13 +23,7 @@ class _TambahLeadStep3ScreenState extends State<TambahLeadStep3Screen> {
   DateTime? tglPermintaan;
   DateTime? dueDate;
 
-  final List<String> statusOptions = [
-    'Open',
-    'On Progress',
-    'Pending',
-    'Closed',
-  ];
-
+  final List<String> statusOptions = ['No Deal', 'Deal', 'In Progress'];
   @override
   void dispose() {
     estimasiNilaiController.dispose();
@@ -98,9 +95,13 @@ class _TambahLeadStep3ScreenState extends State<TambahLeadStep3Screen> {
   }
 
   void handleNext() {
+    widget.leadData.proyek = detailRequestController.text;
+
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const TambahLeadStep4Screen()),
+      MaterialPageRoute(
+        builder: (_) => TambahLeadStep4Screen(leadData: widget.leadData),
+      ),
     );
   }
 
