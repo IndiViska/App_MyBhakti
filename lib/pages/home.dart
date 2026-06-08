@@ -1,8 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:app_mybhakti/pages/presensi_page.dart';
 import 'package:app_mybhakti/pages/laporan_kehadiran_page.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:app_mybhakti/pages/pengajuan_cuti_page.dart';
 import 'package:app_mybhakti/pages/proyek.dart';
 import 'package:app_mybhakti/pages/opportunities_page.dart';
+import 'package:app_mybhakti/pages/aktivitas.dart';
+import 'package:app_mybhakti/pages/schedule_page.dart';
+import 'package:app_mybhakti/pages/knowledge_page.dart';
 
 class HomeView extends StatefulWidget {
   final String username;
@@ -30,6 +37,10 @@ class _HomeViewState extends State<HomeView> {
 
   late final PageController _pageController;
 
+  // ================= JAM REALTIME =================
+  DateTime now = DateTime.now();
+  Timer? timer;
+
   final List<String> banners = [
     "lib/assets/Group 1824.png",
     "lib/assets/Group 1796.png",
@@ -40,12 +51,65 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
 
     _pageController = PageController(viewportFraction: 0.95);
+
+    // ================= UPDATE JAM =================
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        now = DateTime.now();
+      });
+    });
   }
 
   @override
   void dispose() {
+    timer?.cancel();
     _pageController.dispose();
     super.dispose();
+  }
+
+  // ================= FORMAT JAM =================
+
+  String formatTime(DateTime time) {
+    String hour = time.hour.toString().padLeft(2, '0');
+
+    String minute = time.minute.toString().padLeft(2, '0');
+
+    return "$hour:$minute WIB";
+  }
+
+  // ================= FORMAT TANGGAL =================
+
+  String formatDate(DateTime date) {
+    List<String> hari = [
+      "Senin",
+      "Selasa",
+      "Rabu",
+      "Kamis",
+      "Jumat",
+      "Sabtu",
+      "Minggu",
+    ];
+
+    List<String> bulan = [
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ];
+
+    String namaHari = hari[date.weekday - 1];
+
+    String namaBulan = bulan[date.month - 1];
+
+    return "$namaHari, ${date.day} $namaBulan ${date.year}";
   }
 
   void goToLeads() {
@@ -60,11 +124,22 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      bottomNavigationBar: CustomNavbar(username: widget.username),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.white,
+        color: const Color(0xffB1121B),
+        items: const [
+          Icon(Icons.home, color: Colors.white),
+          Icon(Icons.dashboard, color: Colors.white),
+          Icon(Icons.notifications, color: Colors.white),
+          Icon(Icons.person, color: Colors.white),
+        ],
+        onTap: (index) {},
+      ),
 
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+
           children: [
             // ================= HEADER =================
             Row(
@@ -72,15 +147,19 @@ class _HomeViewState extends State<HomeView> {
                 Container(
                   width: 50,
                   height: 50,
+
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
+
                     border: Border.all(color: Colors.grey.shade400),
                   ),
+
                   child: Center(
                     child: Text(
                       widget.username.isNotEmpty
                           ? widget.username[0].toUpperCase()
                           : "A",
+
                       style: const TextStyle(
                         color: Colors.red,
                         fontSize: 24,
@@ -94,16 +173,20 @@ class _HomeViewState extends State<HomeView> {
 
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+
                   children: [
                     const Text(
                       "Good Morning!",
+
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+
                     Text(
                       widget.username,
+
                       style: const TextStyle(color: Colors.grey, fontSize: 16),
                     ),
                   ],
@@ -129,12 +212,19 @@ class _HomeViewState extends State<HomeView> {
                 controller: _pageController,
                 itemCount: banners.length,
                 physics: const BouncingScrollPhysics(),
+
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(22),
-                      child: Image.asset(banners[index], fit: BoxFit.fill),
+
+                      child: Image.asset(
+                        banners[index],
+                        fit: BoxFit.cover, // jangan fill
+                        filterQuality: FilterQuality.high, // biar lebih halus
+                      ),
                     ),
                   );
                 },
@@ -151,33 +241,45 @@ class _HomeViewState extends State<HomeView> {
                   MaterialPageRoute(builder: (_) => const PresensiPage()),
                 );
               },
+
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
                   vertical: 18,
                 ),
+
                 decoration: BoxDecoration(
                   color: Colors.white,
+
                   borderRadius: BorderRadius.circular(20),
+
                   border: Border.all(color: Colors.grey.shade300),
                 ),
+
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
+
                   children: [
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+
                         children: [
                           Row(
                             children: [
                               Icon(
                                 Icons.info_outline,
+
                                 color: Colors.orange.shade700,
+
                                 size: 22,
                               ),
+
                               const SizedBox(width: 6),
+
                               const Text(
                                 "Presensi",
+
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -188,11 +290,25 @@ class _HomeViewState extends State<HomeView> {
 
                           const SizedBox(height: 12),
 
-                          const Text(
-                            "08:16 WIB",
-                            style: TextStyle(
+                          // ================= JAM REALTIME =================
+                          Text(
+                            formatTime(now),
+
+                            style: const TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          const SizedBox(height: 5),
+
+                          // ================= TANGGAL REALTIME =================
+                          Text(
+                            formatDate(now),
+
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
                             ),
                           ),
 
@@ -200,8 +316,10 @@ class _HomeViewState extends State<HomeView> {
 
                           Text(
                             "Lihat info presensi",
+
                             style: TextStyle(
                               color: Colors.cyan.shade700,
+
                               fontSize: 16,
                             ),
                           ),
@@ -211,12 +329,16 @@ class _HomeViewState extends State<HomeView> {
 
                     Padding(
                       padding: const EdgeInsets.only(right: 25, top: 4),
+
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
+
                         children: const [
                           Icon(
                             Icons.login_rounded,
+
                             color: Colors.red,
+
                             size: 46,
                           ),
 
@@ -224,6 +346,7 @@ class _HomeViewState extends State<HomeView> {
 
                           Text(
                             "Check-In",
+
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -242,11 +365,17 @@ class _HomeViewState extends State<HomeView> {
             // ================= MENU =================
             GridView.count(
               crossAxisCount: 3,
+
               shrinkWrap: true,
+
               physics: const NeverScrollableScrollPhysics(),
+
               mainAxisSpacing: 0,
+
               crossAxisSpacing: 10,
+
               childAspectRatio: 0.95,
+
               children: [
                 // LAPORAN
                 GestureDetector(
@@ -256,8 +385,10 @@ class _HomeViewState extends State<HomeView> {
                       MaterialPageRoute(builder: (_) => LaporanKehadiranPage()),
                     );
                   },
+
                   child: const MenuItem(
                     image: "lib/assets/Laporan.png",
+
                     title: "Laporan\nKehadiran",
                   ),
                 ),
@@ -265,6 +396,7 @@ class _HomeViewState extends State<HomeView> {
                 // LEADS
                 GestureDetector(
                   onTap: goToLeads,
+
                   child: const MenuItem(
                     image: "lib/assets/Leads.png",
                     title: "Leads",
@@ -281,25 +413,57 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     );
                   },
+
                   child: const MenuItem(
                     image: "lib/assets/Proyek.png",
+
                     title: "Proyek",
                   ),
                 ),
 
                 // CUTI
-                const MenuItem(image: "lib/assets/Cuti.png", title: "Cuti"),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => PengajuanCutiPage()),
+                    );
+                  },
+
+                  child: const MenuItem(
+                    image: "lib/assets/Cuti.png",
+                    title: "Cuti",
+                  ),
+                ),
 
                 // KNOWLEDGE
-                const MenuItem(
-                  image: "lib/assets/Knowlage.png",
-                  title: "Knowledge",
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const KnowledgePage()),
+                    );
+                  },
+
+                  child: const MenuItem(
+                    image: "lib/assets/Knowlage.png",
+                    title: "Knowledge",
+                  ),
                 ),
 
                 // SCHEDULE
-                const MenuItem(
-                  image: "lib/assets/Schedule.png",
-                  title: "Schedule",
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SchedulePage()),
+                    );
+                  },
+
+                  child: const MenuItem(
+                    image: "lib/assets/Schedule.png",
+                    title: "Schedule",
+                  ),
                 ),
               ],
             ),
@@ -331,15 +495,19 @@ class _CustomNavbarState extends State<CustomNavbar> {
     return Container(
       height: 90,
       color: Colors.white,
+
       child: Stack(
         clipBehavior: Clip.none,
+
         children: [
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
+
             child: Container(
               height: 65,
+
               decoration: const BoxDecoration(color: Color(0xffB1121B)),
             ),
           ),
@@ -348,6 +516,7 @@ class _CustomNavbarState extends State<CustomNavbar> {
           Positioned(
             top: -5,
             left: 25,
+
             child: GestureDetector(
               onTap: () {
                 Navigator.pushReplacement(
@@ -357,14 +526,19 @@ class _CustomNavbarState extends State<CustomNavbar> {
                   ),
                 );
               },
+
               child: Container(
                 width: 70,
                 height: 70,
+
                 decoration: BoxDecoration(
                   color: Colors.grey,
+
                   shape: BoxShape.circle,
+
                   border: Border.all(color: Colors.white, width: 6),
                 ),
+
                 child: const Icon(Icons.home, color: Colors.white, size: 35),
               ),
             ),
@@ -374,22 +548,25 @@ class _CustomNavbarState extends State<CustomNavbar> {
           Positioned.fill(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
+
               children: [
                 const SizedBox(width: 60),
 
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
+
                   child: navItem(
                     context: context,
                     icon: Icons.dashboard_customize_outlined,
                     label: "Activities",
-                    page: const PresensiPage(),
+                    page: const AktivitasPage(username: "admin"),
                     index: 1,
                   ),
                 ),
 
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
+
                   child: navItem(
                     context: context,
                     icon: Icons.notifications,
@@ -401,6 +578,7 @@ class _CustomNavbarState extends State<CustomNavbar> {
 
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
+
                   child: navItem(
                     context: context,
                     icon: Icons.person,
@@ -416,8 +594,10 @@ class _CustomNavbarState extends State<CustomNavbar> {
           const Positioned(
             left: 42,
             bottom: 8,
+
             child: Text(
               "Home",
+
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 13,
@@ -445,8 +625,10 @@ class _CustomNavbarState extends State<CustomNavbar> {
 
         Navigator.push(context, MaterialPageRoute(builder: (_) => page));
       },
+
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+
         children: [
           Icon(icon, color: Colors.white, size: 32),
 
@@ -454,6 +636,7 @@ class _CustomNavbarState extends State<CustomNavbar> {
 
           Text(
             label,
+
             style: const TextStyle(color: Colors.white, fontSize: 12),
           ),
         ],
@@ -481,6 +664,7 @@ class MenuItem extends StatelessWidget {
         Text(
           title,
           textAlign: TextAlign.center,
+
           style: const TextStyle(
             fontSize: 16,
             color: Color(0xff2D4A76),

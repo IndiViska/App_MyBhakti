@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// ================= DATA LIST PROJECT =================
+/// Ini seperti "database dummy" kamu
 final List<Map<String, dynamic>> dummyProjects = [
   {
     "title": "Pendampingan Siakad Tahap III",
@@ -8,7 +10,6 @@ final List<Map<String, dynamic>> dummyProjects = [
     "statusColor": Colors.blue,
     "isPinned": true,
   },
-
   {
     "title": "Pengadaan CCTV Kominfo",
     "client": "Dinas Komunikasi dan Informatika (Diskominfo) Jabar",
@@ -16,7 +17,6 @@ final List<Map<String, dynamic>> dummyProjects = [
     "statusColor": Colors.blue,
     "isPinned": true,
   },
-
   {
     "title": "Penyediaan License Zoom",
     "client": "PT Telkom Indonesia - TREG I (Sumatera) - Poltekkes Aceh",
@@ -24,7 +24,6 @@ final List<Map<String, dynamic>> dummyProjects = [
     "statusColor": Colors.blue,
     "isPinned": false,
   },
-
   {
     "title": "Pendampingan Siakad Tahap II",
     "client": "PT Telkom Indonesia - TREG I (Sumatera) - Universitas Bengkulu",
@@ -32,7 +31,6 @@ final List<Map<String, dynamic>> dummyProjects = [
     "statusColor": Colors.green,
     "isPinned": false,
   },
-
   {
     "title": "Pengadaan CCTV Kominfo II",
     "client": "Dinas Komunikasi dan Informatika (Diskominfo) Jabar",
@@ -41,3 +39,15 @@ final List<Map<String, dynamic>> dummyProjects = [
     "isPinned": true,
   },
 ];
+
+/// ================= ADD NEW PROJECT =================
+/// Pakai ini dari Page 4 (submit)
+void addDummyProject(Map<String, dynamic> project) {
+  dummyProjects.add(project);
+}
+
+/// ================= OPTIONAL HELPER =================
+/// Kalau mau reset semua data (misal testing)
+void resetDummyProjects() {
+  dummyProjects.clear();
+}

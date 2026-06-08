@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-//import 'package:app_mybhakti/pages/pmo_tambah3.dart';
+import 'package:app_mybhakti/pages/addproject3.dart';
+import 'package:app_mybhakti/pages/projectdraft.dart';
 
 class AddProjectPage2 extends StatefulWidget {
   final String username;
+  final ProjectDraft draft;
 
-  const AddProjectPage2({super.key, required this.username});
+  const AddProjectPage2({
+    super.key,
+    required this.username,
+    required this.draft,
+  });
 
   @override
   State<AddProjectPage2> createState() => _AddProjectPage2State();
@@ -21,43 +27,43 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
   String? selectedPicEndUser;
 
   final List<String> customerList = [
-    "PT Telekomunikasi Indonesia",
-    "PT Len Industri",
-    "PT PLN",
-  ];
-
-  final List<String> picCustomerList = [
-    "Budi Santoso",
-    "Andi Wijaya",
-    "Rizky Pratama",
+    "------------",
+    "PT Telkom Indonesia -TREG I (Sumatera)",
+    "PT Telkom Indonesia -TREG II (Jabodetabek)",
+    "PT Telkom Indonesia -TREG III (Jawa Barat)",
+    "PT Telkom Indonesia -TREG VI (Jawa Tengah & DIY)",
   ];
 
   final List<String> endUserList = [
-    "Telkom Regional",
-    "Divisi IT Support",
-    "Network Operation",
+    "------------",
+    "PT Bank Central Asia Tbk (BCA)",
+    "PT Bio Farma (Persero)",
+    "Dinas Komunikasi dan Informatika (Diskominfo) Jabar",
+    "Poltekkes Aceh",
   ];
-
-  final List<String> picEndUserList = ["Dian Permata", "Kevin", "Aulia"];
 
   final TextEditingController customerBaruController = TextEditingController();
 
   final TextEditingController picCustomerBaruController =
       TextEditingController();
 
+  final TextEditingController customerPhoneController = TextEditingController();
+
   final TextEditingController endUserBaruController = TextEditingController();
 
   final TextEditingController picEndUserBaruController =
       TextEditingController();
 
+  final TextEditingController endUserPhoneController = TextEditingController();
+
   void validateAndNext() {
     bool isCustomerValid = customerMode == "tersimpan"
-        ? selectedCustomer != null && selectedPicCustomer != null
+        ? selectedCustomer != null
         : customerBaruController.text.isNotEmpty &&
               picCustomerBaruController.text.isNotEmpty;
 
     bool isEndUserValid = endUserMode == "tersimpan"
-        ? selectedEndUser != null && selectedPicEndUser != null
+        ? selectedEndUser != null
         : endUserBaruController.text.isNotEmpty &&
               picEndUserBaruController.text.isNotEmpty;
 
@@ -72,14 +78,65 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
       return;
     }
 
-    //Navigator.push(
-    //  context,
-    //  MaterialPageRoute(
-    //    builder: (_) => AddProjectPage3(
-    //      username: widget.username,
-    //    ),
-    //  ),
-    //);
+    /// ================= SIMPAN CUSTOMER =================
+    widget.draft.customerSelected = customerMode == "tersimpan"
+        ? selectedCustomer
+        : null;
+
+    widget.draft.newCustomerName = customerMode == "baru"
+        ? customerBaruController.text
+        : null;
+
+    widget.draft.newCustomerPic = customerMode == "baru"
+        ? picCustomerBaruController.text
+        : null;
+
+    widget.draft.newCustomerPhone = customerMode == "baru"
+        ? customerPhoneController.text
+        : null;
+
+    /// ================= SIMPAN END USER =================
+    widget.draft.endUserSelected = endUserMode == "tersimpan"
+        ? selectedEndUser
+        : null;
+
+    widget.draft.newEndUserName = endUserMode == "baru"
+        ? endUserBaruController.text
+        : null;
+
+    widget.draft.newEndUserPic = endUserMode == "baru"
+        ? picEndUserBaruController.text
+        : null;
+
+    widget.draft.newEndUserPhone = endUserMode == "baru"
+        ? endUserPhoneController.text
+        : null;
+
+    print("Lolos validasi");
+
+    print(widget.draft.customerSelected);
+    print(widget.draft.newCustomerName);
+    print(widget.draft.endUserSelected);
+    print(widget.draft.newEndUserName);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            AddProjectPage3(username: widget.username, draft: widget.draft),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    customerBaruController.dispose();
+    picCustomerBaruController.dispose();
+    customerPhoneController.dispose();
+    endUserBaruController.dispose();
+    picEndUserBaruController.dispose();
+    endUserPhoneController.dispose();
+    super.dispose();
   }
 
   @override
@@ -202,12 +259,10 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
 
                 child: Column(
                   children: [
-                    /// STEP
                     buildStepCard(),
 
                     const SizedBox(height: 18),
 
-                    /// CUSTOMER
                     buildStakeholderCard(
                       title: "Customer",
                       mode: customerMode,
@@ -235,11 +290,12 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
                       },
 
                       nameList: customerList,
-                      picList: picCustomerList,
 
                       baruNameController: customerBaruController,
 
                       baruPicController: picCustomerBaruController,
+
+                      phoneController: customerPhoneController,
 
                       hintName: "Pilih pemberi kerja...",
 
@@ -248,7 +304,6 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
 
                     const SizedBox(height: 18),
 
-                    /// END USER
                     buildStakeholderCard(
                       title: "End User",
                       mode: endUserMode,
@@ -276,11 +331,12 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
                       },
 
                       nameList: endUserList,
-                      picList: picEndUserList,
 
                       baruNameController: endUserBaruController,
 
                       baruPicController: picEndUserBaruController,
+
+                      phoneController: endUserPhoneController,
 
                       hintName: "Pilih pengguna terakhir...",
 
@@ -289,7 +345,6 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
 
                     const SizedBox(height: 30),
 
-                    /// BUTTON
                     SizedBox(
                       width: double.infinity,
                       height: 52,
@@ -381,13 +436,13 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
 
-            child: LinearProgressIndicator(
+            child: const LinearProgressIndicator(
               value: 0.50,
               minHeight: 6,
 
-              backgroundColor: const Color(0xffE5E7EB),
+              backgroundColor: Color(0xffE5E7EB),
 
-              valueColor: const AlwaysStoppedAnimation(Color(0xffC1121F)),
+              valueColor: AlwaysStoppedAnimation(Color(0xffC1121F)),
             ),
           ),
         ],
@@ -404,9 +459,9 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
     required String? selectedPic,
     required Function(String?) onPicChanged,
     required List<String> nameList,
-    required List<String> picList,
     required TextEditingController baruNameController,
     required TextEditingController baruPicController,
+    required TextEditingController phoneController,
     required String hintName,
     required String hintPic,
   }) {
@@ -474,17 +529,24 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
             const SizedBox(height: 8),
 
             DropdownButtonFormField<String>(
+              isExpanded: true,
               value: selectedName,
 
               decoration: inputDecoration(),
 
               hint: Text(hintName),
 
-              items: nameList
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
+              items: nameList.map((e) {
+                return DropdownMenuItem<String>(
+                  value: e,
 
-              onChanged: onNameChanged,
+                  child: Text(e, overflow: TextOverflow.ellipsis),
+                );
+              }).toList(),
+
+              onChanged: (value) {
+                onNameChanged(value);
+              },
             ),
 
             const SizedBox(height: 18),
@@ -493,40 +555,83 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
 
             const SizedBox(height: 8),
 
-            DropdownButtonFormField<String>(
-              value: selectedPic,
+            Container(
+              width: double.infinity,
 
-              decoration: inputDecoration(),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
 
-              hint: Text(hintPic),
+              decoration: BoxDecoration(
+                color: Colors.white,
 
-              items: picList
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
+                borderRadius: BorderRadius.circular(12),
 
-              onChanged: onPicChanged,
+                border: Border.all(color: const Color(0xffE5E7EB)),
+              ),
+
+              child: Text(
+                selectedPic ?? "Pilih PIC Pemberi Kerja...",
+
+                style: TextStyle(
+                  fontSize: 14,
+                  color: selectedPic == null ? Colors.grey : Colors.black,
+                ),
+              ),
             ),
           ] else ...[
-            buildLabel("Nama Baru"),
+            buildLabel("Instansi $title"),
 
             const SizedBox(height: 8),
 
             TextField(
               controller: baruNameController,
 
-              decoration: inputDecoration(hint: "Masukkan nama..."),
+              decoration: inputDecoration(hint: "Nama PT / Instansi..."),
             ),
 
             const SizedBox(height: 18),
 
-            buildLabel("PIC Baru"),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-            const SizedBox(height: 8),
+                    children: [
+                      buildLabel("Nama PIC"),
 
-            TextField(
-              controller: baruPicController,
+                      const SizedBox(height: 8),
 
-              decoration: inputDecoration(hint: "Masukkan PIC..."),
+                      TextField(
+                        controller: baruPicController,
+
+                        decoration: inputDecoration(hint: "Nama PIC..."),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(width: 12),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                    children: [
+                      buildLabel("No HP PIC"),
+
+                      const SizedBox(height: 8),
+
+                      TextField(
+                        controller: phoneController,
+
+                        keyboardType: TextInputType.phone,
+
+                        decoration: inputDecoration(hint: "08xxx..."),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ],
