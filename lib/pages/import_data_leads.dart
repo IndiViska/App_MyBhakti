@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'tambah_lead_baru.dart';
+import 'package:excel/excel.dart' as ex;
+
+import 'lead_repository.dart';
+import 'opportunities_page.dart';
 
 class ImportDataLeadsScreen extends StatefulWidget {
   const ImportDataLeadsScreen({super.key});
@@ -11,6 +16,7 @@ class ImportDataLeadsScreen extends StatefulWidget {
 
 class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
   String? selectedFileName;
+  String? selectedFilePath;
 
   Future<void> chooseFile() async {
     try {
@@ -28,6 +34,7 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
 
       setState(() {
         selectedFileName = result.files.first.name;
+        selectedFilePath = result.files.first.path;
       });
     } catch (e) {
       if (!mounted) return;
@@ -38,17 +45,67 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
     }
   }
 
-  void goToTambahLeadBaru() {
-    if (selectedFileName == null) {
+  void processImport() async {
+    if (selectedFilePath == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pilih file terlebih dahulu')),
+        const SnackBar(content: Text("Pilih file terlebih dahulu")),
+      );
+      return;
+    }
+    File file = File(selectedFilePath!);
+
+    var bytes = file.readAsBytesSync();
+
+    var excel = ex.Excel.decodeBytes(bytes);
+    var sheet = excel.tables['Data Leads'];
+
+    if (sheet == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Sheet Data Leads tidak ditemukan")),
       );
       return;
     }
 
-    Navigator.push(
+    for (int i = 2; i < sheet.rows.length; i++) {
+      var row = sheet.rows[i];
+
+      if (row[1]?.value == null) continue;
+      String status = row[3]?.value?.toString().toUpperCase() ?? "IN PROGRESS";
+
+      Color statusColor = Colors.blue;
+
+      if (status == "DEAL") {
+        statusColor = Colors.green;
+      } else if (status == "NO DEAL") {
+        statusColor = Colors.red;
+      }
+      LeadRepository.leads.add({
+        'client': row[6]?.value?.toString() ?? '',
+        'code':
+            row[0]?.value?.toString() ??
+            'INIT26-${LeadRepository.leads.length + 1}',
+        'title': row[1]?.value?.toString() ?? '',
+
+        'kategori': row[2]?.value?.toString() ?? '',
+        'status': status,
+        'sales': row[4]?.value?.toString() ?? '',
+        'market': row[5]?.value?.toString() ?? '',
+
+        'pic': row[7]?.value?.toString() ?? '',
+        'phone': row[8]?.value?.toString() ?? '',
+
+        'date': row[13]?.value?.toString() ?? '',
+
+        'marketingPic': row[17]?.value?.toString() ?? '',
+        'technicalPic': row[18]?.value?.toString() ?? '',
+
+        'color': statusColor,
+        'inputType': 'Import Excel',
+      });
+    }
+    Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => const TambahLeadBaruScreen()),
+      MaterialPageRoute(builder: (_) => const OpportunitiesScreen()),
     );
   }
 
@@ -117,9 +174,7 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
               'Upload File',
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             ),
-
             const SizedBox(height: 12),
-
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(14),
@@ -163,9 +218,7 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
                 ],
               ),
             ),
-
             const SizedBox(height: 18),
-
             GestureDetector(
               onTap: chooseFile,
               child: Container(
@@ -221,14 +274,11 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
                 ),
               ),
             ),
-
             const SizedBox(height: 8),
-
             const Text(
               'Format didukung: .xlsx, .xls',
               style: TextStyle(fontSize: 12, color: Color(0xFF828282)),
             ),
-
             if (selectedFileName != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
@@ -240,9 +290,7 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
                   ),
                 ),
               ),
-
             const SizedBox(height: 18),
-
             SizedBox(
               width: double.infinity,
               height: 48,
@@ -256,7 +304,7 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
                   ),
                   elevation: 0,
                 ),
-                onPressed: goToTambahLeadBaru,
+                onPressed: processImport,
                 label: const Text(
                   'Upload & Proses Import',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),

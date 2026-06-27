@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'tambah_lead_step4.dart';
 import 'lead_data.dart';
 
@@ -19,6 +21,11 @@ class _TambahLeadStep3ScreenState extends State<TambahLeadStep3Screen> {
       TextEditingController();
   final TextEditingController detailRequestController = TextEditingController();
 
+  final currencyFormatter = NumberFormat.currency(
+    locale: 'id_ID',
+    symbol: 'Rp ',
+    decimalDigits: 0,
+  );
   String? selectedStatus;
   DateTime? tglPermintaan;
   DateTime? dueDate;
@@ -203,9 +210,7 @@ class _TambahLeadStep3ScreenState extends State<TambahLeadStep3Screen> {
                 ],
               ),
             ),
-
             const SizedBox(height: 14),
-
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(14),
@@ -220,11 +225,13 @@ class _TambahLeadStep3ScreenState extends State<TambahLeadStep3Screen> {
                   TextField(
                     controller: estimasiNilaiController,
                     keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      RupiahInputFormatter(),
+                    ],
                     decoration: customDecoration(hint: 'Rp 0'),
                   ),
-
                   const SizedBox(height: 16),
-
                   buildLabel('Status Awal'),
                   DropdownButtonFormField<String>(
                     value: selectedStatus,
@@ -242,9 +249,7 @@ class _TambahLeadStep3ScreenState extends State<TambahLeadStep3Screen> {
                       });
                     },
                   ),
-
                   const SizedBox(height: 16),
-
                   buildLabel('Tgl Permintaan'),
                   GestureDetector(
                     onTap: () {
@@ -265,9 +270,7 @@ class _TambahLeadStep3ScreenState extends State<TambahLeadStep3Screen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 16),
-
                   buildLabel('Due Date'),
                   GestureDetector(
                     onTap: () {
@@ -288,17 +291,13 @@ class _TambahLeadStep3ScreenState extends State<TambahLeadStep3Screen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 16),
-
                   buildLabel('Lokasi Delivery'),
                   TextField(
                     controller: lokasiDeliveryController,
                     decoration: customDecoration(hint: 'Alamat Pengiriman...'),
                   ),
-
                   const SizedBox(height: 16),
-
                   buildLabel('Detail Request'),
                   TextField(
                     controller: detailRequestController,
@@ -310,9 +309,7 @@ class _TambahLeadStep3ScreenState extends State<TambahLeadStep3Screen> {
                 ],
               ),
             ),
-
             const SizedBox(height: 24),
-
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -345,6 +342,37 @@ class _TambahLeadStep3ScreenState extends State<TambahLeadStep3Screen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class RupiahInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
+
+    String digits = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    final number = int.parse(digits);
+
+    final formatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
+
+    final newText = formatter.format(number);
+
+    return TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(
+        offset: newText.length,
       ),
     );
   }

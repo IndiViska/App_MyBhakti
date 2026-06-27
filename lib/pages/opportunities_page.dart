@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'import_data_leads.dart';
 import 'tambah_lead_baru.dart';
 import 'lead_repository.dart';
+import 'package:share_plus/share_plus.dart';
+import 'tambah_opportunity_menu.dart';
 
 class OpportunitiesScreen extends StatefulWidget {
   const OpportunitiesScreen({super.key});
@@ -72,7 +74,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
   void goToTambahLeadBaru() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const ImportDataLeadsScreen()),
+      MaterialPageRoute(builder: (_) => const TambahOpportunityMenuScreen()),
     );
   }
 
@@ -91,6 +93,22 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Lead berhasil dihapus')));
+  }
+
+  void shareLead(Map<String, dynamic> lead) {
+    final text =
+        '''
+  📋 LEAD PROJECT
+
+     Client : ${lead['client']}
+     Kode   : ${lead['code']}
+     Project: ${lead['title']}
+     Status : ${lead['status']}
+     Tanggal: ${lead['date']}
+     Sales  : ${lead['sales']}
+     ''';
+
+    Share.share(text, subject: 'Lead Project ${lead['code']}');
   }
 
   Widget buildTopTab(String text, int index) {
@@ -259,9 +277,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
               ),
             ],
           ),
-
           const SizedBox(height: 7),
-
           Text(
             lead['title'],
             style: const TextStyle(
@@ -271,9 +287,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
               fontWeight: FontWeight.w800,
             ),
           ),
-
           const SizedBox(height: 9),
-
           Row(
             children: [
               const Icon(
@@ -307,42 +321,29 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
               ),
             ],
           ),
-
           const SizedBox(height: 9),
-
           const Divider(height: 1, color: Color(0xffE6EAF0)),
-
           const SizedBox(height: 9),
-
           Row(
             children: [
               buildStatusBadge(lead['status'], lead['color']),
-
               const SizedBox(width: 8),
-
               buildInputBadge(lead['inputType'] ?? 'Manual Input'),
-
               const SizedBox(width: 8),
-
               const CircleAvatar(
                 radius: 11,
                 backgroundColor: Colors.lightBlueAccent,
                 child: Icon(Icons.person, size: 13, color: Colors.white),
               ),
-
               const Spacer(),
-
               buildActionButton(
                 icon: Icons.share_outlined,
                 color: const Color(0xff00A7C8),
                 bg: const Color(0xffEAFBFF),
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Share WA: ${lead['title']}')),
-                  );
+                  shareLead(lead);
                 },
               ),
-
               buildActionButton(
                 icon: Icons.edit_outlined,
                 color: const Color(0xff6B7280),
@@ -356,7 +357,6 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                   );
                 },
               ),
-
               buildActionButton(
                 icon: Icons.delete_outline,
                 color: const Color(0xffEF4444),
@@ -423,9 +423,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                           Navigator.pop(context);
                         },
                       ),
-
                       const SizedBox(width: 4),
-
                       const Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -450,7 +448,6 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                           ],
                         ),
                       ),
-
                       IconButton(
                         onPressed: goToImportData,
                         icon: const Icon(
@@ -458,7 +455,6 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                           color: Color(0xffB90F1A),
                         ),
                       ),
-
                       Container(
                         width: 28,
                         height: 28,
@@ -480,22 +476,17 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 24),
-
                   Row(
                     children: [
                       buildTopTab(topTabs[0], 0),
-
                       const SizedBox(width: 28),
-
                       buildTopTab(topTabs[1], 1),
                     ],
                   ),
                 ],
               ),
             ),
-
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(14, 10, 14, 80),
@@ -510,18 +501,14 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                         }),
                       ),
                     ),
-
                     const SizedBox(height: 13),
-
                     TextField(
                       style: const TextStyle(fontSize: 12),
-
                       onChanged: (value) {
                         setState(() {
                           searchKeyword = value.toLowerCase();
                         });
                       },
-
                       decoration: InputDecoration(
                         hintText: selectedTopTab == 0
                             ? 'Cari lead...'
@@ -552,9 +539,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 13),
-
                     if (data.isEmpty)
                       buildEmptyState()
                     else
