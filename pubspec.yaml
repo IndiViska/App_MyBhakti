@@ -40,26 +40,16 @@ dependencies:
   geolocator: ^11.0.0
   image_picker: ^1.1.2
   share_plus: ^10.0.2
-<<<<<<< HEAD
   file_picker: ^10.3.2
-=======
-  file_picker: ^8.1.7
-<<<<<<< HEAD
   intl: ^0.19.0
   http: ^1.2.1
   shared_preferences: ^2.2.2
-=======
   excel: ^2.1.0
->>>>>>> 0856732e5bfddbbcaddbc82b691dbc76f192aafa
-  intl: ^0.19.0
   dotted_border: ^2.1.0
   dio: ^5.8.0
   path_provider: ^2.1.5
   open_filex: ^4.5.0
   url_launcher: ^6.3.0
-
-
->>>>>>> b196bbbb50cc86cca33b2978e96f6f9cd879cfc1
 
 dev_dependencies:
   flutter_test:
