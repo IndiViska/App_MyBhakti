@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'import_data_leads.dart';
 import 'tambah_lead_baru.dart';
+import 'lead_repository.dart';
+import 'package:share_plus/share_plus.dart';
+import 'tambah_opportunity_menu.dart';
 
 class OpportunitiesScreen extends StatefulWidget {
   const OpportunitiesScreen({super.key});
@@ -23,57 +26,17 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
   int selectedTopTab = 0;
   int selectedFilter = 0;
 
+  String searchKeyword = '';
+
   final List<String> topTabs = ['Semua Leads', 'Leads Saya (Tim)'];
 
   final List<String> filters = ['Semua', 'Deal', 'In Progress', 'No Deal'];
 
   // ================= SEMUA LEADS =================
-  final List<Map<String, dynamic>> allLeads = [
-    {
-      'client': 'Universitas Bengkulu',
-      'code': 'Init26-004',
-      'title': 'Pendampingan Siakad Tahap III',
-      'date': '06 Apr 2026',
-      'sales': 'AM Telkom',
-      'status': 'DEAL',
-      'color': Colors.green,
-      'inputType': 'Manual Input',
-    },
-    {
-      'client': 'Diskominfo Jabar',
-      'code': 'Init26-002',
-      'title': 'Pengadaan CCTV Kominfo Banjarmasin',
-      'date': '24 Feb 2026',
-      'sales': 'Direct Sales',
-      'status': 'IN PROGRESS',
-      'color': Colors.blue,
-      'inputType': 'Import Data',
-    },
-    {
-      'client': 'Politeknik Aceh',
-      'code': 'Init26-001',
-      'title': 'Penyediaan License Zoom',
-      'date': '19 Feb 2026',
-      'sales': 'AM Telkom',
-      'status': 'DEAL',
-      'color': Colors.green,
-      'inputType': 'Manual Input',
-    },
-  ];
+  List<Map<String, dynamic>> get allLeads => LeadRepository.leads;
 
   // ================= LEADS SAYA / TIM =================
-  final List<Map<String, dynamic>> myLeads = [
-    {
-      'client': 'Universitas Bengkulu',
-      'code': 'Init26-004',
-      'title': 'Pendampingan Siakad Tahap III',
-      'date': '06 Apr 2026',
-      'sales': 'AM Telkom',
-      'status': 'DEAL',
-      'color': Colors.green,
-      'inputType': 'Manual Input',
-    },
-  ];
+  List<Map<String, dynamic>> get myLeads => LeadRepository.leads;
 
   List<Map<String, dynamic>> get activeLeads {
     if (selectedTopTab == 0) {
@@ -84,23 +47,34 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
   }
 
   List<Map<String, dynamic>> get filteredLeads {
-    final List<Map<String, dynamic>> sourceData = activeLeads;
+    List<Map<String, dynamic>> sourceData = activeLeads;
 
-    if (selectedFilter == 0) {
-      return sourceData;
+    // Filter Status
+    if (selectedFilter != 0) {
+      final filter = filters[selectedFilter].toUpperCase();
+
+      sourceData = sourceData.where((item) {
+        return item['status'] == filter;
+      }).toList();
     }
 
-    final filter = filters[selectedFilter].toUpperCase();
+    // Filter Search
+    if (searchKeyword.isNotEmpty) {
+      sourceData = sourceData.where((item) {
+        return item['client'].toString().toLowerCase().contains(
+              searchKeyword,
+            ) ||
+            item['title'].toString().toLowerCase().contains(searchKeyword);
+      }).toList();
+    }
 
-    return sourceData.where((item) {
-      return item['status'] == filter;
-    }).toList();
+    return sourceData;
   }
 
   void goToTambahLeadBaru() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const TambahLeadBaruScreen()),
+      MaterialPageRoute(builder: (_) => const TambahOpportunityMenuScreen()),
     );
   }
 
@@ -109,6 +83,32 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
       context,
       MaterialPageRoute(builder: (_) => const ImportDataLeadsScreen()),
     );
+  }
+
+  void deleteLead(Map<String, dynamic> lead) {
+    setState(() {
+      LeadRepository.leads.remove(lead);
+    });
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Lead berhasil dihapus')));
+  }
+
+  void shareLead(Map<String, dynamic> lead) {
+    final text =
+        '''
+  📋 LEAD PROJECT
+
+     Client : ${lead['client']}
+     Kode   : ${lead['code']}
+     Project: ${lead['title']}
+     Status : ${lead['status']}
+     Tanggal: ${lead['date']}
+     Sales  : ${lead['sales']}
+     ''';
+
+    Share.share(text, subject: 'Lead Project ${lead['code']}');
   }
 
   Widget buildTopTab(String text, int index) {
@@ -277,9 +277,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
               ),
             ],
           ),
-
           const SizedBox(height: 7),
-
           Text(
             lead['title'],
             style: const TextStyle(
@@ -289,9 +287,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
               fontWeight: FontWeight.w800,
             ),
           ),
-
           const SizedBox(height: 9),
-
           Row(
             children: [
               const Icon(
@@ -325,55 +321,48 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
               ),
             ],
           ),
-
           const SizedBox(height: 9),
-
           const Divider(height: 1, color: Color(0xffE6EAF0)),
-
           const SizedBox(height: 9),
-
           Row(
             children: [
               buildStatusBadge(lead['status'], lead['color']),
-
               const SizedBox(width: 8),
-
               buildInputBadge(lead['inputType'] ?? 'Manual Input'),
-
               const SizedBox(width: 8),
-
               const CircleAvatar(
                 radius: 11,
                 backgroundColor: Colors.lightBlueAccent,
                 child: Icon(Icons.person, size: 13, color: Colors.white),
               ),
-
               const Spacer(),
-
               buildActionButton(
-                icon: Icons.arrow_outward_rounded,
+                icon: Icons.share_outlined,
                 color: const Color(0xff00A7C8),
                 bg: const Color(0xffEAFBFF),
-                onTap: goToTambahLeadBaru,
+                onTap: () {
+                  shareLead(lead);
+                },
               ),
-
               buildActionButton(
                 icon: Icons.edit_outlined,
                 color: const Color(0xff6B7280),
                 bg: const Color(0xffF1F5F9),
-                onTap: goToTambahLeadBaru,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const TambahLeadBaruScreen(),
+                    ),
+                  );
+                },
               ),
-
               buildActionButton(
                 icon: Icons.delete_outline,
                 color: const Color(0xffEF4444),
                 bg: const Color(0xffFEECEC),
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Fitur hapus lead belum dibuat'),
-                    ),
-                  );
+                  deleteLead(lead);
                 },
               ),
             ],
@@ -434,9 +423,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                           Navigator.pop(context);
                         },
                       ),
-
                       const SizedBox(width: 4),
-
                       const Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -461,7 +448,6 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                           ],
                         ),
                       ),
-
                       IconButton(
                         onPressed: goToImportData,
                         icon: const Icon(
@@ -469,7 +455,6 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                           color: Color(0xffB90F1A),
                         ),
                       ),
-
                       Container(
                         width: 28,
                         height: 28,
@@ -491,22 +476,17 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 24),
-
                   Row(
                     children: [
                       buildTopTab(topTabs[0], 0),
-
                       const SizedBox(width: 28),
-
                       buildTopTab(topTabs[1], 1),
                     ],
                   ),
                 ],
               ),
             ),
-
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(14, 10, 14, 80),
@@ -521,11 +501,14 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                         }),
                       ),
                     ),
-
                     const SizedBox(height: 13),
-
                     TextField(
                       style: const TextStyle(fontSize: 12),
+                      onChanged: (value) {
+                        setState(() {
+                          searchKeyword = value.toLowerCase();
+                        });
+                      },
                       decoration: InputDecoration(
                         hintText: selectedTopTab == 0
                             ? 'Cari lead...'
@@ -556,9 +539,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 13),
-
                     if (data.isEmpty)
                       buildEmptyState()
                     else
