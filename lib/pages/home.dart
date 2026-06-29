@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:app_mybhakti/pages/presensi_page.dart';
+import 'package:app_mybhakti/pages/presensi_data.dart';
 import 'package:app_mybhakti/pages/laporan_kehadiran_page.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:app_mybhakti/pages/pengajuan_cuti_page.dart';
 import 'package:app_mybhakti/pages/proyek.dart';
 import 'package:app_mybhakti/pages/opportunities_page.dart';
@@ -368,11 +368,12 @@ class _HomeViewState extends State<HomeView> {
 
             // ================= PRESENSI =================
             GestureDetector(
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const PresensiPage()),
                 );
+                setState(() {});
               },
 
               child: Container(
@@ -466,21 +467,27 @@ class _HomeViewState extends State<HomeView> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
 
-                        children: const [
+                        children: [
                           Icon(
-                            Icons.login_rounded,
+                            PresensiData.hasCheckedIn
+                                ? Icons.logout_rounded
+                                : Icons.login_rounded,
 
-                            color: Colors.red,
+                            color: PresensiData.hasCheckedIn
+                                ? const Color(0xff2D4A76)
+                                : Colors.red,
 
                             size: 46,
                           ),
 
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
 
                           Text(
-                            "Check-In",
+                            PresensiData.hasCheckedIn
+                                ? "Check-Out"
+                                : "Check-In",
 
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),

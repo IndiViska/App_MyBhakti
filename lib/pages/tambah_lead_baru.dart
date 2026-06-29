@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'tambah_lead_step2.dart';
+import 'lead_data.dart';
 
 class TambahLeadBaruScreen extends StatefulWidget {
   const TambahLeadBaruScreen({super.key});
@@ -16,14 +17,19 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
   String? marketValue;
 
   final List<String> kategoriOptions = [
-    'Kategori A',
-    'Kategori B',
-    'Kategori C',
+    'Solusi Teknologi',
+    'Konsultasi',
+    'Perangkat dan Infrastruktur',
   ];
 
-  final List<String> sumberOptions = ['Sumber 1', 'Sumber 2', 'Sumber 3'];
+  final List<String> sumberOptions = [
+    'AM Telkom',
+    'Digital Marketing',
+    'Direct Sales (Canvassing)',
+    'Existing Customer (Repeat)',
+  ];
 
-  final List<String> marketOptions = ['Market 1', 'Market 2', 'Market 3'];
+  final List<String> marketOptions = ['Telkom Group', 'YPT Group', 'Eksternal'];
 
   @override
   void dispose() {
@@ -52,9 +58,16 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
       return;
     }
 
+    LeadData lead = LeadData(
+      judul: judulController.text,
+      kategori: kategoriValue!,
+      sumberOpportunity: sumberValue!,
+      marketCategory: marketValue!,
+    );
+
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const TambahLeadStep2Screen()),
+      MaterialPageRoute(builder: (_) => TambahLeadStep2Screen(leadData: lead)),
     );
   }
 
@@ -168,6 +181,7 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
                     controller: judulController,
                     decoration: InputDecoration(
                       labelText: 'Judul Proyek / Lead',
+                      hintText: 'Misal: Pengadaan CCTV Gudang',
                       labelStyle: const TextStyle(
                         color: Color(0xFF6B7280),
                         fontSize: 13,

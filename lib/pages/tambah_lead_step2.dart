@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'tambah_lead_step3.dart';
+import 'lead_data.dart';
 
 class TambahLeadStep2Screen extends StatefulWidget {
-  const TambahLeadStep2Screen({super.key});
+  final LeadData leadData;
+
+  const TambahLeadStep2Screen({super.key, required this.leadData});
 
   @override
   State<TambahLeadStep2Screen> createState() => _TambahLeadStep2ScreenState();
@@ -29,12 +32,18 @@ class _TambahLeadStep2ScreenState extends State<TambahLeadStep2Screen> {
       TextEditingController();
 
   final List<String> instansiOptions = [
-    'Instansi A',
-    'Instansi B',
-    'Instansi C',
+    'Universitas Bengkulu',
+    'Diskominfo Jawa Barat',
+    'PT Bio Farma',
+    'Politeknik Aceh',
   ];
 
-  final List<String> picOptions = ['PIC 1', 'PIC 2', 'PIC 3'];
+  final List<String> picOptions = [
+    'Budi Santoso',
+    'Andi Pratama',
+    'Rina Wijaya',
+    'Dewi Lestari',
+  ];
 
   @override
   void dispose() {
@@ -525,9 +534,15 @@ class _TambahLeadStep2ScreenState extends State<TambahLeadStep2Screen> {
       return;
     }
 
+    widget.leadData.customer = selectedInstansi ?? customerBaruController.text;
+
+    widget.leadData.pic = selectedCustomerPIC ?? customerPicBaruController.text;
+
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const TambahLeadStep3Screen()),
+      MaterialPageRoute(
+        builder: (_) => TambahLeadStep3Screen(leadData: widget.leadData),
+      ),
     );
   }
 
