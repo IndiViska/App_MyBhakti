@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:excel/excel.dart' as ex;
+import 'package:path_provider/path_provider.dart';
+import 'package:open_filex/open_filex.dart';
 
 import 'lead_repository.dart';
 import 'opportunities_page.dart';
@@ -42,6 +44,97 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Gagal memilih file: $e')));
+    }
+  }
+
+  Future<void> downloadTemplate() async {
+    try {
+      var excel = ex.Excel.createExcel();
+      excel.rename('Sheet1', 'Data Leads');
+      var sheet = excel['Data Leads'];
+
+      // Header kolom sesuai urutan index yang digunakan di processImport
+      List<String> headers = [
+        'Kode Lead',       // col 0
+        'Judul',           // col 1
+        'Kategori',        // col 2
+        'Status',          // col 3  (DEAL / NO DEAL / IN PROGRESS)
+        'Sales',           // col 4
+        'Market',          // col 5
+        'Client',          // col 6
+        'PIC',             // col 7
+        'No HP',           // col 8
+        'Kolom 9',         // col 9
+        'Kolom 10',        // col 10
+        'Kolom 11',        // col 11
+        'Kolom 12',        // col 12
+        'Tanggal',         // col 13
+        'Kolom 14',        // col 14
+        'Kolom 15',        // col 15
+        'Kolom 16',        // col 16
+        'Marketing PIC',   // col 17
+        'Technical PIC',   // col 18
+      ];
+
+      // Baris pertama = judul template (baris index 0)
+      // excel 2.1.0 menerima List<dynamic> terus
+      sheet.appendRow(['TEMPLATE IMPORT DATA LEADS - MyBhakti']);
+
+      // Baris kedua = header kolom (baris index 1)
+      sheet.appendRow(headers);
+
+      // Baris contoh (baris index 2 — sesuai loop processImport mulai dari i=2)
+      sheet.appendRow([
+        'INIT26-001',
+        'Pengadaan Server',
+        'IT',
+        'IN PROGRESS',
+        'Budi',
+        'Bandung',
+        'PT Contoh',
+        'Andi',
+        '08123456789',
+        '',
+        '',
+        '',
+        '',
+        '01/01/2026',
+        '',
+        '',
+        '',
+        'Dewi',
+        'Rudi',
+      ]);
+
+      final List<int>? fileBytes = excel.save();
+      if (fileBytes == null) throw Exception('Gagal membuat file');
+
+      Directory? dir;
+      if (Platform.isAndroid) {
+        dir = Directory('/storage/emulated/0/Download');
+      } else {
+        dir = await getApplicationDocumentsDirectory();
+      }
+
+      final String filePath = '${dir.path}/template_import_leads.xlsx';
+      final File file = File(filePath);
+      await file.writeAsBytes(fileBytes);
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Template disimpan: $filePath'),
+          action: SnackBarAction(
+            label: 'Buka',
+            onPressed: () => OpenFilex.open(filePath),
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal download template: $e')),
+      );
     }
   }
 
@@ -219,6 +312,31 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
               ),
             ),
             const SizedBox(height: 18),
+            const Text(
+              'Template Import',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              height: 45,
+              child: OutlinedButton.icon(
+                onPressed: downloadTemplate,
+                icon: const Icon(Icons.download),
+                label: const Text('Download Template'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: const Color(0xFFB91C21),
+                  side: const BorderSide(color: Color(0xFFB91C21)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             GestureDetector(
               onTap: chooseFile,
               child: Container(
