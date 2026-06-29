@@ -226,7 +226,7 @@ class _TambahLeadStep3ScreenState extends State<TambahLeadStep3Screen> {
 
                   buildLabel('Status Awal'),
                   DropdownButtonFormField<String>(
-                    value: selectedStatus,
+                    initialValue: selectedStatus,
                     isExpanded: true,
                     decoration: customDecoration(hint: 'Select an option'),
                     items: statusOptions.map((item) {

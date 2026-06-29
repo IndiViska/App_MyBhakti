@@ -4,8 +4,15 @@ import 'projectdraft.dart';
 
 class AddProjectPage extends StatefulWidget {
   final String username;
+  final bool isEditMode;
+  final Map<String, dynamic>? projectData;
 
-  const AddProjectPage({super.key, required this.username});
+  const AddProjectPage({
+    super.key,
+    required this.username,
+    this.isEditMode = false,
+    this.projectData,
+  });
 
   @override
   State<AddProjectPage> createState() => _AddProjectPageState();
@@ -34,7 +41,60 @@ class _AddProjectPageState extends State<AddProjectPage> {
   ];
 
   /// ================= DRAFT =================
-  final ProjectDraft draft = ProjectDraft();
+  late final ProjectDraft draft;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.isEditMode && widget.projectData != null) {
+      final p = widget.projectData!;
+
+      /// Pre-fill dari data proyek yang sudah ada
+      judulController.text = p["title"] ?? "";
+      deskripsiController.text = p["deskripsi"] ?? "";
+      selectedKategoriProyek = p["kategoriProyek"];
+      selectedKategoriMarket = p["kategoriMarket"];
+
+      /// Parse tanggal: data dummy menyimpan sebagai String "yyyy-MM-dd"
+      DateTime? parsedStart;
+      DateTime? parsedEnd;
+      final rawStart = p["startDate"];
+      final rawEnd = p["endDate"];
+      if (rawStart is DateTime) {
+        parsedStart = rawStart;
+      } else if (rawStart is String && rawStart.isNotEmpty) {
+        parsedStart = DateTime.tryParse(rawStart);
+      }
+      if (rawEnd is DateTime) {
+        parsedEnd = rawEnd;
+      } else if (rawEnd is String && rawEnd.isNotEmpty) {
+        parsedEnd = DateTime.tryParse(rawEnd);
+      }
+
+      draft = ProjectDraft(
+        kategoriProyek: p["kategoriProyek"],
+        kategoriMarket: p["kategoriMarket"],
+        judul: p["title"],
+        deskripsi: p["deskripsi"],
+        customerSelected: p["customerSelected"],
+        endUserSelected: p["endUserSelected"],
+        newCustomerName: p["newCustomerName"],
+        newCustomerPic: p["newCustomerPic"],
+        newEndUserName: p["newEndUserName"],
+        newEndUserPic: p["newEndUserPic"],
+        newCustomerPhone: p["newCustomerPhone"],
+        newEndUserPhone: p["newEndUserPhone"],
+        picLt: p["lead"],
+        picMarketing: p["picMarketing"],
+        nilaiPekerjaan: p["nilai"],
+        startDate: parsedStart,
+        endDate: parsedEnd,
+      );
+    } else {
+      draft = ProjectDraft();
+    }
+  }
 
   /// ================= NEXT PAGE =================
   void nextPage() {
@@ -66,8 +126,12 @@ class _AddProjectPageState extends State<AddProjectPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) =>
-            AddProjectPage2(username: widget.username, draft: draft),
+        builder: (_) => AddProjectPage2(
+          username: widget.username,
+          draft: draft,
+          isEditMode: widget.isEditMode,
+          projectData: widget.projectData,
+        ),
       ),
     );
   }
@@ -114,7 +178,6 @@ class _AddProjectPageState extends State<AddProjectPage> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-
                     icon: const Icon(
                       Icons.arrow_back_ios_new,
                       color: Colors.white,
@@ -130,23 +193,27 @@ class _AddProjectPageState extends State<AddProjectPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
 
-                    children: const [
+                    children: [
                       Text(
-                        "Form Tambah Data Proyek",
+                        widget.isEditMode
+                            ? "Form Edit Data Proyek"
+                            : "Form Tambah Data Proyek",
 
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
 
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
 
                       Text(
-                        "Tambah data proyek yang dikerjakan",
+                        widget.isEditMode
+                            ? "Edit data proyek yang dikerjakan"
+                            : "Tambah data proyek yang dikerjakan",
 
-                        style: TextStyle(color: Colors.white, fontSize: 13),
+                        style: const TextStyle(color: Colors.white, fontSize: 13),
                       ),
                     ],
                   ),
@@ -284,7 +351,7 @@ class _AddProjectPageState extends State<AddProjectPage> {
                           const SizedBox(height: 8),
 
                           DropdownButtonFormField<String>(
-                            value: selectedKategoriProyek,
+                            initialValue: selectedKategoriProyek,
 
                             decoration: inputDecoration(),
 
@@ -313,7 +380,7 @@ class _AddProjectPageState extends State<AddProjectPage> {
                           const SizedBox(height: 8),
 
                           DropdownButtonFormField<String>(
-                            value: selectedKategoriMarket,
+                            initialValue: selectedKategoriMarket,
 
                             decoration: inputDecoration(),
 

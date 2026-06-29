@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:app_mybhakti/pages/presensi_page.dart';
 import 'package:app_mybhakti/pages/laporan_kehadiran_page.dart';
@@ -10,6 +9,8 @@ import 'package:app_mybhakti/pages/opportunities_page.dart';
 import 'package:app_mybhakti/pages/aktivitas.dart';
 import 'package:app_mybhakti/pages/schedule_page.dart';
 import 'package:app_mybhakti/pages/knowledge_page.dart';
+import 'package:app_mybhakti/pages/notification.dart';
+import 'package:app_mybhakti/pages/profile.dart';
 
 class HomeView extends StatefulWidget {
   final String username;
@@ -124,16 +125,148 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.white,
-        color: const Color(0xffB1121B),
-        items: const [
-          Icon(Icons.home, color: Colors.white),
-          Icon(Icons.dashboard, color: Colors.white),
-          Icon(Icons.notifications, color: Colors.white),
-          Icon(Icons.person, color: Colors.white),
-        ],
-        onTap: (index) {},
+      bottomNavigationBar: SizedBox(
+        height: 70,
+
+        child: Stack(
+          clipBehavior: Clip.none,
+
+          children: [
+            CurvedNavigationBar(
+              backgroundColor: Colors.white,
+
+              color: const Color(0xffB1121B),
+
+              height: 75,
+
+              index: 0,
+
+              items: [
+                // HOME
+                Padding(
+                  padding: EdgeInsets.only(top: 0),
+
+                  child: Icon(Icons.home, color: Colors.white, size: 28),
+                ),
+
+                // ACTIVITIES
+                Transform.translate(
+                  offset: const Offset(0, 10),
+
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+
+                    children: [
+                      Icon(Icons.dashboard, color: Colors.white, size: 25),
+
+                      SizedBox(height: 3),
+
+                      Text(
+                        "Activities",
+                        style: TextStyle(color: Colors.white, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // NOTIFICATION
+                Transform.translate(
+                  offset: const Offset(0, 10),
+
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+
+                    children: [
+                      Icon(Icons.notifications, color: Colors.white, size: 25),
+
+                      SizedBox(height: 3),
+
+                      Text(
+                        "Notification",
+                        style: TextStyle(color: Colors.white, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // PROFILE
+                Transform.translate(
+                  offset: const Offset(0, 10),
+
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+
+                    children: [
+                      Icon(Icons.person, color: Colors.white, size: 25),
+
+                      SizedBox(height: 3),
+
+                      Text(
+                        "Profile",
+                        style: TextStyle(color: Colors.white, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+
+              onTap: (index) {
+                switch (index) {
+                  case 0:
+                    break;
+
+                  case 1:
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            AktivitasPage(username: widget.username),
+                      ),
+                    );
+                    break;
+
+                  case 2:
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            NotificationPage(username: widget.username),
+                      ),
+                    );
+                    break;
+
+                  case 3:
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => Profile(username: widget.username),
+                      ),
+                    );
+                    break;
+                }
+              },
+            ),
+
+            // LABEL HOME DI LUAR BULATAN
+            Positioned(
+              bottom: 10,
+
+              left: 47,
+
+              child: const Text(
+                "Home",
+
+                style: TextStyle(
+                  color: Colors.white,
+
+                  fontSize: 11,
+
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
 
       body: SafeArea(
@@ -456,7 +589,7 @@ class _HomeViewState extends State<HomeView> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const SchedulePage()),
+                      MaterialPageRoute(builder: (_) => SchedulePage(username: widget.username)),
                     );
                   },
 
@@ -471,175 +604,6 @@ class _HomeViewState extends State<HomeView> {
             const SizedBox(height: 20),
           ],
         ),
-      ),
-    );
-  }
-}
-
-// ================= CUSTOM NAVBAR =================
-
-class CustomNavbar extends StatefulWidget {
-  final String username;
-
-  const CustomNavbar({super.key, required this.username});
-
-  @override
-  State<CustomNavbar> createState() => _CustomNavbarState();
-}
-
-class _CustomNavbarState extends State<CustomNavbar> {
-  int selectedIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 90,
-      color: Colors.white,
-
-      child: Stack(
-        clipBehavior: Clip.none,
-
-        children: [
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-
-            child: Container(
-              height: 65,
-
-              decoration: const BoxDecoration(color: Color(0xffB1121B)),
-            ),
-          ),
-
-          // HOME BUTTON
-          Positioned(
-            top: -5,
-            left: 25,
-
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => HomeView(username: widget.username),
-                  ),
-                );
-              },
-
-              child: Container(
-                width: 70,
-                height: 70,
-
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-
-                  shape: BoxShape.circle,
-
-                  border: Border.all(color: Colors.white, width: 6),
-                ),
-
-                child: const Icon(Icons.home, color: Colors.white, size: 35),
-              ),
-            ),
-          ),
-
-          // MENU ITEMS
-          Positioned.fill(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-              children: [
-                const SizedBox(width: 60),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-
-                  child: navItem(
-                    context: context,
-                    icon: Icons.dashboard_customize_outlined,
-                    label: "Activities",
-                    page: const AktivitasPage(username: "admin"),
-                    index: 1,
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-
-                  child: navItem(
-                    context: context,
-                    icon: Icons.notifications,
-                    label: "Notification",
-                    page: LaporanKehadiranPage(),
-                    index: 2,
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-
-                  child: navItem(
-                    context: context,
-                    icon: Icons.person,
-                    label: "Profile",
-                    page: HomeView(username: widget.username),
-                    index: 3,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const Positioned(
-            left: 42,
-            bottom: 8,
-
-            child: Text(
-              "Home",
-
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget navItem({
-    required BuildContext context,
-    required IconData icon,
-    required String label,
-    required Widget page,
-    required int index,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedIndex = index;
-        });
-
-        Navigator.push(context, MaterialPageRoute(builder: (_) => page));
-      },
-
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-
-        children: [
-          Icon(icon, color: Colors.white, size: 32),
-
-          const SizedBox(height: 3),
-
-          Text(
-            label,
-
-            style: const TextStyle(color: Colors.white, fontSize: 12),
-          ),
-        ],
       ),
     );
   }

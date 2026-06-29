@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:app_mybhakti/pages/project_dummy.dart';
 import 'package:app_mybhakti/pages/addproject1.dart';
+import 'package:app_mybhakti/pages/viewproject.dart';
+
+const List<Color> avatarColors = [
+  Color(0xFFF4D03F),
+  Color(0xFF5DADE2),
+  Color(0xFF58D68D),
+  Color(0xFFAF7AC5),
+  Color(0xFFFF8A65),
+];
 
 class ProjectPage extends StatefulWidget {
   final String username;
@@ -87,12 +96,17 @@ class _ProjectPageState extends State<ProjectPage> {
 
               child: Row(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-
-                    child: const Icon(Icons.arrow_back),
+                  InkWell(
+                    onTap: () => Navigator.pop(context),
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(Icons.arrow_back),
+                    ),
                   ),
 
                   const SizedBox(width: 12),
@@ -310,6 +324,8 @@ class _ProjectPageState extends State<ProjectPage> {
   // ================= PROJECT CARD =================
 
   Widget buildProjectCard(Map<String, dynamic> project) {
+    const int maxVisibleMembers = 5;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
 
@@ -388,17 +404,31 @@ class _ProjectPageState extends State<ProjectPage> {
 
               const SizedBox(width: 10),
 
-              Container(
-                width: 32,
-                height: 32,
-
-                decoration: BoxDecoration(
-                  color: const Color(0xffC1121F),
-
-                  borderRadius: BorderRadius.circular(8),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PmoViewData(
+                        username: widget.username,
+                        project: project,
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffC1121F),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.folder,
+                    color: Colors.white,
+                    size: 18,
+                  ),
                 ),
-
-                child: const Icon(Icons.folder, color: Colors.white, size: 18),
               ),
             ],
           ),
@@ -407,21 +437,56 @@ class _ProjectPageState extends State<ProjectPage> {
 
           // ================= MEMBER =================
           Row(
-            children: List.generate(
-              5,
-              (i) => Container(
-                margin: const EdgeInsets.only(right: 4),
+            children: [
+              ...List.generate(
+                project["anggota"].length > maxVisibleMembers
+                    ? maxVisibleMembers
+                    : project["anggota"].length,
+                (i) {
+                  final String nama = project["anggota"][i];
 
-                width: 20,
-                height: 20,
-
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-
-                  color: Colors.primaries[i % Colors.primaries.length],
-                ),
+                  return Container(
+                    margin: const EdgeInsets.only(right: 4),
+                    width: 22,
+                    height: 22,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: avatarColors[i % avatarColors.length],
+                    ),
+                    child: Center(
+                      child: Text(
+                        nama[0].toUpperCase(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
-            ),
+
+              if (project["anggota"].length > maxVisibleMembers)
+                Container(
+                  width: 22,
+                  height: 22,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey.shade300,
+                  ),
+                  child: Center(
+                    child: Text(
+                      "+${project["anggota"].length - maxVisibleMembers}",
+                      style: const TextStyle(
+                        color: Colors.black54,
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
 
           const SizedBox(height: 14),
@@ -505,12 +570,16 @@ class _ProjectPageState extends State<ProjectPage> {
               // ================= EDIT =================
               GestureDetector(
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Edit project clicked")),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => AddProjectPage(
+                        username: widget.username,
+                        isEditMode: true,
+                        projectData: project,
+                      ),
+                    ),
                   );
-
-                  // NANTI BISA NAVIGATE KE PAGE EDIT
-                  // Navigator.push(...)
                 },
 
                 child: actionButton(Icons.edit_outlined),

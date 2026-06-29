@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:app_mybhakti/pages/add_activity_page.dart';
 import 'package:app_mybhakti/pages/home.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:app_mybhakti/pages/notification.dart';
+import 'package:app_mybhakti/pages/profile.dart';
 
 class AktivitasPage extends StatefulWidget {
   final String username;
@@ -12,14 +16,176 @@ class AktivitasPage extends StatefulWidget {
 
 class _AktivitasPageState extends State<AktivitasPage> {
   int selectedTab = 0;
+  List<Map<String, dynamic>> items = [];
 
   @override
   Widget build(BuildContext context) {
+    String currentCategory = selectedTab == 0 ? 'All' : (selectedTab == 1 ? 'Leads' : 'Project');
+    DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
+    // Remove expired items
+    items.removeWhere((i) {
+      String deadline = i['deadline'] ?? '';
+      if (deadline.isEmpty) return false;
+      try {
+        List<String> parts = deadline.split('/');
+        DateTime dueDate = DateTime(int.parse(parts[2]), int.parse(parts[0]), int.parse(parts[1]));
+        return dueDate.isBefore(today);
+      } catch (_) {
+        return false;
+      }
+    });
+
+    List<Map<String, dynamic>> aktivitasItems = items.where((i) => i['type'] == 'Aktivitas' && (currentCategory == 'All' || i['category'] == currentCategory)).toList();
+    List<Map<String, dynamic>> acaraItems = items.where((i) => i['type'] == 'Acara' && (currentCategory == 'All' || i['category'] == currentCategory)).toList();
     return Scaffold(
       backgroundColor: Colors.white,
 
-      // ================= NAVBAR =================
-      bottomNavigationBar: CustomNavbar(username: widget.username),
+      bottomNavigationBar: SizedBox(
+        height: 70,
+
+        child: Stack(
+          clipBehavior: Clip.none,
+
+          children: [
+            CurvedNavigationBar(
+              backgroundColor: Colors.white,
+
+              color: const Color(0xffB1121B),
+
+              height: 75,
+
+              index: 1,
+
+              items: [
+                // HOME
+                Transform.translate(
+                  offset: const Offset(0, 10),
+
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+
+                    children: [
+                      Icon(Icons.home, color: Colors.white, size: 25),
+
+                      SizedBox(height: 3),
+
+                      Text(
+                        "Home",
+                        style: TextStyle(color: Colors.white, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // ACTIVITIES
+                Padding(
+                  padding: EdgeInsets.only(top: 0),
+
+                  child: Icon(Icons.dashboard, color: Colors.white, size: 28),
+                ),
+
+                // NOTIFICATION
+                Transform.translate(
+                  offset: const Offset(0, 10),
+
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+
+                    children: [
+                      Icon(Icons.notifications, color: Colors.white, size: 25),
+
+                      SizedBox(height: 3),
+
+                      Text(
+                        "Notification",
+                        style: TextStyle(color: Colors.white, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // PROFILE
+                Transform.translate(
+                  offset: const Offset(0, 10),
+
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+
+                    children: [
+                      Icon(Icons.person, color: Colors.white, size: 25),
+
+                      SizedBox(height: 3),
+
+                      Text(
+                        "Profile",
+                        style: TextStyle(color: Colors.white, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+
+              onTap: (index) {
+                switch (index) {
+                  case 0:
+                    Navigator.pushReplacement(
+                      context,
+
+                      MaterialPageRoute(
+                        builder: (_) => HomeView(username: widget.username),
+                      ),
+                    );
+
+                    break;
+
+                  case 1:
+                    break;
+
+                  case 2:
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            NotificationPage(username: widget.username),
+                      ),
+                    );
+                    break;
+
+                  case 3:
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => Profile(username: widget.username),
+                      ),
+                    );
+
+                    break;
+                }
+              },
+            ),
+
+            // LABEL ACTIVITIES DI LUAR BULATAN
+            Positioned(
+              bottom: 10,
+
+              left: 175,
+
+              child: const Text(
+                "Activities",
+
+                style: TextStyle(
+                  color: Colors.white,
+
+                  fontSize: 11,
+
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
 
       body: SafeArea(
         child: Column(
@@ -97,11 +263,57 @@ class _AktivitasPageState extends State<AktivitasPage> {
 
                     const SizedBox(height: 14),
 
-                    activityCard(
-                      title: "Belum ada aktivitas!",
-                      buttonText: "+ Tambahkan Aktivitas...",
-                      imagePath: 'lib/assets/aktivitas.png',
-                    ),
+                    aktivitasItems.isEmpty
+                        ? activityCard(
+                            title: "Belum ada aktivitas!",
+                            buttonText: "+ Tambahkan Aktivitas...",
+                            imagePath: 'lib/assets/aktivitas.png',
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => AddActivityPage(
+                                    isEventMode: false,
+                                    username: widget.username,
+                                  ),
+                                ),
+                              );
+                              if (result != null && result is Map<String, dynamic>) {
+                                setState(() {
+                                  items.add(Map<String, dynamic>.from(result));
+                                });
+                              }
+                            },
+                          )
+                        : Column(
+                            children: [
+                              ...aktivitasItems.map((item) => _buildItemCard(item)).toList(),
+                              const SizedBox(height: 12),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => AddActivityPage(
+                                        isEventMode: false,
+                                        username: widget.username,
+                                      ),
+                                    ),
+                                  );
+                                  if (result != null && result is Map<String, dynamic>) {
+                                    setState(() {
+                                      items.add(Map<String, dynamic>.from(result));
+                                    });
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xffB1121B),
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: const Text("+ Tambah Aktivitas"),
+                              ),
+                            ],
+                          ),
 
                     const SizedBox(height: 40),
 
@@ -117,11 +329,57 @@ class _AktivitasPageState extends State<AktivitasPage> {
 
                     const SizedBox(height: 14),
 
-                    activityCard(
-                      title: "Belum ada acara!",
-                      buttonText: "+ Tambahkan Acara...",
-                      imagePath: 'lib/assets/acara.png',
-                    ),
+                    acaraItems.isEmpty
+                        ? activityCard(
+                            title: "Belum ada acara!",
+                            buttonText: "+ Tambahkan Acara...",
+                            imagePath: 'lib/assets/acara.png',
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => AddActivityPage(
+                                    isEventMode: true,
+                                    username: widget.username,
+                                  ),
+                                ),
+                              );
+                              if (result != null && result is Map<String, dynamic>) {
+                                setState(() {
+                                  items.add(Map<String, dynamic>.from(result));
+                                });
+                              }
+                            },
+                          )
+                        : Column(
+                            children: [
+                              ...acaraItems.map((item) => _buildItemCard(item)).toList(),
+                              const SizedBox(height: 12),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => AddActivityPage(
+                                        isEventMode: true,
+                                        username: widget.username,
+                                      ),
+                                    ),
+                                  );
+                                  if (result != null && result is Map<String, dynamic>) {
+                                    setState(() {
+                                      items.add(Map<String, dynamic>.from(result));
+                                    });
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xffB1121B),
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: const Text("+ Tambah Acara"),
+                              ),
+                            ],
+                          ),
 
                     const SizedBox(height: 40),
                   ],
@@ -130,6 +388,79 @@ class _AktivitasPageState extends State<AktivitasPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildItemCard(Map<String, dynamic> item) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade300),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xffB1121B).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  item['category'],
+                  style: const TextStyle(
+                    color: Color(0xffB1121B),
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                item['deadline'] ?? '-',
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            item['title'].toString().isEmpty ? '(No Title)' : item['title'],
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              const Icon(Icons.business_center_outlined, size: 16, color: Colors.grey),
+              const SizedBox(width: 6),
+              Text(
+                item['project'] ?? '-',
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -171,6 +502,7 @@ class _AktivitasPageState extends State<AktivitasPage> {
     required String title,
     required String buttonText,
     required String imagePath,
+    required VoidCallback onPressed,
   }) {
     return Stack(
       clipBehavior: Clip.none,
@@ -224,7 +556,7 @@ class _AktivitasPageState extends State<AktivitasPage> {
         Positioned(
           bottom: -20,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: onPressed,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               elevation: 5,
@@ -241,167 +573,6 @@ class _AktivitasPageState extends State<AktivitasPage> {
           ),
         ),
       ],
-    );
-  }
-}
-
-// ================= CUSTOM NAVBAR =================
-
-class CustomNavbar extends StatefulWidget {
-  final String username;
-
-  const CustomNavbar({super.key, required this.username});
-
-  @override
-  State<CustomNavbar> createState() => _CustomNavbarState();
-}
-
-class _CustomNavbarState extends State<CustomNavbar> {
-  int selectedIndex = 1;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 90,
-      color: Colors.white,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: 65,
-              decoration: const BoxDecoration(color: Color(0xffB1121B)),
-            ),
-          ),
-
-          // ================= BULATAN ACTIVITIES =================
-          Positioned(
-            top: -5,
-            left: MediaQuery.of(context).size.width * 0.32,
-            child: GestureDetector(
-              onTap: () {},
-              child: Container(
-                width: 70,
-                height: 70,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 6),
-                ),
-                child: const Icon(
-                  Icons.dashboard_customize_outlined,
-                  color: Colors.white,
-                  size: 35,
-                ),
-              ),
-            ),
-          ),
-
-          // ================= MENU =================
-          Positioned.fill(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  // HOME
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: navItem(
-                        context: context,
-                        icon: Icons.home,
-                        label: "Home",
-                        page: HomeView(username: widget.username),
-                        index: 0,
-                      ),
-                    ),
-                  ),
-
-                  // SPACE BULATAN
-                  const SizedBox(width: 75),
-
-                  // NOTIFICATION
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: navItem(
-                        context: context,
-                        icon: Icons.notifications,
-                        label: "Notification",
-                        page: const SizedBox(),
-                        index: 2,
-                      ),
-                    ),
-                  ),
-
-                  // PROFILE
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: navItem(
-                        context: context,
-                        icon: Icons.person,
-                        label: "Profile",
-                        page: HomeView(username: widget.username),
-                        index: 3,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // ================= TEXT ACTIVITIES =================
-          Positioned(
-            left: MediaQuery.of(context).size.width * 0.34,
-            bottom: 8,
-            child: const Text(
-              "Activities",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget navItem({
-    required BuildContext context,
-    required IconData icon,
-    required String label,
-    required Widget page,
-    required int index,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedIndex = index;
-        });
-
-        Navigator.push(context, MaterialPageRoute(builder: (_) => page));
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Icon(icon, color: Colors.white, size: 32),
-
-          const SizedBox(height: 3),
-
-          Text(
-            label,
-            style: const TextStyle(color: Colors.white, fontSize: 12),
-          ),
-        ],
-      ),
     );
   }
 }

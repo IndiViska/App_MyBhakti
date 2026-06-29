@@ -56,28 +56,17 @@ class OnboardingState extends State<Onboarding>
           AnimatedBuilder(
             animation: _animation,
             builder: (context, child) {
-              double fadeValue = ((_animation.value - 0.7) / 0.3).clamp(
+              double fadeValue = ((_animation.value - 0.5) / 0.5).clamp(
                 0.0,
                 1.0,
               );
 
-              return Column(
-                children: [
-                  Expanded(
-                    flex: 7,
-                    child: Container(
-                      color: Color.lerp(
-                        const Color(0xFFB1121B),
-                        Colors.white,
-                        fadeValue,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(color: const Color(0xFFB1121B)),
-                  ),
-                ],
+              return Container(
+                color: Color.lerp(
+                  const Color(0xFFB1121B),
+                  Colors.white,
+                  fadeValue,
+                ),
               );
             },
           ),
@@ -87,7 +76,7 @@ class OnboardingState extends State<Onboarding>
               return Transform.translate(
                 offset: Offset(
                   0,
-                  lerpDouble(-height * 1.8, height * 0.87, _animation.value)!,
+                  lerpDouble(-height * 1.8, -height * 0.05, _animation.value)!,
                 ),
                 child: ClipPath(
                   clipper: MeltClipper(),
@@ -663,39 +652,71 @@ Widget buildBottomNav({
 class MeltClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
+    final w = size.width;
+    final h = size.height;
     Path path = Path();
 
-    path.lineTo(0, size.height * 0.55);
+    // Start from top-left, go down the left edge
+    path.lineTo(0, h * 0.75);
 
-    path.quadraticBezierTo(
-      size.width * 0.10,
-      size.height * 0.35,
-      size.width * 0.28,
-      size.height * 0.80,
+    // Smooth wave across the bottom using cubic bezier curves
+    // First drip (left side - gentle curve down)
+    path.cubicTo(
+      w * 0.04, h * 0.75,
+      w * 0.08, h * 0.82,
+      w * 0.14, h * 0.85,
     );
 
-    path.quadraticBezierTo(
-      size.width * 0.40,
-      size.height * 1.10,
-      size.width * 0.58,
-      size.height * 0.72,
+    // Rise back up
+    path.cubicTo(
+      w * 0.20, h * 0.88,
+      w * 0.22, h * 0.78,
+      w * 0.28, h * 0.76,
     );
 
-    path.quadraticBezierTo(
-      size.width * 0.72,
-      size.height * 0.20,
-      size.width * 0.82,
-      size.height * 1.18,
+    // Second drip (center-left - deeper drip)
+    path.cubicTo(
+      w * 0.34, h * 0.74,
+      w * 0.36, h * 0.92,
+      w * 0.42, h * 0.95,
     );
 
-    path.quadraticBezierTo(
-      size.width * 0.92,
-      size.height * 1.45,
-      size.width,
-      size.height * 0.68,
+    // Rise back up from second drip
+    path.cubicTo(
+      w * 0.48, h * 0.98,
+      w * 0.50, h * 0.80,
+      w * 0.55, h * 0.78,
     );
 
-    path.lineTo(size.width, 0);
+    // Third drip (center-right - medium drip)
+    path.cubicTo(
+      w * 0.60, h * 0.76,
+      w * 0.62, h * 0.88,
+      w * 0.68, h * 0.90,
+    );
+
+    // Rise back up
+    path.cubicTo(
+      w * 0.74, h * 0.92,
+      w * 0.76, h * 0.74,
+      w * 0.82, h * 0.72,
+    );
+
+    // Fourth drip (right side - gentle curve)
+    path.cubicTo(
+      w * 0.88, h * 0.70,
+      w * 0.92, h * 0.84,
+      w * 0.96, h * 0.82,
+    );
+
+    // Connect to top-right
+    path.cubicTo(
+      w * 0.98, h * 0.81,
+      w, h * 0.78,
+      w, h * 0.76,
+    );
+
+    path.lineTo(w, 0);
     path.close();
 
     return path;

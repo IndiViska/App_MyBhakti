@@ -214,7 +214,7 @@ class _TambahLeadStep4ScreenState extends State<TambahLeadStep4Screen> {
       children: [
         buildLabel(label),
         DropdownButtonFormField<String>(
-          value: value,
+          initialValue: value,
           isExpanded: true,
           icon: const Icon(
             Icons.keyboard_arrow_down_rounded,

@@ -5,27 +5,21 @@ class AjukanCutiPage extends StatefulWidget {
   const AjukanCutiPage({super.key});
 
   @override
-  State<AjukanCutiPage> createState() =>
-      _AjukanCutiPageState();
+  State<AjukanCutiPage> createState() => _AjukanCutiPageState();
 }
 
-class _AjukanCutiPageState
-    extends State<AjukanCutiPage> {
-
+class _AjukanCutiPageState extends State<AjukanCutiPage> {
   // ================= FILE =================
   String? fileName;
 
   // ================= CONTROLLER =================
   String? selectedCuti;
 
-  final TextEditingController mulaiController =
-      TextEditingController();
+  final TextEditingController mulaiController = TextEditingController();
 
-  final TextEditingController selesaiController =
-      TextEditingController();
+  final TextEditingController selesaiController = TextEditingController();
 
-  final TextEditingController keteranganController =
-      TextEditingController();
+  final TextEditingController keteranganController = TextEditingController();
 
   // ================= DATE =================
   DateTime? startDate;
@@ -36,35 +30,23 @@ class _AjukanCutiPageState
   // ================= STEP =================
   bool get step1Done => selectedCuti != null;
 
-  bool get step2Done =>
-      startDate != null && endDate != null;
+  bool get step2Done => startDate != null && endDate != null;
 
   bool get step3Done =>
-      step1Done &&
-      step2Done &&
-      keteranganController.text.isNotEmpty;
+      step1Done && step2Done && keteranganController.text.isNotEmpty;
 
   // ================= HITUNG DURASI =================
   void hitungDurasi() {
     if (startDate != null && endDate != null) {
-      durasiHari =
-          endDate!
-              .difference(startDate!)
-              .inDays +
-          1;
+      durasiHari = endDate!.difference(startDate!).inDays + 1;
     }
   }
 
   // ================= PICK FILE =================
   Future<void> pickFile() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: [
-        'pdf',
-        'jpg',
-        'png',
-      ],
+      allowedExtensions: ['pdf', 'jpg', 'png'],
     );
 
     if (result != null) {
@@ -107,8 +89,7 @@ class _AjukanCutiPageState
                   children: [
                     // ================= APPBAR =================
                     Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                       children: [
                         GestureDetector(
@@ -121,8 +102,7 @@ class _AjukanCutiPageState
                             width: 42,
 
                             decoration: BoxDecoration(
-                              color: Colors.white
-                                  .withOpacity(0.2),
+                              color: Colors.white.withOpacity(0.2),
 
                               shape: BoxShape.circle,
                             ),
@@ -170,16 +150,13 @@ class _AjukanCutiPageState
                       decoration: BoxDecoration(
                         color: const Color(0xffD20F1E),
 
-                        borderRadius:
-                            BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(20),
                       ),
 
                       child: Column(
                         children: [
                           Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment
-                                    .spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                             children: const [
                               Text(
@@ -214,8 +191,7 @@ class _AjukanCutiPageState
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 45,
-                                  fontWeight:
-                                      FontWeight.bold,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
 
@@ -240,17 +216,13 @@ class _AjukanCutiPageState
                     // ================= STEP =================
                     Row(
                       children: [
-                        buildStep(
-                          number: "1",
-                          isActive: step1Done,
-                        ),
+                        buildStep(number: "1", isActive: step1Done),
 
                         Expanded(
                           child: Divider(
                             color: step1Done
                                 ? Colors.green
-                                : Colors.grey
-                                    .shade400,
+                                : Colors.grey.shade400,
                             thickness: 2,
                           ),
                         ),
@@ -265,8 +237,7 @@ class _AjukanCutiPageState
                           child: Divider(
                             color: step2Done
                                 ? Colors.green
-                                : Colors.grey
-                                    .shade400,
+                                : Colors.grey.shade400,
                             thickness: 2,
                           ),
                         ),
@@ -282,36 +253,25 @@ class _AjukanCutiPageState
                     const SizedBox(height: 8),
 
                     Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment
-                              .spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                       children: const [
                         Text(
                           "Jenis",
 
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                          ),
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
                         ),
 
                         Text(
                           "Tanggal",
 
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                          ),
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
                         ),
 
                         Text(
                           "Kirim",
 
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                          ),
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
                         ),
                       ],
                     ),
@@ -324,8 +284,7 @@ class _AjukanCutiPageState
                 padding: const EdgeInsets.all(20),
 
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
 
                   children: [
                     // ================= JENIS CUTI =================
@@ -341,7 +300,7 @@ class _AjukanCutiPageState
                     const SizedBox(height: 12),
 
                     DropdownButtonFormField(
-                      value: selectedCuti,
+                      initialValue: selectedCuti,
 
                       decoration: InputDecoration(
                         hintText: "Pilih",
@@ -350,47 +309,34 @@ class _AjukanCutiPageState
                         fillColor: Colors.white,
 
                         border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(
-                            14,
-                          ),
+                          borderRadius: BorderRadius.circular(14),
                         ),
                       ),
 
                       items: const [
                         DropdownMenuItem(
                           value: "Cuti Tahunan",
-                          child: Text(
-                            "Cuti Tahunan",
-                          ),
+                          child: Text("Cuti Tahunan"),
                         ),
 
                         DropdownMenuItem(
                           value: "Cuti Sakit",
-                          child: Text(
-                            "Cuti Sakit",
-                          ),
+                          child: Text("Cuti Sakit"),
                         ),
 
                         DropdownMenuItem(
                           value: "Cuti Melahirkan",
-                          child: Text(
-                            "Cuti Melahirkan",
-                          ),
+                          child: Text("Cuti Melahirkan"),
                         ),
 
                         DropdownMenuItem(
                           value: "Cuti Penting",
-                          child: Text(
-                            "Cuti Penting",
-                          ),
+                          child: Text("Cuti Penting"),
                         ),
 
                         DropdownMenuItem(
                           value: "Cuti Besar",
-                          child: Text(
-                            "Cuti Besar",
-                          ),
+                          child: Text("Cuti Besar"),
                         ),
                       ],
 
@@ -420,15 +366,11 @@ class _AjukanCutiPageState
                         Expanded(
                           child: GestureDetector(
                             onTap: () async {
-                              DateTime? picked =
-                                  await showDatePicker(
+                              DateTime? picked = await showDatePicker(
                                 context: context,
-                                initialDate:
-                                    DateTime.now(),
-                                firstDate:
-                                    DateTime(2024),
-                                lastDate:
-                                    DateTime(2030),
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(2024),
+                                lastDate: DateTime(2030),
                               );
 
                               if (picked != null) {
@@ -445,24 +387,16 @@ class _AjukanCutiPageState
 
                             child: AbsorbPointer(
                               child: TextField(
-                                controller:
-                                    mulaiController,
+                                controller: mulaiController,
 
-                                decoration:
-                                    InputDecoration(
+                                decoration: InputDecoration(
                                   hintText: "Mulai",
 
                                   filled: true,
-                                  fillColor:
-                                      Colors.white,
+                                  fillColor: Colors.white,
 
-                                  border:
-                                      OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius
-                                            .circular(
-                                      14,
-                                    ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(14),
                                   ),
                                 ),
                               ),
@@ -475,23 +409,18 @@ class _AjukanCutiPageState
                         Expanded(
                           child: GestureDetector(
                             onTap: () async {
-                              DateTime? picked =
-                                  await showDatePicker(
+                              DateTime? picked = await showDatePicker(
                                 context: context,
-                                initialDate:
-                                    DateTime.now(),
-                                firstDate:
-                                    DateTime(2024),
-                                lastDate:
-                                    DateTime(2030),
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(2024),
+                                lastDate: DateTime(2030),
                               );
 
                               if (picked != null) {
                                 setState(() {
                                   endDate = picked;
 
-                                  selesaiController
-                                      .text =
+                                  selesaiController.text =
                                       "${picked.day}/${picked.month}/${picked.year}";
 
                                   hitungDurasi();
@@ -501,25 +430,16 @@ class _AjukanCutiPageState
 
                             child: AbsorbPointer(
                               child: TextField(
-                                controller:
-                                    selesaiController,
+                                controller: selesaiController,
 
-                                decoration:
-                                    InputDecoration(
-                                  hintText:
-                                      "Selesai",
+                                decoration: InputDecoration(
+                                  hintText: "Selesai",
 
                                   filled: true,
-                                  fillColor:
-                                      Colors.white,
+                                  fillColor: Colors.white,
 
-                                  border:
-                                      OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius
-                                            .circular(
-                                      14,
-                                    ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(14),
                                   ),
                                 ),
                               ),
@@ -535,32 +455,25 @@ class _AjukanCutiPageState
                     Container(
                       width: double.infinity,
 
-                      padding:
-                          const EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 14,
                         vertical: 12,
                       ),
 
                       decoration: BoxDecoration(
-                        color:
-                            const Color(0xffFDE4E4),
+                        color: const Color(0xffFDE4E4),
 
-                        borderRadius:
-                            BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10),
                       ),
 
                       child: Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment
-                                .spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                         children: [
                           const Text(
                             "Durasi pengajuan",
 
-                            style: TextStyle(
-                              color: Colors.red,
-                            ),
+                            style: TextStyle(color: Colors.red),
                           ),
 
                           Text(
@@ -568,8 +481,7 @@ class _AjukanCutiPageState
 
                             style: const TextStyle(
                               color: Colors.red,
-                              fontWeight:
-                                  FontWeight.bold,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
@@ -591,8 +503,7 @@ class _AjukanCutiPageState
                     const SizedBox(height: 12),
 
                     TextField(
-                      controller:
-                          keteranganController,
+                      controller: keteranganController,
 
                       maxLines: 4,
 
@@ -601,17 +512,13 @@ class _AjukanCutiPageState
                       },
 
                       decoration: InputDecoration(
-                        hintText:
-                            "Tuliskan alasan pengajuan cuti",
+                        hintText: "Tuliskan alasan pengajuan cuti",
 
                         filled: true,
                         fillColor: Colors.white,
 
                         border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(
-                            14,
-                          ),
+                          borderRadius: BorderRadius.circular(14),
                         ),
                       ),
                     ),
@@ -640,56 +547,39 @@ class _AjukanCutiPageState
                         decoration: BoxDecoration(
                           color: Colors.white,
 
-                          borderRadius:
-                              BorderRadius.circular(
-                            16,
-                          ),
+                          borderRadius: BorderRadius.circular(16),
 
-                          border: Border.all(
-                            color:
-                                Colors.grey.shade300,
-                          ),
+                          border: Border.all(color: Colors.grey.shade300),
                         ),
 
                         child: Column(
-                          mainAxisAlignment:
-                              MainAxisAlignment
-                                  .center,
+                          mainAxisAlignment: MainAxisAlignment.center,
 
                           children: [
                             Icon(
                               Icons.file_copy_outlined,
                               size: 40,
-                              color: Colors
-                                  .grey.shade600,
+                              color: Colors.grey.shade600,
                             ),
 
-                            const SizedBox(
-                              height: 10,
-                            ),
+                            const SizedBox(height: 10),
 
                             Text(
-                              fileName ??
-                                  "Unggah dokumen pendukung",
+                              fileName ?? "Unggah dokumen pendukung",
 
                               style: TextStyle(
-                                color: Colors
-                                    .grey.shade700,
-                                fontWeight:
-                                    FontWeight.w500,
+                                color: Colors.grey.shade700,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
 
-                            const SizedBox(
-                              height: 4,
-                            ),
+                            const SizedBox(height: 4),
 
                             Text(
                               "PDF, JPG, PNG - maks 5 MB",
 
                               style: TextStyle(
-                                color: Colors
-                                    .grey.shade500,
+                                color: Colors.grey.shade500,
                                 fontSize: 12,
                               ),
                             ),
@@ -707,35 +597,24 @@ class _AjukanCutiPageState
 
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color(0xffB80D17),
+                          backgroundColor: const Color(0xffB80D17),
 
-                          shape:
-                              RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(
-                              14,
-                            ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
                           ),
                         ),
 
                         onPressed: step3Done
                             ? () {
                                 final dataBaru = {
-                                  "title":
-                                      selectedCuti,
+                                  "title": selectedCuti,
                                   "date":
                                       "${mulaiController.text} - ${selesaiController.text} • $durasiHari hari",
-                                  "status":
-                                      "Menunggu",
-                                  "color":
-                                      Colors.orange,
+                                  "status": "Menunggu",
+                                  "color": Colors.orange,
                                 };
 
-                                Navigator.pop(
-                                  context,
-                                  dataBaru,
-                                );
+                                Navigator.pop(context, dataBaru);
                               }
                             : null,
 
@@ -745,8 +624,7 @@ class _AjukanCutiPageState
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
-                            fontWeight:
-                                FontWeight.bold,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -773,15 +651,11 @@ class _AjukanCutiPageState
       backgroundColor: isActive
           ? Colors.green
           : isRed
-              ? const Color(0xffB80D17)
-              : Colors.grey.shade300,
+          ? const Color(0xffB80D17)
+          : Colors.grey.shade300,
 
       child: isActive
-          ? const Icon(
-              Icons.check,
-              color: Colors.white,
-              size: 20,
-            )
+          ? const Icon(Icons.check, color: Colors.white, size: 20)
           : Text(
               number,
 

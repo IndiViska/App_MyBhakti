@@ -5,11 +5,15 @@ import 'projectdraft.dart';
 class AddProjectPage3 extends StatefulWidget {
   final String username;
   final ProjectDraft draft;
+  final bool isEditMode;
+  final Map<String, dynamic>? projectData;
 
   const AddProjectPage3({
     super.key,
     required this.username,
     required this.draft,
+    this.isEditMode = false,
+    this.projectData,
   });
 
   @override
@@ -36,6 +40,26 @@ class _AddProjectPage3State extends State<AddProjectPage3> {
     "Wahyu Pratama - Direktur Utama",
   ];
 
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.isEditMode && widget.projectData != null) {
+      final p = widget.projectData!;
+
+      /// Hanya set jika nilainya ada persis dalam list dropdown
+      final lead = p["lead"] as String?;
+      if (lead != null && picLtList.contains(lead)) {
+        selectedPicLt = lead;
+      }
+
+      final marketing = p["picMarketing"] as String?;
+      if (marketing != null && picMarketingList.contains(marketing)) {
+        selectedPicMarketing = marketing;
+      }
+    }
+  }
+
   void validateAndNext() {
     if (selectedPicLt == null || selectedPicMarketing == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -58,8 +82,12 @@ class _AddProjectPage3State extends State<AddProjectPage3> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) =>
-            AddProjectPage4(username: widget.username, draft: widget.draft),
+        builder: (_) => AddProjectPage4(
+          username: widget.username,
+          draft: widget.draft,
+          isEditMode: widget.isEditMode,
+          projectData: widget.projectData,
+        ),
       ),
     );
   }
@@ -84,14 +112,18 @@ class _AddProjectPage3State extends State<AddProjectPage3> {
             child: Row(
               children: [
                 Container(
-                  width: 38,
-                  height: 38,
+                  width: 36,
+                  height: 36,
+
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.15),
                     shape: BoxShape.circle,
                   ),
+
                   child: IconButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     icon: const Icon(
                       Icons.arrow_back_ios_new,
                       color: Colors.white,
@@ -102,22 +134,26 @@ class _AddProjectPage3State extends State<AddProjectPage3> {
 
                 const SizedBox(width: 14),
 
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Form Tambah Data Proyek",
-                        style: TextStyle(
+                        widget.isEditMode
+                            ? "Form Edit Data Proyek"
+                            : "Form Tambah Data Proyek",
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 3),
+                      const SizedBox(height: 3),
                       Text(
-                        "Pilih PIC Internal",
-                        style: TextStyle(color: Colors.white, fontSize: 13),
+                        widget.isEditMode
+                            ? "Edit data proyek yang dikerjakan"
+                            : "Pilih PIC Internal",
+                        style: const TextStyle(color: Colors.white, fontSize: 13),
                       ),
                     ],
                   ),
@@ -224,7 +260,7 @@ class _AddProjectPage3State extends State<AddProjectPage3> {
                           const SizedBox(height: 8),
 
                           DropdownButtonFormField<String>(
-                            value: selectedPicLt,
+                            initialValue: selectedPicLt,
                             isExpanded: true,
                             decoration: inputDecoration(),
                             hint: const Text("Pilih PIC LT"),
@@ -250,7 +286,7 @@ class _AddProjectPage3State extends State<AddProjectPage3> {
                           const SizedBox(height: 8),
 
                           DropdownButtonFormField<String>(
-                            value: selectedPicMarketing,
+                            initialValue: selectedPicMarketing,
                             isExpanded: true,
                             decoration: inputDecoration(),
                             hint: const Text("Pilih PIC Marketing"),

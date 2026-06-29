@@ -9,11 +9,15 @@ import 'proyek.dart';
 class AddProjectPage4 extends StatefulWidget {
   final String username;
   final ProjectDraft draft;
+  final bool isEditMode;
+  final Map<String, dynamic>? projectData;
 
   const AddProjectPage4({
     super.key,
     required this.username,
     required this.draft,
+    this.isEditMode = false,
+    this.projectData,
   });
 
   @override
@@ -21,10 +25,45 @@ class AddProjectPage4 extends StatefulWidget {
 }
 
 class _AddProjectPage4State extends State<AddProjectPage4> {
+  final TextEditingController nilaiController = TextEditingController();
+
   String textField1 = "";
 
   DateTime? startDate;
   DateTime? endDate;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.isEditMode && widget.projectData != null) {
+      final p = widget.projectData!;
+      textField1 = p["nilai"] ?? "";
+      nilaiController.text = textField1;
+
+      /// Tangani startDate: bisa berupa String atau DateTime
+      final rawStart = p["startDate"];
+      if (rawStart is DateTime) {
+        startDate = rawStart;
+      } else if (rawStart is String && rawStart.isNotEmpty) {
+        startDate = DateTime.tryParse(rawStart);
+      }
+
+      /// Tangani endDate: bisa berupa String atau DateTime
+      final rawEnd = p["endDate"];
+      if (rawEnd is DateTime) {
+        endDate = rawEnd;
+      } else if (rawEnd is String && rawEnd.isNotEmpty) {
+        endDate = DateTime.tryParse(rawEnd);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    nilaiController.dispose();
+    super.dispose();
+  }
 
   Future<void> pickStartDate() async {
     final date = await showDatePicker(
@@ -64,29 +103,71 @@ class _AddProjectPage4State extends State<AddProjectPage4> {
     widget.draft.startDate = startDate;
     widget.draft.endDate = endDate;
 
-    addDummyProject({
-      "title": widget.draft.judul ?? "-",
-      "client":
-          widget.draft.customerSelected ?? widget.draft.newCustomerName ?? "-",
-      "status": "ON WORKING",
-      "statusColor": Colors.blue,
-      "isPinned": false,
+    if (widget.isEditMode && widget.projectData != null) {
+      /// ================= UPDATE DATA YANG ADA =================
+      final p = widget.projectData!;
+      p["title"] = widget.draft.judul ?? p["title"];
+      p["client"] = widget.draft.customerSelected ??
+          widget.draft.newCustomerName ??
+          p["client"];
+      p["lead"] = widget.draft.picLt ?? p["lead"];
+      p["nilai"] = widget.draft.nilaiPekerjaan;
+      p["startDate"] = widget.draft.startDate;
+      p["endDate"] = widget.draft.endDate;
+      p["kategoriProyek"] = widget.draft.kategoriProyek;
+      p["kategoriMarket"] = widget.draft.kategoriMarket;
+      p["deskripsi"] = widget.draft.deskripsi;
+      p["customerSelected"] = widget.draft.customerSelected;
+      p["newCustomerName"] = widget.draft.newCustomerName;
+      p["newCustomerPic"] = widget.draft.newCustomerPic;
+      p["newCustomerPhone"] = widget.draft.newCustomerPhone;
+      p["endUserSelected"] = widget.draft.endUserSelected;
+      p["newEndUserName"] = widget.draft.newEndUserName;
+      p["newEndUserPic"] = widget.draft.newEndUserPic;
+      p["newEndUserPhone"] = widget.draft.newEndUserPhone;
+      p["picMarketing"] = widget.draft.picMarketing;
 
-      "picLt": widget.draft.picLt,
-      "picMarketing": widget.draft.picMarketing,
+      /// KEMBALI KE HALAMAN PROYEK
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ProjectPage(username: widget.username),
+        ),
+        (route) => false,
+      );
+    } else {
+      addDummyProject({
+        "title": widget.draft.judul ?? "-",
+        "client":
+            widget.draft.customerSelected ?? widget.draft.newCustomerName ?? "-",
 
-      "nilai": widget.draft.nilaiPekerjaan,
+        "lead": widget.draft.picLt ?? "-",
+        "anggota": [],
 
-      "startDate": widget.draft.startDate,
-      "endDate": widget.draft.endDate,
-    });
+        "progress": 0,
 
-    /// PINDAH KE HALAMAN PROYEK
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => ProjectPage(username: widget.username)),
-      (route) => false,
-    );
+        "status": "ON WORKING",
+        "statusColor": Colors.blue,
+        "isPinned": false,
+
+        "nilai": widget.draft.nilaiPekerjaan,
+
+        "startDate": widget.draft.startDate,
+        "endDate": widget.draft.endDate,
+
+        "todos": [],
+        "documents": [],
+      });
+
+      /// PINDAH KE HALAMAN PROYEK
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ProjectPage(username: widget.username),
+        ),
+        (route) => false,
+      );
+    }
   }
 
   @override
@@ -116,21 +197,28 @@ class _AddProjectPage4State extends State<AddProjectPage4> {
                 ),
                 const SizedBox(width: 10),
 
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Form Tambah Data Proyek",
-                        style: TextStyle(
+                        widget.isEditMode
+                            ? "Form Edit Data Proyek"
+                            : "Form Tambah Data Proyek",
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        "Nilai & Waktu",
-                        style: TextStyle(color: Colors.white70, fontSize: 13),
+                        widget.isEditMode
+                            ? "Edit data proyek yang dikerjakan"
+                            : "Nilai & Waktu",
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 13,
+                        ),
                       ),
                     ],
                   ),
@@ -142,7 +230,12 @@ class _AddProjectPage4State extends State<AddProjectPage4> {
                     widget.username.isNotEmpty
                         ? widget.username[0].toUpperCase()
                         : "A",
-                    style: const TextStyle(color: Color(0xffC1121F)),
+
+                    style: const TextStyle(
+                      color: Color(0xffC1121F),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
                   ),
                 ),
               ],
@@ -168,6 +261,7 @@ class _AddProjectPage4State extends State<AddProjectPage4> {
                         const SizedBox(height: 8),
 
                         TextField(
+                          controller: nilaiController,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
