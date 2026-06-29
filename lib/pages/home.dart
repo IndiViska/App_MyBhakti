@@ -2,17 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:app_mybhakti/pages/presensi_page.dart';
+import 'package:app_mybhakti/pages/presensi_data.dart';
 import 'package:app_mybhakti/pages/laporan_kehadiran_page.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:app_mybhakti/pages/pengajuan_cuti_page.dart';
 import 'package:app_mybhakti/pages/proyek.dart';
 import 'package:app_mybhakti/pages/opportunities_page.dart';
-<<<<<<< HEAD
 import 'package:app_mybhakti/pages/aktivitas.dart';
-=======
 import 'package:app_mybhakti/pages/schedule_page.dart';
 import 'package:app_mybhakti/pages/knowledge_page.dart';
->>>>>>> caf2ba26208e1524be8e3475070ba2f8bdc68873
 
 class HomeView extends StatefulWidget {
   final String username;
@@ -257,14 +254,15 @@ SizedBox(
 
             // ================= PRESENSI =================
             GestureDetector(
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) =>
                         const PresensiPage(),
                   ),
                 );
+                setState(() {});
               },
 
               child: Container(
@@ -383,21 +381,27 @@ SizedBox(
                             MainAxisAlignment
                                 .center,
 
-                        children: const [
+                        children: [
                           Icon(
-                            Icons.login_rounded,
+                            PresensiData.hasCheckedIn
+                                ? Icons.logout_rounded
+                                : Icons.login_rounded,
 
-                            color: Colors.red,
+                            color: PresensiData.hasCheckedIn
+                                ? const Color(0xff2D4A76)
+                                : Colors.red,
 
                             size: 46,
                           ),
 
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
 
                           Text(
-                            "Check-In",
+                            PresensiData.hasCheckedIn
+                                ? "Check-Out"
+                                : "Check-In",
 
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight:
                                   FontWeight.w500,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_mybhakti/pages/home.dart';
+import 'package:app_mybhakti/services/api_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,6 +17,95 @@ class _LoginPageState extends State<LoginPage> {
       TextEditingController();
 
   bool isPasswordHidden = true;
+  bool isLoading = false;
+
+  final ApiService _apiService = ApiService();
+
+  // ================= LOGIN =================
+  Future<void> _handleLogin() async {
+    final username = usernameController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (username.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Username dan Password harus diisi",
+          ),
+          backgroundColor: Color(0xFFB1121B),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    // Bypass API untuk login dummy admin/admin
+    if (username == "admin" && password == "admin") {
+      setState(() {
+        isLoading = false;
+      });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => HomeView(
+            username: username,
+          ),
+        ),
+      );
+      return;
+    }
+
+    final result = await _apiService.login(
+      username: username,
+      password: password,
+    );
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (!mounted) return;
+
+    if (result['success'] == true) {
+      // Login berhasil, ambil data user
+      String displayName = username;
+
+      // Coba ambil data profil dari /auth/me/
+      final meResult = await _apiService.getMe();
+
+      if (meResult['success'] == true) {
+        final userData = meResult['data'];
+        displayName = userData['username'] ??
+            userData['first_name'] ??
+            userData['email'] ??
+            username;
+      }
+
+      if (!mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => HomeView(
+            username: displayName,
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            result['message'] ??
+                "Login gagal",
+          ),
+          backgroundColor: const Color(0xFFB1121B),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +144,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     TextField(
                       controller: usernameController,
+                      enabled: !isLoading,
 
                       decoration: InputDecoration(
                         hintText: "Enter Username",
@@ -80,6 +171,9 @@ class _LoginPageState extends State<LoginPage> {
                     TextField(
                       controller: passwordController,
                       obscureText: isPasswordHidden,
+                      enabled: !isLoading,
+
+                      onSubmitted: (_) => _handleLogin(),
 
                       decoration: InputDecoration(
                         hintText: "Enter Password",
@@ -132,38 +226,16 @@ class _LoginPageState extends State<LoginPage> {
                       width: double.infinity,
 
                       child: ElevatedButton(
-                        onPressed: () {
-                          String username =
-                              usernameController.text;
-
-                          String password =
-                              passwordController.text;
-
-                          if (username == "admin" &&
-                              password == "admin") {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => HomeView(
-                                  username: username,
-                                ),
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  "Username atau Password salah",
-                                ),
-                              ),
-                            );
-                          }
-                        },
+                        onPressed:
+                            isLoading ? null : _handleLogin,
 
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               const Color(0xFFB1121B),
+
+                          disabledBackgroundColor:
+                              const Color(0xFFB1121B)
+                                  .withOpacity(0.6),
 
                           padding:
                               const EdgeInsets.symmetric(
@@ -176,13 +248,23 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
 
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                        ),
+                        child: isLoading
+                            ? const SizedBox(
+                                height: 22,
+                                width: 22,
+                                child:
+                                    CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2.5,
+                                ),
+                              )
+                            : const Text(
+                                "Login",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
                       ),
                     ),
                   ],

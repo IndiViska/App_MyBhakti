@@ -40,10 +40,9 @@ dependencies:
   image_picker: ^1.1.2
   share_plus: ^10.0.2
   file_picker: ^8.1.7
-<<<<<<< HEAD
   intl: ^0.19.0
-=======
->>>>>>> caf2ba26208e1524be8e3475070ba2f8bdc68873
+  http: ^1.2.1
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,7 +25,7 @@ class _PresensiPageState
 
   // ================= SELFIE =================
 
-  File? selfieImage;
+  XFile? selfieImage;
 
   // ================= MODE =================
 
@@ -159,9 +160,7 @@ class _PresensiPageState
 
     if (pickedFile != null) {
       setState(() {
-        selfieImage = File(
-          pickedFile.path,
-        );
+        selfieImage = pickedFile;
       });
     }
   }
@@ -314,10 +313,12 @@ class _PresensiPageState
                                     .start,
 
                             children: [
-                              const Text(
-                                "Check In",
+                              Text(
+                                PresensiData.hasCheckedIn
+                                    ? "Check Out"
+                                    : "Check In",
 
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight:
                                       FontWeight
@@ -796,12 +797,15 @@ class _PresensiPageState
                                         18,
                                       ),
 
-                                      child:
-                                          Image.file(
-                                        selfieImage!,
-                                        fit: BoxFit
-                                            .cover,
-                                      ),
+                                      child: kIsWeb
+                                          ? Image.network(
+                                              selfieImage!.path,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Image.file(
+                                              File(selfieImage!.path),
+                                              fit: BoxFit.cover,
+                                            ),
                                     )
                                   : Column(
                                       mainAxisAlignment:
@@ -853,9 +857,9 @@ class _PresensiPageState
                           style:
                               ElevatedButton.styleFrom(
                             backgroundColor:
-                                const Color(
-                              0xffB1121B,
-                            ),
+                                PresensiData.hasCheckedIn
+                                    ? const Color(0xff2D4A76)
+                                    : const Color(0xffB1121B),
 
                             shape:
                                 RoundedRectangleBorder(
@@ -905,6 +909,15 @@ class _PresensiPageState
                             String tanggal =
                                 "${now.day}/${now.month}/${now.year}";
 
+                            final String currentAction =
+                                PresensiData.hasCheckedIn
+                                    ? "Check Out"
+                                    : "Check In";
+
+                            // Toggle state
+                            PresensiData.hasCheckedIn =
+                                !PresensiData.hasCheckedIn;
+
                             PresensiData
                                 .riwayat
                                 .insert(0, {
@@ -915,14 +928,16 @@ class _PresensiPageState
                                   "Hadir",
                               "mode":
                                   selectedMode,
+                              "type":
+                                  currentAction,
                             });
 
                             ScaffoldMessenger.of(
                               context,
                             ).showSnackBar(
-                              const SnackBar(
+                              SnackBar(
                                 content: Text(
-                                  "Presensi berhasil",
+                                  "$currentAction berhasil",
                                 ),
                               ),
                             );
@@ -932,10 +947,12 @@ class _PresensiPageState
                             );
                           },
 
-                          child: const Text(
-                            "Check In",
+                          child: Text(
+                            PresensiData.hasCheckedIn
+                                ? "Check Out"
+                                : "Check In",
 
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight:
