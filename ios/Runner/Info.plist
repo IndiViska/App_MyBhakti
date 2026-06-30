@@ -66,5 +66,15 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Aplikasi memerlukan akses lokasi untuk mendeteksi lokasi presensi Anda.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Aplikasi memerlukan akses lokasi untuk mendeteksi lokasi presensi Anda.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Aplikasi memerlukan akses lokasi untuk mendeteksi lokasi presensi Anda.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Aplikasi memerlukan akses kamera untuk mengambil foto selfie presensi.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Aplikasi memerlukan akses galeri foto untuk memilih foto selfie jika diperlukan.</string>
 </dict>
 </plist>
