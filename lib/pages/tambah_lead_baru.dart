@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'tambah_lead_step2.dart';
 import 'lead_data.dart';
+import 'lead_repository.dart';
 
 class TambahLeadBaruScreen extends StatefulWidget {
-  const TambahLeadBaruScreen({super.key});
+  final Map<String, dynamic>? lead;
+  final int? index;
+
+  const TambahLeadBaruScreen({super.key, this.lead, this.index});
 
   @override
   State<TambahLeadBaruScreen> createState() => _TambahLeadBaruScreenState();
@@ -27,6 +31,7 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
     'Digital Marketing',
     'Direct Sales (Canvassing)',
     'Existing Customer (Repeat)',
+    'Partner Referral / Recommendation',
   ];
 
   final List<String> marketOptions = ['Telkom Group', 'YPT Group', 'Eksternal'];
@@ -35,6 +40,42 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
   void dispose() {
     judulController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.lead != null) {
+      judulController.text = widget.lead!['title'] ?? '';
+
+      final kategori = widget.lead!['kategori']?.toString().trim();
+
+      final sumber = widget.lead!['sales']?.toString().trim();
+
+      final market = widget.lead!['market']?.toString().trim();
+
+      kategoriValue = kategoriOptions.firstWhere(
+        (e) => e.trim() == kategori,
+        orElse: () => '',
+      );
+
+      if (kategoriValue == '') kategoriValue = null;
+
+      sumberValue = sumberOptions.firstWhere(
+        (e) => e.trim() == sumber,
+        orElse: () => '',
+      );
+
+      if (sumberValue == '') sumberValue = null;
+
+      marketValue = marketOptions.firstWhere(
+        (e) => e.trim() == market,
+        orElse: () => '',
+      );
+
+      if (marketValue == '') marketValue = null;
+    }
   }
 
   void showMessage(String message) {
@@ -71,6 +112,29 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
     );
   }
 
+  void saveEdit() {
+    if (judulController.text.trim().isEmpty) {
+      showMessage('Judul Proyek / Lead wajib diisi');
+      return;
+    }
+
+    if (kategoriValue == null || sumberValue == null || marketValue == null) {
+      showMessage('Lengkapi semua data terlebih dahulu');
+      return;
+    }
+
+    LeadRepository.leads[widget.index!] = {
+      ...LeadRepository.leads[widget.index!],
+
+      'title': judulController.text,
+      'kategori': kategoriValue,
+      'sales': sumberValue,
+      'market': marketValue,
+    };
+
+    Navigator.pop(context);
+  }
+
   Widget buildDropdown({
     required String label,
     required String? value,
@@ -78,7 +142,7 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
     required Function(String?) onChanged,
   }) {
     return DropdownButtonFormField<String>(
-      initialValue: value,
+      value: value,
       decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(color: Color(0xFF6B7280), fontSize: 13),
@@ -123,11 +187,11 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
             Navigator.pop(context);
           },
         ),
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Tambah Lead Baru',
+              widget.lead == null ? 'Tambah Lead Baru' : 'Edit Lead',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
@@ -136,7 +200,9 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
             ),
             SizedBox(height: 2),
             Text(
-              'Buat opportunity proyek baru',
+              widget.lead == null
+                  ? 'Buat opportunity proyek baru'
+                  : 'Ubah data opportunity',
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 12,
@@ -241,7 +307,13 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
               width: double.infinity,
               height: 48,
               child: ElevatedButton(
-                onPressed: goToStep2,
+                onPressed: () {
+                  if (widget.lead == null) {
+                    goToStep2();
+                  } else {
+                    saveEdit();
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryRed,
                   foregroundColor: Colors.white,
@@ -250,18 +322,20 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Next',
+                      widget.lead == null ? 'Next' : 'Simpan',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
                     SizedBox(width: 6),
-                    Icon(Icons.arrow_forward),
+                    Icon(
+                      widget.lead == null ? Icons.arrow_forward : Icons.save,
+                    ),
                   ],
                 ),
               ),

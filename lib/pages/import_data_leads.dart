@@ -1,13 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:excel/excel.dart' as ex;
-import 'package:path_provider/path_provider.dart';
-import 'package:open_filex/open_filex.dart';
-
 import 'lead_repository.dart';
 import 'opportunities_page.dart';
+import 'dart:typed_data';
+import 'dart:html' as html;
 
 class ImportDataLeadsScreen extends StatefulWidget {
   const ImportDataLeadsScreen({super.key});
@@ -18,7 +15,7 @@ class ImportDataLeadsScreen extends StatefulWidget {
 
 class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
   String? selectedFileName;
-  String? selectedFilePath;
+  Uint8List? selectedBytes;
 
   Future<void> chooseFile() async {
     try {
@@ -36,7 +33,7 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
 
       setState(() {
         selectedFileName = result.files.first.name;
-        selectedFilePath = result.files.first.path;
+        selectedBytes = result.files.first.bytes;
       });
     } catch (e) {
       if (!mounted) return;
@@ -50,30 +47,29 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
   Future<void> downloadTemplate() async {
     try {
       var excel = ex.Excel.createExcel();
-      excel.rename('Sheet1', 'Data Leads');
-      var sheet = excel['Data Leads'];
+      var sheet = excel['Sheet1'];
 
       // Header kolom sesuai urutan index yang digunakan di processImport
       List<String> headers = [
-        'Kode Lead',       // col 0
-        'Judul',           // col 1
-        'Kategori',        // col 2
-        'Status',          // col 3  (DEAL / NO DEAL / IN PROGRESS)
-        'Sales',           // col 4
-        'Market',          // col 5
-        'Client',          // col 6
-        'PIC',             // col 7
-        'No HP',           // col 8
-        'Kolom 9',         // col 9
-        'Kolom 10',        // col 10
-        'Kolom 11',        // col 11
-        'Kolom 12',        // col 12
-        'Tanggal',         // col 13
-        'Kolom 14',        // col 14
-        'Kolom 15',        // col 15
-        'Kolom 16',        // col 16
-        'Marketing PIC',   // col 17
-        'Technical PIC',   // col 18
+        'Kode Lead', // col 0
+        'Judul', // col 1
+        'Kategori', // col 2
+        'Status', // col 3  (DEAL / NO DEAL / IN PROGRESS)
+        'Sales', // col 4
+        'Market', // col 5
+        'Client', // col 6
+        'PIC', // col 7
+        'No HP', // col 8
+        'Kolom 9', // col 9
+        'Kolom 10', // col 10
+        'Kolom 11', // col 11
+        'Kolom 12', // col 12
+        'Tanggal', // col 13
+        'Kolom 14', // col 14
+        'Kolom 15', // col 15
+        'Kolom 16', // col 16
+        'Marketing PIC', // col 17
+        'Technical PIC', // col 18
       ];
 
       // Baris pertama = judul template (baris index 0)
@@ -87,10 +83,10 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
       sheet.appendRow([
         'INIT26-001',
         'Pengadaan Server',
-        'IT',
+        'Solusi Teknologi',
         'IN PROGRESS',
-        'Budi',
-        'Bandung',
+        'AM Telkom',
+        'Telkom Group',
         'PT Contoh',
         'Andi',
         '08123456789',
@@ -109,49 +105,48 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
       final List<int>? fileBytes = excel.save();
       if (fileBytes == null) throw Exception('Gagal membuat file');
 
-      Directory? dir;
-      if (Platform.isAndroid) {
-        dir = Directory('/storage/emulated/0/Download');
-      } else {
-        dir = await getApplicationDocumentsDirectory();
-      }
+      final blob = html.Blob([fileBytes]);
 
-      final String filePath = '${dir.path}/template_import_leads.xlsx';
-      final File file = File(filePath);
-      await file.writeAsBytes(fileBytes);
+      final url = html.Url.createObjectUrlFromBlob(blob);
+
+      final anchor = html.AnchorElement(href: url)
+        ..setAttribute("download", "template_import_leads.xlsx")
+        ..click();
+
+      html.Url.revokeObjectUrl(url);
 
       if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Template disimpan: $filePath'),
-          action: SnackBarAction(
-            label: 'Buka',
-            onPressed: () => OpenFilex.open(filePath),
-          ),
-        ),
+        const SnackBar(content: Text("Template berhasil diunduh")),
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal download template: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Gagal download template: $e')));
     }
   }
 
   void processImport() async {
-    if (selectedFilePath == null) {
+    // Cek apakah user sudah memilih file
+    if (selectedBytes == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Pilih file terlebih dahulu")),
       );
       return;
     }
-    File file = File(selectedFilePath!);
 
-    var bytes = file.readAsBytesSync();
+    // Baca file Excel
+    var excel = ex.Excel.decodeBytes(selectedBytes!);
 
-    var excel = ex.Excel.decodeBytes(bytes);
+    // Untuk mengecek nama sheet
+    print(excel.tables.keys);
+
+    // Ambil sheet
     var sheet = excel.tables['Data Leads'];
 
+    // Cek apakah sheet ditemukan
     if (sheet == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Sheet Data Leads tidak ditemukan")),
@@ -159,10 +154,15 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
       return;
     }
 
+    // Baru mulai membaca data
+    print("Jumlah baris excel: ${sheet.rows.length}");
     for (int i = 2; i < sheet.rows.length; i++) {
       var row = sheet.rows[i];
+      print(row.map((e) => e?.value).toList());
 
+      if (row.length < 19) continue;
       if (row[1]?.value == null) continue;
+
       String status = row[3]?.value?.toString().toUpperCase() ?? "IN PROGRESS";
 
       Color statusColor = Colors.blue;
@@ -172,30 +172,27 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
       } else if (status == "NO DEAL") {
         statusColor = Colors.red;
       }
+
       LeadRepository.leads.add({
         'client': row[6]?.value?.toString() ?? '',
         'code':
             row[0]?.value?.toString() ??
             'INIT26-${LeadRepository.leads.length + 1}',
         'title': row[1]?.value?.toString() ?? '',
-
         'kategori': row[2]?.value?.toString() ?? '',
         'status': status,
         'sales': row[4]?.value?.toString() ?? '',
         'market': row[5]?.value?.toString() ?? '',
-
-        'pic': row[7]?.value?.toString() ?? '',
-        'phone': row[8]?.value?.toString() ?? '',
-
         'date': row[13]?.value?.toString() ?? '',
-
-        'marketingPic': row[17]?.value?.toString() ?? '',
-        'technicalPic': row[18]?.value?.toString() ?? '',
-
         'color': statusColor,
-        'inputType': 'Import Excel',
+        'inputType': 'Import Data',
       });
     }
+
+    // PINDAHKAN KE LUAR FOR
+    print("Jumlah Lead: ${LeadRepository.leads.length}");
+    print(LeadRepository.leads.last);
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const OpportunitiesScreen()),
@@ -314,10 +311,7 @@ class _ImportDataLeadsScreenState extends State<ImportDataLeadsScreen> {
             const SizedBox(height: 18),
             const Text(
               'Template Import',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-              ),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             ),
             const SizedBox(height: 10),
             SizedBox(
