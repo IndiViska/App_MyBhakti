@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'lead_repository.dart';
 import 'tambah_lead_step2.dart';
 import 'lead_data.dart';
 
 class TambahLeadBaruScreen extends StatefulWidget {
-  const TambahLeadBaruScreen({super.key});
+  final Map<String, dynamic>? lead;
+  final int? index;
+
+  const TambahLeadBaruScreen({super.key, this.lead, this.index});
 
   @override
   State<TambahLeadBaruScreen> createState() => _TambahLeadBaruScreenState();
