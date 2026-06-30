@@ -348,13 +348,18 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                 icon: Icons.edit_outlined,
                 color: const Color(0xff6B7280),
                 bg: const Color(0xffF1F5F9),
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const TambahLeadBaruScreen(),
+                      builder: (_) => TambahLeadBaruScreen(
+                        lead: lead,
+                        index: LeadRepository.leads.indexOf(lead),
+                      ),
                     ),
                   );
+
+                  setState(() {});
                 },
               ),
               buildActionButton(
