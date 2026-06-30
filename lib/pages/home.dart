@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:app_mybhakti/pages/presensi_page.dart';
 import 'package:app_mybhakti/pages/presensi_data.dart';
 import 'package:app_mybhakti/pages/laporan_kehadiran_page.dart';
