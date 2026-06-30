@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class SchedulePage extends StatefulWidget {
-  const SchedulePage({super.key});
+  final String username;
+
+  const SchedulePage({super.key, required this.username});
 
   @override
-  State<SchedulePage> createState() =>
-      _SchedulePageState();
+  State<SchedulePage> createState() => _SchedulePageState();
 }
 
-class _SchedulePageState
-    extends State<SchedulePage> {
+class _SchedulePageState extends State<SchedulePage> {
   List<Map<String, dynamic>> schedules = [
     {
       "title": "Praying and Meditation Time",
@@ -27,16 +27,10 @@ class _SchedulePageState
       "subtitle": "Kantor Pusat",
       "color": Colors.red,
     },
-    {
-      "title": "Lunch",
-      "time": "12:00 - 13:00",
-      "color": Colors.grey,
-    },
+    {"title": "Lunch", "time": "12:00 - 13:00", "color": Colors.grey},
   ];
 
-  void addSchedule(
-    Map<String, dynamic> newSchedule,
-  ) {
+  void addSchedule(Map<String, dynamic> newSchedule) {
     setState(() {
       schedules.add(newSchedule);
     });
@@ -45,22 +39,15 @@ class _SchedulePageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          const Color(0xffF5F5F5),
+      backgroundColor: const Color(0xffF5F5F5),
 
-      floatingActionButton:
-          FloatingActionButton(
-        backgroundColor:
-            const Color(0xffC70D1A),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xffC70D1A),
 
         onPressed: () async {
-          final result =
-              await Navigator.push(
+          final result = await Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (_) =>
-                  const AddSchedulePage(),
-            ),
+            MaterialPageRoute(builder: (_) => const AddSchedulePage()),
           );
 
           if (result != null) {
@@ -68,16 +55,12 @@ class _SchedulePageState
           }
         },
 
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
 
       body: Column(
         children: [
           // ================= HEADER =================
-
           Container(
             width: double.infinity,
 
@@ -92,52 +75,38 @@ class _SchedulePageState
               color: Color(0xffC70D1A),
 
               borderRadius: BorderRadius.only(
-                bottomLeft:
-                    Radius.circular(5),
+                bottomLeft: Radius.circular(5),
 
-                bottomRight:
-                    Radius.circular(5),
+                bottomRight: Radius.circular(5),
               ),
             ),
 
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment
-                          .spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                   children: [
                     // ================= BACK BUTTON =================
-
                     GestureDetector(
                       onTap: () {
-                        Navigator.pop(
-                          context,
-                        );
+                        Navigator.pop(context);
                       },
 
                       child: Container(
                         height: 40,
                         width: 40,
 
-                        decoration:
-                            BoxDecoration(
-                          color: Colors.white
-                              .withOpacity(
-                            0.2,
-                          ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
 
-                          shape:
-                              BoxShape.circle,
+                          shape: BoxShape.circle,
                         ),
 
                         child: const Icon(
-                          Icons
-                              .arrow_back_ios_new,
+                          Icons.arrow_back_ios_new,
 
-                          color:
-                              Colors.white,
+                          color: Colors.white,
 
                           size: 18,
                         ),
@@ -150,8 +119,7 @@ class _SchedulePageState
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
-                        fontWeight:
-                            FontWeight.bold,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
 
@@ -159,25 +127,20 @@ class _SchedulePageState
                       height: 40,
                       width: 40,
 
-                      decoration:
-                          const BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
                       ),
 
-                      alignment:
-                          Alignment.center,
+                      alignment: Alignment.center,
 
                       child: const Text(
                         "A",
 
                         style: TextStyle(
-                          color: Color(
-                            0xffC70D1A,
-                          ),
+                          color: Color(0xffC70D1A),
 
-                          fontWeight:
-                              FontWeight.bold,
+                          fontWeight: FontWeight.bold,
 
                           fontSize: 18,
                         ),
@@ -190,118 +153,67 @@ class _SchedulePageState
           ),
 
           // ================= CONTENT =================
-
           Expanded(
             child: SingleChildScrollView(
-              padding:
-                  const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
 
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
 
                 children: [
                   const Text(
                     "Apr 2026",
 
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight:
-                          FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
 
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
 
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment
-                            .spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                     children: [
-                      dateItem(
-                        "Sen",
-                        "21",
-                        true,
-                      ),
+                      dateItem("Sen", "21", true),
 
-                      dateItem(
-                        "Sel",
-                        "22",
-                        false,
-                      ),
+                      dateItem("Sel", "22", false),
 
-                      dateItem(
-                        "Rab",
-                        "23",
-                        false,
-                      ),
+                      dateItem("Rab", "23", false),
 
-                      dateItem(
-                        "Kam",
-                        "24",
-                        false,
-                      ),
+                      dateItem("Kam", "24", false),
 
-                      dateItem(
-                        "Jum",
-                        "25",
-                        false,
-                      ),
+                      dateItem("Jum", "25", false),
 
-                      dateItem(
-                        "Sab",
-                        "26",
-                        false,
-                      ),
+                      dateItem("Sab", "26", false),
 
-                      dateItem(
-                        "Min",
-                        "27",
-                        false,
-                      ),
+                      dateItem("Min", "27", false),
                     ],
                   ),
 
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
 
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 12,
                       vertical: 8,
                     ),
 
                     decoration: BoxDecoration(
-                      color:
-                          Colors.yellow.shade100,
+                      color: Colors.yellow.shade100,
 
-                      borderRadius:
-                          BorderRadius.circular(
-                        10,
-                      ),
+                      borderRadius: BorderRadius.circular(10),
                     ),
 
                     child: Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment
-                              .spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                       children: const [
                         Text(
                           "Overdue",
 
                           style: TextStyle(
-                            color:
-                                Colors.orange,
+                            color: Colors.orange,
 
-                            fontWeight:
-                                FontWeight
-                                    .bold,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
 
@@ -311,83 +223,48 @@ class _SchedulePageState
                           style: TextStyle(
                             color: Colors.red,
 
-                            fontWeight:
-                                FontWeight
-                                    .bold,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
                   ),
 
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
 
                   const Text(
                     "21 Apr • Hari ini • Senin",
 
-                    style: TextStyle(
-                      fontWeight:
-                          FontWeight.bold,
-
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
 
-                  const SizedBox(
-                    height: 15,
-                  ),
+                  const SizedBox(height: 15),
 
-                  scheduleCard(
-                    schedules,
-                  ),
+                  scheduleCard(schedules),
 
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
 
                   const Text(
                     "22 Apr • Besok • Selasa",
 
-                    style: TextStyle(
-                      fontWeight:
-                          FontWeight.bold,
-
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
 
-                  const SizedBox(
-                    height: 15,
-                  ),
+                  const SizedBox(height: 15),
 
-                  scheduleCard(
-                    schedules,
-                  ),
+                  scheduleCard(schedules),
 
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
 
                   const Text(
                     "23 Apr • Rabu",
 
-                    style: TextStyle(
-                      fontWeight:
-                          FontWeight.bold,
-
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
 
-                  const SizedBox(
-                    height: 15,
-                  ),
+                  const SizedBox(height: 15),
 
-                  scheduleCard(
-                    schedules,
-                  ),
+                  scheduleCard(schedules),
                 ],
               ),
             ),
@@ -399,21 +276,10 @@ class _SchedulePageState
 
   // ================= DATE ITEM =================
 
-  Widget dateItem(
-    String day,
-    String date,
-    bool selected,
-  ) {
+  Widget dateItem(String day, String date, bool selected) {
     return Column(
       children: [
-        Text(
-          day,
-
-          style: const TextStyle(
-            color: Colors.grey,
-            fontSize: 13,
-          ),
-        ),
+        Text(day, style: const TextStyle(color: Colors.grey, fontSize: 13)),
 
         const SizedBox(height: 10),
 
@@ -422,11 +288,7 @@ class _SchedulePageState
           width: 40,
 
           decoration: BoxDecoration(
-            color: selected
-                ? const Color(
-                    0xffC70D1A,
-                  )
-                : Colors.transparent,
+            color: selected ? const Color(0xffC70D1A) : Colors.transparent,
 
             shape: BoxShape.circle,
           ),
@@ -437,12 +299,9 @@ class _SchedulePageState
             date,
 
             style: TextStyle(
-              color: selected
-                  ? Colors.white
-                  : Colors.grey,
+              color: selected ? Colors.white : Colors.grey,
 
-              fontWeight:
-                  FontWeight.bold,
+              fontWeight: FontWeight.bold,
 
               fontSize: 18,
             ),
@@ -454,34 +313,25 @@ class _SchedulePageState
 
   // ================= CARD =================
 
-  Widget scheduleCard(
-    List<Map<String, dynamic>> data,
-  ) {
+  Widget scheduleCard(List<Map<String, dynamic>> data) {
     return Container(
       padding: const EdgeInsets.all(15),
 
       decoration: BoxDecoration(
         color: Colors.white,
 
-        borderRadius:
-            BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(18),
 
-        border: Border.all(
-          color: Colors.grey.shade300,
-        ),
+        border: Border.all(color: Colors.grey.shade300),
       ),
 
       child: Column(
         children: data.map((item) {
           return Container(
-            margin:
-                const EdgeInsets.only(
-              bottom: 12,
-            ),
+            margin: const EdgeInsets.only(bottom: 12),
 
             child: Row(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
 
               children: [
                 Container(
@@ -491,10 +341,7 @@ class _SchedulePageState
                   decoration: BoxDecoration(
                     color: item["color"],
 
-                    borderRadius:
-                        BorderRadius.circular(
-                      10,
-                    ),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
 
@@ -502,45 +349,32 @@ class _SchedulePageState
 
                 Expanded(
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment
-                            .start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
                     children: [
                       Text(
                         item["title"],
 
-                        style:
-                            const TextStyle(
-                          fontWeight:
-                              FontWeight.bold,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
 
                           fontSize: 15,
                         ),
                       ),
 
-                      const SizedBox(
-                        height: 4,
-                      ),
+                      const SizedBox(height: 4),
 
                       Text(
                         item["time"],
 
-                        style:
-                            const TextStyle(
-                          color: Colors.grey,
-                        ),
+                        style: const TextStyle(color: Colors.grey),
                       ),
 
-                      if (item["subtitle"] !=
-                          null)
+                      if (item["subtitle"] != null)
                         Text(
                           item["subtitle"],
 
-                          style:
-                              const TextStyle(
-                            color: Colors.red,
-                          ),
+                          style: const TextStyle(color: Colors.red),
                         ),
                     ],
                   ),
@@ -556,34 +390,23 @@ class _SchedulePageState
 
 // ================= ADD PAGE =================
 
-class AddSchedulePage
-    extends StatefulWidget {
-  const AddSchedulePage({
-    super.key,
-  });
+class AddSchedulePage extends StatefulWidget {
+  const AddSchedulePage({super.key});
 
   @override
-  State<AddSchedulePage>
-      createState() =>
-          _AddSchedulePageState();
+  State<AddSchedulePage> createState() => _AddSchedulePageState();
 }
 
-class _AddSchedulePageState
-    extends State<AddSchedulePage> {
-  final titleController =
-      TextEditingController();
+class _AddSchedulePageState extends State<AddSchedulePage> {
+  final titleController = TextEditingController();
 
-  final descController =
-      TextEditingController();
+  final descController = TextEditingController();
 
-  final startController =
-      TextEditingController();
+  final startController = TextEditingController();
 
-  final endController =
-      TextEditingController();
+  final endController = TextEditingController();
 
-  Color selectedColor =
-      Colors.green;
+  Color selectedColor = Colors.green;
 
   List<Color> colors = [
     Colors.green,
@@ -597,8 +420,7 @@ class _AddSchedulePageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          const Color(0xffF5F5F5),
+      backgroundColor: const Color(0xffF5F5F5),
 
       body: Column(
         children: [
@@ -616,46 +438,35 @@ class _AddSchedulePageState
               color: Color(0xffC70D1A),
 
               borderRadius: BorderRadius.only(
-                bottomLeft:
-                    Radius.circular(35),
+                bottomLeft: Radius.circular(35),
 
-                bottomRight:
-                    Radius.circular(35),
+                bottomRight: Radius.circular(35),
               ),
             ),
 
             child: Row(
-              mainAxisAlignment:
-                  MainAxisAlignment
-                      .spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pop(
-                      context,
-                    );
+                    Navigator.pop(context);
                   },
 
                   child: Container(
                     height: 40,
                     width: 40,
 
-                    decoration:
-                        BoxDecoration(
-                      color: Colors.white
-                          .withOpacity(0.2),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
 
-                      shape:
-                          BoxShape.circle,
+                      shape: BoxShape.circle,
                     ),
 
                     child: const Icon(
-                      Icons
-                          .arrow_back_ios_new,
+                      Icons.arrow_back_ios_new,
 
-                      color:
-                          Colors.white,
+                      color: Colors.white,
 
                       size: 18,
                     ),
@@ -668,8 +479,7 @@ class _AddSchedulePageState
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 22,
-                    fontWeight:
-                        FontWeight.bold,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
 
@@ -677,8 +487,7 @@ class _AddSchedulePageState
                   height: 40,
                   width: 40,
 
-                  decoration:
-                      const BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
                   ),
@@ -689,12 +498,9 @@ class _AddSchedulePageState
                     "A",
 
                     style: TextStyle(
-                      color: Color(
-                        0xffC70D1A,
-                      ),
+                      color: Color(0xffC70D1A),
 
-                      fontWeight:
-                          FontWeight.bold,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -704,149 +510,99 @@ class _AddSchedulePageState
 
           Expanded(
             child: SingleChildScrollView(
-              padding:
-                  const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
 
               child: Container(
-                padding:
-                    const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
 
                 decoration: BoxDecoration(
                   color: Colors.white,
 
-                  borderRadius:
-                      BorderRadius.circular(
-                    20,
-                  ),
+                  borderRadius: BorderRadius.circular(20),
                 ),
 
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
 
                   children: [
                     const Text(
                       "Judul",
 
-                      style: TextStyle(
-                        fontWeight:
-                            FontWeight.bold,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
 
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10),
 
                     TextField(
-                      controller:
-                          titleController,
+                      controller: titleController,
 
-                      decoration:
-                          InputDecoration(
-                        hintText:
-                            "Nama agenda...",
+                      decoration: InputDecoration(
+                        hintText: "Nama agenda...",
 
-                        border:
-                            OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(
-                            10,
-                          ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
 
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
 
                     const Text(
                       "Deskripsi",
 
-                      style: TextStyle(
-                        fontWeight:
-                            FontWeight.bold,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
 
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10),
 
                     TextField(
-                      controller:
-                          descController,
+                      controller: descController,
 
                       maxLines: 4,
 
-                      decoration:
-                          InputDecoration(
-                        hintText:
-                            "Detail agenda...",
+                      decoration: InputDecoration(
+                        hintText: "Detail agenda...",
 
-                        border:
-                            OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(
-                            10,
-                          ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
 
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
 
                     const Text(
                       "Warna label",
 
-                      style: TextStyle(
-                        fontWeight:
-                            FontWeight.bold,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
 
-                    const SizedBox(
-                      height: 12,
-                    ),
+                    const SizedBox(height: 12),
 
                     Row(
-                      children:
-                          colors.map((color) {
+                      children: colors.map((color) {
                         return GestureDetector(
                           onTap: () {
                             setState(() {
-                              selectedColor =
-                                  color;
+                              selectedColor = color;
                             });
                           },
 
                           child: Container(
-                            margin:
-                                const EdgeInsets.only(
-                              right: 10,
-                            ),
+                            margin: const EdgeInsets.only(right: 10),
 
                             height: 25,
                             width: 25,
 
-                            decoration:
-                                BoxDecoration(
+                            decoration: BoxDecoration(
                               color: color,
 
-                              shape:
-                                  BoxShape.circle,
+                              shape: BoxShape.circle,
 
                               border: Border.all(
-                                color:
-                                    selectedColor ==
-                                            color
-                                        ? Colors
-                                            .black
-                                        : Colors
-                                            .transparent,
+                                color: selectedColor == color
+                                    ? Colors.black
+                                    : Colors.transparent,
 
                                 width: 2,
                               ),
@@ -856,66 +612,43 @@ class _AddSchedulePageState
                       }).toList(),
                     ),
 
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
 
                     const Text(
                       "Tanggal",
 
-                      style: TextStyle(
-                        fontWeight:
-                            FontWeight.bold,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
 
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
 
                     Row(
                       children: [
                         Expanded(
                           child: TextField(
-                            controller:
-                                startController,
+                            controller: startController,
 
-                            decoration:
-                                InputDecoration(
-                              hintText:
-                                  "Mulai",
+                            decoration: InputDecoration(
+                              hintText: "Mulai",
 
-                              border:
-                                  OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.circular(
-                                  10,
-                                ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                           ),
                         ),
 
-                        const SizedBox(
-                          width: 12,
-                        ),
+                        const SizedBox(width: 12),
 
                         Expanded(
                           child: TextField(
-                            controller:
-                                endController,
+                            controller: endController,
 
-                            decoration:
-                                InputDecoration(
-                              hintText:
-                                  "Selesai",
+                            decoration: InputDecoration(
+                              hintText: "Selesai",
 
-                              border:
-                                  OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.circular(
-                                  10,
-                                ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                           ),
@@ -923,50 +656,32 @@ class _AddSchedulePageState
                       ],
                     ),
 
-                    const SizedBox(
-                      height: 40,
-                    ),
+                    const SizedBox(height: 40),
 
                     SizedBox(
                       width: double.infinity,
                       height: 55,
 
                       child: ElevatedButton(
-                        style:
-                            ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color(
-                            0xffC70D1A,
-                          ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xffC70D1A),
 
-                          shape:
-                              RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(
-                              12,
-                            ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
 
                         onPressed: () {
-                          Navigator.pop(
-                            context,
-                            {
-                              "title":
-                                  titleController
-                                      .text,
+                          Navigator.pop(context, {
+                            "title": titleController.text,
 
-                              "time":
-                                  "${startController.text} - ${endController.text}",
+                            "time":
+                                "${startController.text} - ${endController.text}",
 
-                              "subtitle":
-                                  descController
-                                      .text,
+                            "subtitle": descController.text,
 
-                              "color":
-                                  selectedColor,
-                            },
-                          );
+                            "color": selectedColor,
+                          });
                         },
 
                         child: const Text(
@@ -975,8 +690,7 @@ class _AddSchedulePageState
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
-                            fontWeight:
-                                FontWeight.bold,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),

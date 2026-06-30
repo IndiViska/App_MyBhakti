@@ -78,7 +78,7 @@ class _TambahLeadBaruScreenState extends State<TambahLeadBaruScreen> {
     required Function(String?) onChanged,
   }) {
     return DropdownButtonFormField<String>(
-      value: value,
+      initialValue: value,
       decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(color: Color(0xFF6B7280), fontSize: 13),

@@ -5,11 +5,15 @@ import 'package:app_mybhakti/pages/projectdraft.dart';
 class AddProjectPage2 extends StatefulWidget {
   final String username;
   final ProjectDraft draft;
+  final bool isEditMode;
+  final Map<String, dynamic>? projectData;
 
   const AddProjectPage2({
     super.key,
     required this.username,
     required this.draft,
+    this.isEditMode = false,
+    this.projectData,
   });
 
   @override
@@ -55,6 +59,47 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
       TextEditingController();
 
   final TextEditingController endUserPhoneController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.isEditMode && widget.projectData != null) {
+      final p = widget.projectData!;
+
+      /// Pre-fill customer
+      if (p["customerSelected"] != null) {
+        customerMode = "tersimpan";
+        selectedCustomer = p["customerSelected"];
+      } else if (p["newCustomerName"] != null) {
+        customerMode = "baru";
+        customerBaruController.text = p["newCustomerName"] ?? "";
+        picCustomerBaruController.text = p["newCustomerPic"] ?? "";
+        customerPhoneController.text = p["newCustomerPhone"] ?? "";
+      } else {
+        // fallback dari field "client"
+        final client = p["client"] as String?;
+        if (client != null && customerList.contains(client)) {
+          customerMode = "tersimpan";
+          selectedCustomer = client;
+        } else if (client != null) {
+          customerMode = "baru";
+          customerBaruController.text = client;
+        }
+      }
+
+      /// Pre-fill end user
+      if (p["endUserSelected"] != null) {
+        endUserMode = "tersimpan";
+        selectedEndUser = p["endUserSelected"];
+      } else if (p["newEndUserName"] != null) {
+        endUserMode = "baru";
+        endUserBaruController.text = p["newEndUserName"] ?? "";
+        picEndUserBaruController.text = p["newEndUserPic"] ?? "";
+        endUserPhoneController.text = p["newEndUserPhone"] ?? "";
+      }
+    }
+  }
 
   void validateAndNext() {
     bool isCustomerValid = customerMode == "tersimpan"
@@ -122,8 +167,12 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) =>
-            AddProjectPage3(username: widget.username, draft: widget.draft),
+        builder: (_) => AddProjectPage3(
+          username: widget.username,
+          draft: widget.draft,
+          isEditMode: widget.isEditMode,
+          projectData: widget.projectData,
+        ),
       ),
     );
   }
@@ -174,7 +223,6 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-
                     icon: const Icon(
                       Icons.arrow_back_ios_new,
                       color: Colors.white,
@@ -189,23 +237,27 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
 
-                    children: const [
+                    children: [
                       Text(
-                        "Form Tambah Data Proyek",
+                        widget.isEditMode
+                            ? "Form Edit Data Proyek"
+                            : "Form Tambah Data Proyek",
 
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
 
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
 
                       Text(
-                        "Tambah data proyek yang dikerjakan",
+                        widget.isEditMode
+                            ? "Edit data proyek yang dikerjakan"
+                            : "Tambah data proyek yang dikerjakan",
 
-                        style: TextStyle(color: Colors.white, fontSize: 13),
+                        style: const TextStyle(color: Colors.white, fontSize: 13),
                       ),
                     ],
                   ),
@@ -530,7 +582,7 @@ class _AddProjectPage2State extends State<AddProjectPage2> {
 
             DropdownButtonFormField<String>(
               isExpanded: true,
-              value: selectedName,
+              initialValue: selectedName,
 
               decoration: inputDecoration(),
 
