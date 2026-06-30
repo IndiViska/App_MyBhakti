@@ -74,7 +74,7 @@ flutter:
   uses-material-design: true
   assets:
     - lib/assets/
-    - lib/assets/excel/ 
+    - lib/assets/excel/template_import_leads.xlsx
 
   
   # To add assets to your application, add an assets section, like this:
